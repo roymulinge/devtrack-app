@@ -1,6 +1,7 @@
 
 import React from "react";
 import Projects from "./pages/Projects";
+import Skills from "./pages/Skills";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Register from "./pages/Register";
@@ -35,6 +36,16 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/skills"
+          element={
+            <ProtectedRoute>
+              <Skills />
+            </ProtectedRoute>
+          }
+        />
+
 
        </Routes>
 
