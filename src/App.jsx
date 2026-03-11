@@ -25,6 +25,15 @@ function App() {
             </ProtectedRoute>
           }
         />
+        
+        <Route
+          path="/projects"
+          element={
+            <ProtectedRoute>
+              <Projects />
+            </ProtectedRoute>
+          }
+        />
 
        </Routes>
 
