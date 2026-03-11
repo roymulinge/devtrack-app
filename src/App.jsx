@@ -1,5 +1,6 @@
 
 import React from "react";
+import Ideas from "./pages/Ideas";
 import Projects from "./pages/Projects";
 import Skills from "./pages/Skills";
 import Dashboard from "./pages/Dashboard";
@@ -45,6 +46,16 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/ideas"
+          element={
+            <ProtectedRoute>
+              <Ideas />
+            </ProtectedRoute>
+          }
+        />
+
 
 
        </Routes>
