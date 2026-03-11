@@ -1,5 +1,6 @@
 
 import React from "react";
+import Projects from "./pages/Projects";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Register from "./pages/Register";
