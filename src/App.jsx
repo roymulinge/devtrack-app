@@ -1,6 +1,7 @@
 
 import React from "react";
-import Assignments from "./pages/Assignments";
+import WeeklyPriorities from "./pages/WeeklyPriorities";
+import Assignment from "./pages/Assignment";
 import Ideas from "./pages/Ideas";
 import Projects from "./pages/Projects";
 import Skills from "./pages/Skills";
@@ -61,10 +62,20 @@ function App() {
           path="/assignments"
           element={
             <ProtectedRoute>
-              <Assignments />
+              <Assignment />
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/weekly-planner"
+          element={
+            <ProtectedRoute>
+              <WeeklyPriorities />
+            </ProtectedRoute>
+          }
+        />
+
 
 
 
