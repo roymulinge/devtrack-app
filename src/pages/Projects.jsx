@@ -8,15 +8,15 @@ const Projects = () => {
   const [loading, setLoading] = useState(true);
 
   const fetchProjects = async () => {
-    try {
-      const res = await api.get("/projects/");
-      setProjects(res.data);
-    } catch (error) {
-      console.error("Error fetching projects:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    const response = await api.get("/projects/");
+    // Use results array if it exists, else fallback to empty array
+    setProjects(response.data.results || []);
+  } catch (error) {
+    console.error("Error fetching projects:", error);
+    setProjects([]);
+  }
+};
 
   useEffect(() => {
     fetchProjects();

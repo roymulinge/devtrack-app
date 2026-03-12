@@ -7,16 +7,16 @@ const Skills = () => {
   const [level, setLevel] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const fetchSkills = async () => {
-    try {
-      const res = await api.get("/skills/");
-      setSkills(res.data);
-    } catch (error) {
-      console.error("Error fetching skills:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+ const fetchSkills = async () => {
+  try {
+    const response = await api.get("/skills/");
+    // Use results array if it exists
+    setSkills(response.data.results || []);
+  } catch (error) {
+    console.error("Error fetching skills:", error);
+    setSkills([]);
+  }
+};
 
   useEffect(() => {
     fetchSkills();

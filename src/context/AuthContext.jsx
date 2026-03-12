@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-
+import api from "../api/axios";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -10,10 +10,19 @@ export const AuthProvider = ({ children }) => {
     if (token) setUser({ token });
   }, []);
 
-  const login = (data) => {
-    localStorage.setItem("access_token", data.access);
-    localStorage.setItem("refresh_token", data.refresh);
-    setUser({ token: data.access });
+   const login = async (email, password) => {
+
+    const response = await api.post("/token/", {
+      email: email,
+      password: password
+    });
+
+    const { access, refresh } = response.data;
+
+    localStorage.setItem("access_token", access);
+    localStorage.setItem("refresh_token", refresh);
+
+    setUser({ token: access });
   };
 
   const logout = () => {

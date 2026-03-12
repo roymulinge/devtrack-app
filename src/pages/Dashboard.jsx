@@ -14,15 +14,19 @@ const Dashboard = () => {
         const skillsRes = await api.get("/skills/");
         const prioritiesRes = await api.get("/weekly-priorities/");
 
-        setProjects(projectsRes.data);
-        setSkills(skillsRes.data);
-        setWeeklyPriorities(prioritiesRes.data);
-      } catch (error) {
-        console.error("Error loading dashboard data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+         // If response has "results", use that, else fallback to empty array
+      setProjects(projectsRes.data.results || []);
+      setSkills(skillsRes.data.results || []);
+      setWeeklyPriorities(prioritiesRes.data.results || []);
+    } catch (error) {
+      console.error("Error loading dashboard data:", error);
+      setProjects([]);
+      setSkills([]);
+      setWeeklyPriorities([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
     fetchDashboardData();
   }, []);
