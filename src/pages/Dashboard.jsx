@@ -98,6 +98,23 @@ const [staleSkills, setStaleSkills] = useState([]);
           )}
         </div>
 
+        {/* Overdue Assignments */}
+        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+          <h2 className="text-xl font-semibold mb-4">Overdue Assignments</h2>
+
+          {overdueAssignments.length === 0 ? (
+            <p className="text-slate-400">No overdue assignments.</p>
+          ) : (
+            <ul className="space-y-2">
+              {overdueAssignments.slice(0,5).map((a) => (
+                <li key={a.id} className="text-slate-300">
+                  {a.title}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
       </div>
 
     </div>
