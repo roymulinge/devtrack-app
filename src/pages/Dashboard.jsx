@@ -14,69 +14,87 @@ const Dashboard = () => {
         const skillsRes = await api.get("/skills/");
         const prioritiesRes = await api.get("/weekly-priorities/");
 
-         // If response has "results", use that, else fallback to empty array
-      setProjects(projectsRes.data.results || []);
-      setSkills(skillsRes.data.results || []);
-      setWeeklyPriorities(prioritiesRes.data.results || []);
-    } catch (error) {
-      console.error("Error loading dashboard data:", error);
-      setProjects([]);
-      setSkills([]);
-      setWeeklyPriorities([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+        setProjects(projectsRes.data.results || []);
+        setSkills(skillsRes.data.results || []);
+        setWeeklyPriorities(prioritiesRes.data.results || []);
+      } catch (error) {
+        console.error("Error loading dashboard data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     fetchDashboardData();
   }, []);
 
   if (loading) {
-    return <div>Loading dashboard...</div>;
+    return (
+      <div className="text-center mt-20 text-slate-400">
+        Loading dashboard...
+      </div>
+    );
   }
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>DevTrack Dashboard</h1>
+    <div className="max-w-6xl mx-auto px-6 py-10 text-white">
 
-      <section>
-        <h2>Projects</h2>
-        {projects.length === 0 ? (
-          <p>No projects yet.</p>
-        ) : (
-          <ul>
-            {projects.map((project) => (
-              <li key={project.id}>{project.title || project.name}</li>
-            ))}
-          </ul>
-        )}
-      </section>
+      <h1 className="text-3xl font-bold mb-10">Dashboard</h1>
 
-      <section>
-        <h2>Skills</h2>
-        {skills.length === 0 ? (
-          <p>No skills tracked.</p>
-        ) : (
-          <ul>
-            {skills.map((skill) => (
-              <li key={skill.id}>{skill.name}</li>
-            ))}
-          </ul>
-        )}
-      </section>
+      <div className="grid md:grid-cols-3 gap-8">
 
-      <section>
-        <h2>This Week's Priorities</h2>
-        {weeklyPriorities.length === 0 ? (
-          <p>No priorities set.</p>
-        ) : (
-          <ul>
-            {weeklyPriorities.map((priority) => (
-              <li key={priority.id}>{priority.top_three_text}</li>
-            ))}
-          </ul>
-        )}
-      </section>
+        {/* Projects */}
+        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+          <h2 className="text-xl font-semibold mb-4">Projects</h2>
+
+          {projects.length === 0 ? (
+            <p className="text-slate-400">No projects yet.</p>
+          ) : (
+            <ul className="space-y-2">
+              {projects.slice(0, 5).map((project) => (
+                <li key={project.id} className="text-slate-300">
+                  {project.name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* Skills */}
+        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+          <h2 className="text-xl font-semibold mb-4">Skills</h2>
+
+          {skills.length === 0 ? (
+            <p className="text-slate-400">No skills tracked.</p>
+          ) : (
+            <ul className="space-y-2">
+              {skills.slice(0, 5).map((skill) => (
+                <li key={skill.id} className="text-slate-300">
+                  {skill.name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* Weekly Priorities */}
+        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+          <h2 className="text-xl font-semibold mb-4">Weekly Priorities</h2>
+
+          {weeklyPriorities.length === 0 ? (
+            <p className="text-slate-400">No priorities set.</p>
+          ) : (
+            <ul className="space-y-2">
+              {weeklyPriorities.slice(0, 3).map((priority) => (
+                <li key={priority.id} className="text-slate-300">
+                  {priority.top_three_text}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+      </div>
+
     </div>
   );
 };
