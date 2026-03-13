@@ -3,20 +3,32 @@ import api from "../api/axios";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [name, setName] = useState("");
+  const [vision, setVision] = useState("");
+  const [priority, setPriority] = useState(1);
+  const [status, setStatus] = useState("active");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const fetchProjects = async () => {
-  try {
-    const response = await api.get("/projects/");
-    // Use results array if it exists, else fallback to empty array
-    setProjects(response.data.results || []);
-  } catch (error) {
-    console.error("Error fetching projects:", error);
-    setProjects([]);
-  }
-};
+    try {
+      const res = await api.get("/projects/");
+      const data = res.data;
+
+      if (Array.isArray(data)) {
+        setProjects(data);
+      } else if (Array.isArray(data.results)) {
+        setProjects(data.results);
+      } else {
+        setProjects([]);
+      }
+    } catch (err) {
+      console.error("Error fetching projects:", err);
+      setProjects([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchProjects();
@@ -24,33 +36,38 @@ const Projects = () => {
 
   const createProject = async (e) => {
     e.preventDefault();
+    setError("");
 
     try {
       const res = await api.post("/projects/", {
-        title,
-        description,
+        name,
+        vision,
+        priority,
+        status
       });
 
       setProjects([...projects, res.data]);
-      setTitle("");
-      setDescription("");
-    } catch (error) {
-      console.error("Error creating project:", error);
+
+      setName("");
+      setVision("");
+      setPriority(1);
+      setStatus("active");
+    } catch (err) {
+      console.error("Error creating project:", err);
+      setError(JSON.stringify(err.response?.data || "Unknown error"));
     }
   };
 
   const deleteProject = async (id) => {
     try {
       await api.delete(`/projects/${id}/`);
-      setProjects(projects.filter((project) => project.id !== id));
-    } catch (error) {
-      console.error("Error deleting project:", error);
+      setProjects(projects.filter((p) => p.id !== id));
+    } catch (err) {
+      console.error("Error deleting project:", err);
     }
   };
 
-  if (loading) {
-    return <div>Loading projects...</div>;
-  }
+  if (loading) return <div>Loading projects...</div>;
 
   return (
     <div style={{ padding: "20px" }}>
@@ -59,29 +76,47 @@ const Projects = () => {
       <form onSubmit={createProject} style={{ marginBottom: "20px" }}>
         <input
           type="text"
-          placeholder="Project title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Project name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           required
         />
 
         <input
           type="text"
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Vision"
+          value={vision}
+          onChange={(e) => setVision(e.target.value)}
+          required
         />
+
+        <input
+          type="number"
+          placeholder="Priority"
+          value={priority}
+          onChange={(e) => setPriority(Number(e.target.value))}
+          min="1"
+          required
+        />
+
+        <select value={status} onChange={(e) => setStatus(e.target.value)}>
+          <option value="active">Active</option>
+          <option value="paused">Paused</option>
+          <option value="completed">Completed</option>
+        </select>
 
         <button type="submit">Create Project</button>
       </form>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
       {projects.length === 0 ? (
         <p>No projects yet.</p>
       ) : (
         <ul>
           {projects.map((project) => (
-            <li key={project.id} style={{ marginBottom: "10px" }}>
-              <strong>{project.title}</strong> — {project.description}
+            <li key={project.id}>
+              <strong>{project.name}</strong> — {project.vision} | Priority: {project.priority} | Status: {project.status}
 
               <button
                 onClick={() => deleteProject(project.id)}
