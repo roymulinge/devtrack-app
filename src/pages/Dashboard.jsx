@@ -114,6 +114,23 @@ const [staleSkills, setStaleSkills] = useState([]);
             </ul>
           )}
         </div>
+        
+        {/* Stale Skills */}
+        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+          <h2 className="text-xl font-semibold mb-4">Stale Skills</h2>
+
+          {staleSkills.length === 0 ? (
+            <p className="text-slate-400">All skills recently practiced.</p>
+          ) : (
+            <ul className="space-y-2">
+              {staleSkills.slice(0,5).map((skill) => (
+                <li key={skill.id} className="text-slate-300">
+                  {skill.name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
       </div>
 
