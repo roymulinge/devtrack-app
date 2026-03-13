@@ -4,33 +4,32 @@ import api from "../api/axios";
 const Skills = () => {
   const [skills, setSkills] = useState([]);
   const [name, setName] = useState("");
-  const [level, setLevel] = useState("");
+  const [category, setCategory] = useState("");
+  const [depthLevel, setDepthLevel] = useState(1);
+  const [lastPracticed, setLastPracticed] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
- const fetchSkills = async () => {
+  const fetchSkills = async () => {
     try {
-      const response = await api.get("/skills/");
-
-      const data = response.data;
+      const res = await api.get("/skills/");
+      const data = res.data;
 
       if (Array.isArray(data)) {
         setSkills(data);
       } else if (Array.isArray(data.results)) {
         setSkills(data.results);
       } else {
-        console.error("Unexpected API format:", data);
+        console.error("Unexpected API response:", data);
         setSkills([]);
       }
-    } catch (error) {
-      console.error("Error fetching skills:", error);
+    } catch (err) {
+      console.error("Error fetching skills:", err);
       setSkills([]);
     } finally {
       setLoading(false);
     }
   };
-
-
 
   useEffect(() => {
     fetchSkills();
@@ -42,16 +41,21 @@ const Skills = () => {
 
     try {
       const res = await api.post("/skills/", {
-        name,
-        level,
+        name: name,
+        category: category,
+        depth_level: depthLevel,
+        last_practiced: lastPracticed || null,
       });
 
       setSkills([...skills, res.data]);
+
       setName("");
-      setLevel("");
-    } catch (error) {
-      console.error("Error creating skill:", error);
-      setError(JSON.stringify(error.response?.data || "Unknown error"));
+      setCategory("");
+      setDepthLevel(1);
+      setLastPracticed("");
+    } catch (err) {
+      console.error("Error creating skill:", err);
+      setError(JSON.stringify(err.response?.data || "Unknown error"));
     }
   };
 
@@ -59,8 +63,8 @@ const Skills = () => {
     try {
       await api.delete(`/skills/${id}/`);
       setSkills(skills.filter((skill) => skill.id !== id));
-    } catch (error) {
-      console.error("Error deleting skill:", error);
+    } catch (err) {
+      console.error("Error deleting skill:", err);
     }
   };
 
@@ -83,13 +87,31 @@ const Skills = () => {
 
         <input
           type="text"
-          placeholder="Skill level"
-          value={level}
-          onChange={(e) => setLevel(e.target.value)}
+          placeholder="Category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          required
+        />
+
+        <input
+          type="number"
+          placeholder="Depth level"
+          value={depthLevel}
+          onChange={(e) => setDepthLevel(Number(e.target.value))}
+          min="1"
+          required
+        />
+
+        <input
+          type="date"
+          value={lastPracticed}
+          onChange={(e) => setLastPracticed(e.target.value)}
         />
 
         <button type="submit">Add Skill</button>
       </form>
+
+      {error && <p style={{ color: "red" }}>Error: {error}</p>}
 
       {skills.length === 0 ? (
         <p>No skills yet.</p>
@@ -97,7 +119,8 @@ const Skills = () => {
         <ul>
           {skills.map((skill) => (
             <li key={skill.id} style={{ marginBottom: "10px" }}>
-              <strong>{skill.name}</strong> — {skill.level}
+              <strong>{skill.name}</strong> — {skill.category} — Depth: {skill.depth_level}
+              {skill.last_practiced && ` — Last practiced: ${skill.last_practiced}`}
 
               <button
                 onClick={() => deleteSkill(skill.id)}
