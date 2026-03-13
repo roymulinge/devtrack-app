@@ -11,7 +11,7 @@ const WeeklyPriorities = () => {
   const fetchPriorities = async () => {
     try {
       const res = await api.get("/weekly-priorities/");
-      setPriorities(res.data);
+      setPriorities(res.data.results || []);
     } catch (error) {
       console.error("Error fetching priorities:", error);
     } finally {
@@ -30,10 +30,11 @@ const WeeklyPriorities = () => {
       const res = await api.post("/weekly-priorities/", {
         week_start: weekStart,
         top_three_text: topThreeText,
-        notes: notes,
+        notes,
       });
 
       setPriorities([...priorities, res.data]);
+
       setWeekStart("");
       setTopThreeText("");
       setNotes("");
@@ -90,17 +91,8 @@ const WeeklyPriorities = () => {
       ) : (
         <ul>
           {priorities.map((priority) => (
-            <li key={priority.id} style={{ marginBottom: "10px" }}>
-              <strong>Week:</strong> {priority.week_start} <br />
-              <strong>Top 3:</strong> {priority.top_three_text} <br />
-              <strong>Notes:</strong> {priority.notes}
-
-              <button
-                onClick={() => deletePriority(priority.id)}
-                style={{ marginLeft: "10px" }}
-              >
-                Delete
-              </button>
+            <li key={priority.id}>
+              <strong>{priority.week_start}</strong> — {priority.top_three_text}
             </li>
           ))}
         </ul>
