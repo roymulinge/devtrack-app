@@ -6,17 +6,22 @@ const Dashboard = () => {
   const [skills, setSkills] = useState([]);
   const [weeklyPriorities, setWeeklyPriorities] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [overdueAssignments, setOverdueAssignments] = useState([]);
+const [staleSkills, setStaleSkills] = useState([]);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         const projectsRes = await api.get("/projects/");
-        const skillsRes = await api.get("/skills/");
+        const skillsRes = await api.get("/skills/stale/");
+        const overdueRes = await api.get("/assignments/overdue/");
         const prioritiesRes = await api.get("/weekly-priorities/");
 
         setProjects(projectsRes.data.results || []);
-        setSkills(skillsRes.data.results || []);
+
         setWeeklyPriorities(prioritiesRes.data.results || []);
+        setOverdueAssignments(overdueRes.data.results || []);
+        setStaleSkills(skillsRes.data.results || []);
       } catch (error) {
         console.error("Error loading dashboard data:", error);
       } finally {
