@@ -31,36 +31,34 @@ const Dashboard = () => {
   const [overdueAssignments, setOverdueAssignments] = useState([]);
   const [staleSkills, setStaleSkills] = useState([]);
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        const ideasRes = await api.get("/ideas/");
-        const projectsRes = await api.get("/projects/");
-        const skillsRes = await api.get("/skills/");
-        const staleSkillsRes = await api.get("/skills/stale/");
-        const overdueRes = await api.get("/assignments/overdue/");
-        const prioritiesRes = await api.get("/weekly-priorities/");
+ useEffect(() => {
+  const fetchDashboardData = async () => {
+    try {
+      const [ideasRes, projectsRes, skillsRes, staleRes, overdueRes, prioritiesRes] =
+        await Promise.all([
+          api.get("/ideas/"),
+          api.get("/projects/"),
+          api.get("/skills/"),
+          api.get("/skills/stale/"),
+          api.get("/assignments/overdue/"),
+          api.get("/weekly-priorities/"),
+        ]);
 
-        setIdeas(ideasRes.data.results || ideasRes.data || []);
+      setIdeas(ideasRes.data.results        ?? ideasRes.data        ?? []);
+      setProjects(projectsRes.data.results  ?? projectsRes.data     ?? []);
+      setSkills(skillsRes.data.results      ?? skillsRes.data       ?? []);
+      setStaleSkills(staleRes.data.results  ?? staleRes.data        ?? []);
+      setOverdueAssignments(overdueRes.data.results ?? overdueRes.data ?? []);
+      setWeeklyPriorities(prioritiesRes.data.results ?? prioritiesRes.data ?? []);
+    } catch (err) {
+      console.error("Dashboard fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        setProjects(projectsRes.data.results || []);
-
-        setWeeklyPriorities(prioritiesRes.data.results || []);
-
-        setOverdueAssignments(overdueRes.data.results || []);
-
-        setSkills(skillsRes.data.results || skillsRes.data || []);
-
-        setStaleSkills(staleSkillsRes.data.results || staleSkillsRes.data || []);
-      } catch (error) {
-        console.error("Error loading dashboard data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDashboardData();
-  }, []);
+  fetchDashboardData();
+}, []);
 
   if (loading) {
     return (
