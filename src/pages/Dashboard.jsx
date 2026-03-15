@@ -61,12 +61,17 @@ const Dashboard = () => {
 }, []);
 
   if (loading) {
-    return (
-      <div className="text-center mt-20 text-slate-400">
-        Loading dashboard...
+  return (
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+      <div className="text-center">
+        <p className="text-xs font-mono text-sky-400 tracking-widest uppercase mb-2">
+          // loading
+        </p>
+        <p className="text-slate-500 text-sm">Fetching your workspace...</p>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 text-white">
