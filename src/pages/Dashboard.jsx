@@ -2,6 +2,26 @@ import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { Link } from "react-router-dom";
 
+const depthToPercent = (depth) => {
+  const map = { beginner: 25, intermediate: 60, advanced: 85, expert: 100 };
+  return map[depth?.toLowerCase()] ?? 40;
+};
+
+const depthColor = (depth) => {
+  const map = {
+    beginner: "#fbbf24",
+    intermediate: "#a78bfa",
+    advanced: "#38bdf8",
+    expert: "#34d399",
+  };
+  return map[depth?.toLowerCase()] ?? "#38bdf8";
+};
+
+const getWeekNumber = () => {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 1);
+  return Math.ceil(((now - start) / 86400000 + start.getDay() + 1) / 7);
+};
 const Dashboard = () => {
   const [ideas, setIdeas] = useState([]);
   const [projects, setProjects] = useState([]);
