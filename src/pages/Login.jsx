@@ -1,97 +1,131 @@
-import React, { useState, useContext } from "react";
-import { useNavigate, Link  } from "react-router-dom";
+import { useState, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
-  const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
-  const [email, setEmail] = useState("");
+  const navigate        = useNavigate();
+  const { login }       = useContext(AuthContext);
+  const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError]       = useState("");
+  const [loading, setLoading]   = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
     try {
       await login(email, password);
-      navigate("/dashboard"); // Navigate to dashboard after login
+      navigate("/dashboard");
     } catch (err) {
-      setError("Invalid credentials. Please try again.");
+      setError("Invalid email or password. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-900 px-4">
-      <div className="w-full max-w-md bg-slate-800 rounded-lg shadow-lg p-8">
-        <h2 className="text-2xl font-bold text-sky-400 mb-6 text-center">
-          Login to DevTrack
-        </h2>
+    <div className="min-h-screen bg-[#090d13] flex items-center justify-center px-4 relative overflow-hidden">
 
+      {/* Background glow */}
+      <div className="absolute w-[500px] h-[500px] rounded-full bg-sky-400/5 blur-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+
+      {/* Card */}
+      <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-2xl p-8 relative z-10">
+
+        {/* Logo */}
+        <div className="flex items-center justify-center gap-1.5 mb-8">
+          <span className="text-sky-400 font-mono font-bold text-base">[</span>
+          <span className="w-2 h-2 rounded-full bg-sky-400 inline-block" />
+          <span className="font-mono font-bold text-base text-slate-100 tracking-wide">DevTrack</span>
+          <span className="text-sky-400 font-mono font-bold text-base">]</span>
+        </div>
+
+        {/* Heading */}
+        <div className="text-center mb-7">
+          <h1 className="text-xl font-bold text-slate-100 mb-1">Welcome back</h1>
+          <p className="text-xs font-mono text-slate-600">// sign in to your workspace</p>
+        </div>
+
+        {/* Error */}
         {error && (
-          <p className="text-red-500 text-sm mb-4 text-center">{error}</p>
+          <div className="mb-5 text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2.5 text-center">
+            {error}
+          </div>
         )}
 
+        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
+
           <div>
-            <label className="block text-slate-300 mb-1" htmlFor="email">
+            <label className="block text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1.5">
               Email
             </label>
             <input
-              id="email"
               type="email"
               placeholder="you@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-2 rounded-lg bg-slate-700 text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-400"
+              autoComplete="email"
+              className="w-full bg-[#090d13] border border-slate-800 rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 transition"
             />
           </div>
 
           <div>
-            <label className="block text-slate-300 mb-1" htmlFor="password">
+            <label className="block text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1.5">
               Password
             </label>
             <input
-              id="password"
               type="password"
-              placeholder="********"
+              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-2 rounded-lg bg-slate-700 text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-400"
+              autoComplete="current-password"
+              className="w-full bg-[#090d13] border border-slate-800 rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 transition"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-sky-500 hover:bg-sky-600 text-white py-2 rounded-lg font-semibold transition"
+            disabled={loading}
+            className="w-full bg-sky-400 hover:bg-sky-300 disabled:bg-sky-400/40 text-[#090d13] font-mono font-bold text-sm py-2.5 rounded-lg transition tracking-wide mt-2"
           >
-            Login
+            {loading ? "signing in..." : "sign in"}
           </button>
+
         </form>
 
-        <p className="mt-4 text-sm text-slate-400 text-center">
-          Don't have an account?{" "}
-          <a
-            href="/register"
-            className="text-sky-400 hover:underline"
-          >
-            Register
-          </a>
-        </p>
+        {/* Divider */}
+        <div className="flex items-center gap-3 my-5">
+          <div className="flex-1 h-px bg-slate-800" />
+          <span className="text-xs font-mono text-slate-700">or</span>
+          <div className="flex-1 h-px bg-slate-800" />
+        </div>
 
-        <div className="mb-4 text-center">
+        {/* Register link */}
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-slate-600">No account yet?</span>
           <Link
-            to="/"
-            className="text-sky-400 hover:underline text-sm"
+            to="/register"
+            className="text-xs font-mono text-sky-400 hover:text-sky-300 transition"
           >
-            ← Return to Home
+            register →
           </Link>
         </div>
 
+        {/* Back to home */}
+        <div className="mt-6 text-center">
+          <Link
+            to="/"
+            className="text-xs font-mono text-slate-700 hover:text-slate-500 transition"
+          >
+            ← return to home
+          </Link>
+        </div>
 
       </div>
     </div>
   );
 };
-
-export default Login;
