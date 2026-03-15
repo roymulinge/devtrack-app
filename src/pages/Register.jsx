@@ -2,120 +2,220 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "../api/axios";
 
+// Password strength helper
+const getStrength = (pwd) => {
+  if (!pwd) return { score: 0, label: "", color: "" };
+  let score = 0;
+  if (pwd.length >= 8)              score++;
+  if (/[A-Z]/.test(pwd))            score++;
+  if (/[0-9]/.test(pwd))            score++;
+  if (/[^A-Za-z0-9]/.test(pwd))     score++;
+  const map = {
+    0: { label: "",          color: "" },
+    1: { label: "weak",      color: "bg-red-400"     },
+    2: { label: "medium",    color: "bg-amber-400"   },
+    3: { label: "strong",    color: "bg-sky-400"     },
+    4: { label: "very strong", color: "bg-emerald-400" },
+  };
+  return { score, ...map[score] };
+};
+
 const Register = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    password2: ""
-  });
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({ email: "", password: "", password2: "" });
+  const [error, setError]       = useState("");
+  const [loading, setLoading]   = useState(false);
 
   const { email, password, password2 } = formData;
+  const strength = getStrength(password);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
     if (password !== password2) {
-      setError("Passwords do not match");
+      setError("Passwords do not match.");
       return;
     }
 
+    if (strength.score < 2) {
+      setError("Please choose a stronger password.");
+      return;
+    }
+
+    setLoading(true);
     try {
-      setLoading(true);
-      setError("");
-
       await axios.post("/auth/register/", { email, password });
-
       navigate("/login");
     } catch (err) {
-      console.error(err.response?.data || err.message);
-      setError("Registration failed");
+      const data = err.response?.data;
+      if (data?.email)    setError(data.email[0]);
+      else if (data?.password) setError(data.password[0]);
+      else setError("Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-slate-700 mb-6 text-center">Create an Account</h2>
+    <div className="min-h-screen bg-[#090d13] flex items-center justify-center px-4 relative overflow-hidden">
 
+      {/* Background glow — violet tint to differentiate from login */}
+      <div className="absolute w-[500px] h-[500px] rounded-full bg-violet-400/5 blur-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+
+      {/* Card */}
+      <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-2xl p-8 relative z-10">
+
+        {/* Logo */}
+        <div className="flex items-center justify-center gap-1.5 mb-8">
+          <span className="text-sky-400 font-mono font-bold text-base">[</span>
+          <span className="w-2 h-2 rounded-full bg-sky-400 inline-block" />
+          <span className="font-mono font-bold text-base text-slate-100 tracking-wide">DevTrack</span>
+          <span className="text-sky-400 font-mono font-bold text-base">]</span>
+        </div>
+
+        {/* Heading */}
+        <div className="text-center mb-7">
+          <h1 className="text-xl font-bold text-slate-100 mb-1">Create your account</h1>
+          <p className="text-xs font-mono text-slate-600">// start tracking your progress</p>
+        </div>
+
+        {/* Error */}
         {error && (
-          <p className="bg-red-100 text-red-700 px-4 py-2 rounded mb-4 text-center">
+          <div className="mb-5 text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2.5 text-center">
             {error}
-          </p>
+          </div>
         )}
 
+        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
+
+          {/* Email */}
           <div>
+            <label className="block text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1.5">
+              Email
+            </label>
             <input
               type="email"
               name="email"
-              placeholder="Email"
+              placeholder="you@example.com"
               value={email}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-400"
+              autoComplete="email"
+              className="w-full bg-[#090d13] border border-slate-800 rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 transition"
             />
           </div>
 
+          {/* Password + strength meter */}
           <div>
+            <label className="block text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1.5">
+              Password
+            </label>
             <input
               type="password"
               name="password"
-              placeholder="Password"
+              placeholder="••••••••"
               value={password}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-400"
+              autoComplete="new-password"
+              className="w-full bg-[#090d13] border border-slate-800 rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 transition"
             />
+            {/* Strength bar */}
+            {password && (
+              <div className="mt-2">
+                <div className="flex gap-1 mb-1">
+                  {[1, 2, 3, 4].map((n) => (
+                    <div
+                      key={n}
+                      className={`flex-1 h-[2px] rounded-full transition-all duration-300
+                        ${n <= strength.score ? strength.color : "bg-slate-800"}`}
+                    />
+                  ))}
+                </div>
+                <p className={`text-xs font-mono ${
+                  strength.score <= 1 ? "text-red-400"
+                  : strength.score === 2 ? "text-amber-400"
+                  : strength.score === 3 ? "text-sky-400"
+                  : "text-emerald-400"
+                }`}>
+                  {strength.label}
+                </p>
+              </div>
+            )}
           </div>
 
+          {/* Confirm password */}
           <div>
+            <label className="block text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1.5">
+              Confirm Password
+            </label>
             <input
               type="password"
               name="password2"
-              placeholder="Confirm Password"
+              placeholder="••••••••"
               value={password2}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-400"
+              autoComplete="new-password"
+              className={`w-full bg-[#090d13] border rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none transition
+                ${password2 && password !== password2
+                  ? "border-red-500/50 focus:border-red-500/50"
+                  : password2 && password === password2
+                  ? "border-emerald-500/50 focus:border-emerald-500/50"
+                  : "border-slate-800 focus:border-sky-500/50"
+                }`}
             />
+            {/* Match indicator */}
+            {password2 && (
+              <p className={`text-xs font-mono mt-1 ${
+                password === password2 ? "text-emerald-400" : "text-red-400"
+              }`}>
+                {password === password2 ? "passwords match" : "passwords do not match"}
+              </p>
+            )}
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-2 rounded-lg text-white font-semibold transition ${
-              loading ? "bg-sky-300 cursor-not-allowed" : "bg-sky-500 hover:bg-sky-600"
-            }`}
+            className="w-full bg-sky-400 hover:bg-sky-300 disabled:bg-sky-400/40 text-[#090d13] font-mono font-bold text-sm py-2.5 rounded-lg transition tracking-wide mt-2"
           >
-            {loading ? "Registering..." : "Register"}
+            {loading ? "creating account..." : "create account"}
           </button>
+
         </form>
 
-        <p className="text-center text-slate-500 mt-4">
-          Already have an account?{" "}
-          <Link to="/login" className="text-sky-500 hover:underline">
-            Login
-          </Link>
-        </p>
+        {/* Divider */}
+        <div className="flex items-center gap-3 my-5">
+          <div className="flex-1 h-px bg-slate-800" />
+          <span className="text-xs font-mono text-slate-700">or</span>
+          <div className="flex-1 h-px bg-slate-800" />
+        </div>
 
-        <div className="mb-4 text-center">
+        {/* Login link */}
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-slate-600">Already have an account?</span>
+          <Link
+            to="/login"
+            className="text-xs font-mono text-sky-400 hover:text-sky-300 transition"
+          >
+            sign in →
+          </Link>
+        </div>
+
+        {/* Back to home */}
+        <div className="mt-6 text-center">
           <Link
             to="/"
-            className="text-sky-400 hover:underline text-sm"
+            className="text-xs font-mono text-slate-700 hover:text-slate-500 transition"
           >
-            ← Return to Home
+            ← return to home
           </Link>
         </div>
 
