@@ -13,11 +13,7 @@ const Ideas = () => {
   const fetchIdeas = async () => {
     try {
       const res = await api.get("/ideas/");
-      if (Array.isArray(res.data)) {
-        setIdeas(res.data);
-      } else {
-        console.error("Unexpected data format:", res.data);
-      }
+      setIdeas(res.data.results ||res.data || []);
     } catch (err) {
       console.error("Error fetching ideas:", err);
     } finally {
