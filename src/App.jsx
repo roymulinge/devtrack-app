@@ -13,7 +13,7 @@ import { BrowserRouter as Router, Routes, Route,useLocation } from "react-router
 import Login from "./pages/Login";
 import Landing from "./pages/Landing";
 import About   from "./pages/About";
-import Contact from "./pages/Contact";
+
 
 function App() {
   const location = useLocation();

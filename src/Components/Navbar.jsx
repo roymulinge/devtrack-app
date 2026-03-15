@@ -42,6 +42,10 @@ const Navbar = () => {
           <Link className="hover:text-white transition" to="/weekly-planner">
             Planner
           </Link>
+
+          <Link className="hover:text-white transition" to="/about">
+            About
+          </Link>
         </div>
 
         {/* Auth Buttons */}
