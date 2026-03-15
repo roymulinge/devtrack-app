@@ -109,6 +109,16 @@ const Register = () => {
             Login
           </Link>
         </p>
+
+        <div className="mb-4 text-center">
+          <Link
+            to="/"
+            className="text-sky-400 hover:underline text-sm"
+          >
+            ← Return to Home
+          </Link>
+        </div>
+
       </div>
     </div>
   );

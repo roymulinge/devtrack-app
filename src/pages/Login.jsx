@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link  } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
@@ -79,7 +79,15 @@ const Login = () => {
           </a>
         </p>
 
-        
+        <div className="mb-4 text-center">
+          <Link
+            to="/"
+            className="text-sky-400 hover:underline text-sm"
+          >
+            ← Return to Home
+          </Link>
+        </div>
+
 
       </div>
     </div>
