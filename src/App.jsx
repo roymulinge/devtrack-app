@@ -9,15 +9,20 @@ import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Register from "./pages/Register";
 import Navbar from "./Components/Navbar";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route,useLocation } from "react-router-dom";
 import Login from "./pages/Login";
 import Landing from "./pages/Landing";
+
 function App() {
- 
+  const location = useLocation();
+
+  const hideNavbar =
+  location.pathname === "/login" ||
+  location.pathname === "/register";
   return (
     <>
-    <Router>
-      <Navbar />
+    
+      {!hideNavbar && <Navbar />}
        <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -86,7 +91,7 @@ function App() {
        </Routes>
 
 
-    </Router>
+    
       
     </>
   )
