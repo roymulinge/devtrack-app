@@ -12,6 +12,8 @@ import Navbar from "./Components/Navbar";
 import { BrowserRouter as Router, Routes, Route,useLocation } from "react-router-dom";
 import Login from "./pages/Login";
 import Landing from "./pages/Landing";
+import About   from "./pages/About";
+import Contact from "./pages/Contact";
 
 function App() {
   const location = useLocation();
@@ -26,7 +28,8 @@ function App() {
        <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
+        <Route path="/about"   element={<About />} />
+        
         <Route path="/" element={<Landing />} />
 
                 {/* Protected Routes */}
