@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../api/axios";
 
 const Dashboard = () => {
+  const [ideas, setIdeas] = useState([]);
   const [projects, setProjects] = useState([]);
   const [skills, setSkills] = useState([]);
   const [weeklyPriorities, setWeeklyPriorities] = useState([]);
@@ -12,11 +13,14 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
+        const ideasRes = await api.get("/ideas/");
         const projectsRes = await api.get("/projects/");
         const skillsRes = await api.get("/skills/");
         const staleSkillsRes = await api.get("/skills/stale/");
         const overdueRes = await api.get("/assignments/overdue/");
         const prioritiesRes = await api.get("/weekly-priorities/");
+
+        setIdeas(ideasRes.data.results || ideasRes.data || []);
 
         setProjects(projectsRes.data.results || []);
 
@@ -25,7 +29,7 @@ const Dashboard = () => {
         setOverdueAssignments(overdueRes.data.results || []);
 
         setSkills(skillsRes.data.results || skillsRes.data || []);
-        
+
         setStaleSkills(staleSkillsRes.data.results || staleSkillsRes.data || []);
       } catch (error) {
         console.error("Error loading dashboard data:", error);
@@ -63,6 +67,23 @@ const Dashboard = () => {
               {projects.slice(0, 5).map((project) => (
                 <li key={project.id} className="text-slate-300">
                   {project.name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {/* Ideas */}
+        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+          <h2 className="text-xl font-semibold mb-4">Ideas</h2>
+
+          {ideas.length === 0 ? (
+            <p className="text-slate-400">No ideas yet.</p>
+          ) : (
+            <ul className="space-y-2">
+              {ideas.slice(0, 5).map((idea) => (
+                <li key={idea.id} className="text-slate-300">
+                  {idea.problem_statement}
                 </li>
               ))}
             </ul>
