@@ -9,11 +9,18 @@ const PRIORITY_OPTIONS = [
 
 const priorityStyle = (p) => {
   const map = {
+    // string values
     high:   { bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/30" },
     medium: { bg: "bg-sky-500/10",     text: "text-sky-400",     border: "border-sky-500/30"     },
     low:    { bg: "bg-amber-500/10",   text: "text-amber-400",   border: "border-amber-500/30"   },
+    // numeric values
+    1:      { bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/30" },
+    2:      { bg: "bg-sky-500/10",     text: "text-sky-400",     border: "border-sky-500/30"     },
+    3:      { bg: "bg-amber-500/10",   text: "text-amber-400",   border: "border-amber-500/30"   },
   };
-  return map[p?.toLowerCase()] ?? map.medium;
+  if (p === null || p === undefined) return map.medium;
+  if (typeof p === "number") return map[p] ?? map.medium;
+  return map[String(p).toLowerCase()] ?? map.medium;
 };
 
 const statusDot = (status) => {
@@ -22,7 +29,8 @@ const statusDot = (status) => {
     paused:    "bg-amber-400",
     completed: "bg-sky-400",
   };
-  return map[status?.toLowerCase()] ?? "bg-slate-600";
+  if (!status) return "bg-slate-600";
+  return map[String(status).toLowerCase()] ?? "bg-slate-600";
 };
 
 const Projects = () => {
