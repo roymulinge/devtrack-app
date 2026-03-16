@@ -27,7 +27,7 @@ const solutions = [
 
 const Landing = () => {
   return (
-    <div className="bg-[#090d13] text-slate-200 min-h-screen">
+    <div className="bg-[var(--bg-primary)] text-slate-200 min-h-screen">
 
       {/* ── Hero ── */}
       <section className="relative min-h-[92vh] flex items-center justify-center px-6 overflow-hidden">
