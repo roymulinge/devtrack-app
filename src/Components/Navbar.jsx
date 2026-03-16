@@ -71,6 +71,17 @@ const Navbar = () => {
           >
             About
           </Link>
+
+          <Link
+            to="/contact"
+            className={`text-xs font-medium px-3 py-1.5 rounded-md border transition tracking-wide
+              ${pathname === "/contact"
+                ? "text-sky-400 bg-sky-400/10 border-sky-400/25"
+                : "text-slate-500 border-transparent hover:text-slate-200 hover:bg-white/5 hover:border-slate-700"
+              }`}
+          >
+            Contact
+          </Link>
         </div>
 
         {/* Auth */}
