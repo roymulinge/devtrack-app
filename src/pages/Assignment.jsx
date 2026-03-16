@@ -44,34 +44,34 @@ const Assignments = () => {
   useEffect(() => { fetchData(); }, []);
 
   const createAssignment = async (e) => {
-    e.preventDefault();
-    setError("");
-    setSubmitting(true);
-    try {
-      const res = await api.post("/assignments/", {
-        title,
-        subject,
-        project:         projectId || null,
-        deadline:        deadline  || null,
-        effort_estimate: effortEstimate || null,
-      });
-      setAssignments([res.data, ...assignments]);
-      setTitle("");
-      setSubject("");
-      setProjectId("");
-      setDeadline("");
-      setEffortEstimate("");
-    } catch (err) {
-      console.error("Error creating assignment:", err);
-      setError(
-        err.response?.data
-          ? JSON.stringify(err.response.data)
-          : "Failed to create assignment."
-      );
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  e.preventDefault();
+  setError("");
+  setSubmitting(true);
+  try {
+    const res = await api.post("/assignments/", {
+      title,
+      subject:         subject  || "",
+      project:         projectId || null,
+      deadline:        deadline  || null,
+      effort_estimate: effortEstimate ? parseInt(effortEstimate) : null,
+    });
+    setAssignments([res.data, ...assignments]);
+    setTitle("");
+    setSubject("");
+    setProjectId("");
+    setDeadline("");
+    setEffortEstimate("");
+  } catch (err) {
+    console.error("Error creating assignment:", err);
+    const data = err.response?.data;
+    if (data?.title)    setError(data.title[0]);
+    else if (data?.deadline) setError(data.deadline[0]);
+    else if (data?.project)  setError(data.project[0]);
+    else setError("Failed to create assignment. Please try again.");
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   const deleteAssignment = async (id) => {
     try {

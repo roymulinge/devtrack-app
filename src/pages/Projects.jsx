@@ -57,22 +57,31 @@ const Projects = () => {
   useEffect(() => { fetchProjects(); }, []);
 
   const createProject = async (e) => {
-    e.preventDefault();
-    setError("");
-    setSubmitting(true);
-    try {
-      const res = await api.post("/projects/", { name, vision, priority });
-      setProjects([res.data, ...projects]);
-      setName("");
-      setVision("");
-      setPriority("high");
-    } catch (err) {
-      console.error("Error creating project:", err);
-      setError("Failed to create project. Please try again.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  e.preventDefault();
+  setError("");
+  setSubmitting(true);
+  try {
+    const res = await api.post("/projects/", {
+      name,
+      vision,
+      priority,
+      status: "active",   // ← always start as active
+    });
+    setProjects([res.data, ...projects]);
+    setName("");
+    setVision("");
+    setPriority("high");
+  } catch (err) {
+    console.error("Error creating project:", err);
+    const data = err.response?.data;
+    if (data?.name)     setError(data.name[0]);
+    else if (data?.priority) setError(data.priority[0]);
+    else if (data?.vision)   setError(data.vision[0]);
+    else setError("Failed to create project. Please try again.");
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   const deleteProject = async (id) => {
     try {
