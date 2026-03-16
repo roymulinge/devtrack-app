@@ -1,7 +1,7 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-
+import ThemeToggle from "../Components/ThemeToggle";
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const { pathname } = useLocation();
