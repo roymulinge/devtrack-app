@@ -22,6 +22,17 @@ const Navbar = () => {
     ?? user?.username?.[0]?.toUpperCase()
     ?? "D";
 
+      // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropRef.current && !dropRef.current.contains(e.target)) {
+        setDropOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <nav className="bg-[#090d13] border-b border-slate-800 relative">
 
