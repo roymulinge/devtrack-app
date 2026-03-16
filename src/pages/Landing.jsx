@@ -209,6 +209,12 @@ const Landing = () => {
             >
               learn more →
             </Link>
+            <Link
+              to="/contact"
+              className="bg-transparent border border-slate-700 hover:border-slate-500 text-slate-400 hover:text-slate-200 font-mono text-sm px-6 py-2.5 rounded-lg transition"
+            >
+              contact us →
+            </Link>
           </div>
         </div>
       </section>
