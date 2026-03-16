@@ -22,11 +22,11 @@ const getStrength = (pwd) => {
 
 const Register = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ email: "", password: "", password2: "" });
+  const [formData, setFormData] = useState({ full_name: "", email: "", password: "", password2: "" });
   const [error, setError]       = useState("");
   const [loading, setLoading]   = useState(false);
 
-  const { email, password, password2 } = formData;
+  const { full_name, email, password, password2 } = formData;
   const strength = getStrength(password);
 
   const handleChange = (e) => {
@@ -49,7 +49,7 @@ const Register = () => {
 
     setLoading(true);
     try {
-      await axios.post("/auth/register/", { email, password });
+      await axios.post("/auth/register/", { full_name, email, password, password2 });
       navigate("/login");
     } catch (err) {
       const data = err.response?.data;
@@ -93,6 +93,22 @@ const Register = () => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
+
+          {/* Full Name */}
+          <div>
+            <label className="block text-xs text-[var(--text-secondary)] uppercase tracking-widest font-semibold mb-1.5">
+              Full Name
+            </label>
+            <input
+              type="text"
+              name="full_name"
+              placeholder="John Doe"
+              value={full_name}
+              onChange={handleChange}
+              required
+              className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 transition"
+            />
+          </div>
 
           {/* Email */}
           <div>
