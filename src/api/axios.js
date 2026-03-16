@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/", // Django backend
-   headers: {
+  baseURL: import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api/",
+  headers: {
     "Content-Type": "application/json",
   },
 });
@@ -17,28 +17,20 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const original = error.config;
-
-    // If 401 and we haven't already retried this request
     if (error.response?.status === 401 && !original._retry) {
       original._retry = true;
-
       const refresh = localStorage.getItem("refresh_token");
-
       if (refresh) {
         try {
           const res = await axios.post(
-            "http://127.0.0.1:8000/api/token/refresh/",
+            `${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api/"}token/refresh/`,
             { refresh }
           );
-
           const newAccess = res.data.access;
           localStorage.setItem("access_token", newAccess);
-
-          // Retry the original failed request with the new token
           original.headers.Authorization = `Bearer ${newAccess}`;
           return api(original);
-        } catch (refreshError) {
-          // Refresh also failed — clear everything and redirect
+        } catch {
           localStorage.removeItem("access_token");
           localStorage.removeItem("refresh_token");
           window.location.href = "/login";
@@ -47,7 +39,6 @@ api.interceptors.response.use(
         window.location.href = "/login";
       }
     }
-
     return Promise.reject(error);
   }
 );
