@@ -1,1 +1,41 @@
-@import "tailwindcss"
+@import "tailwindcss";
+
+/* ── Enable class-based dark mode for Tailwind v4 ── */
+@variant dark (&:where(.dark, .dark *));
+
+/* ── Design tokens ── */
+:root {
+  --bg-primary:    #090d13;
+  --bg-surface:    #0f172a;
+  --bg-elevated:   #1e293b;
+  --border:        #1e293b;
+  --text-primary:  #f1f5f9;
+  --text-secondary:#94a3b8;
+  --text-muted:    #475569;
+  --accent:        #38bdf8;
+}
+
+:root.light {
+  --bg-primary:    #f8fafc;
+  --bg-surface:    #ffffff;
+  --bg-elevated:   #f1f5f9;
+  --border:        #e2e8f0;
+  --text-primary:  #0f172a;
+  --text-secondary:#475569;
+  --text-muted:    #94a3b8;
+  --accent:        #0284c7;
+}
+
+/* ── Apply tokens to base elements ── */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* ── Smooth theme transition on all elements ── */
+*, *::before, *::after {
+  transition: background-color 0.2s ease,
+              border-color 0.2s ease,
+              color 0.15s ease;
+}
