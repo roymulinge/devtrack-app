@@ -32,11 +32,12 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  return (
+  
+   useEffect(() => { setDropOpen(false); }, [pathname]);
+   return (
     <nav className="bg-[#090d13] border-b border-slate-800 relative">
 
-      {/* Subtle glow line at the bottom */}
+      {/* Bottom glow line */}
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-sky-400/20 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-14">
@@ -52,76 +53,133 @@ const Navbar = () => {
           <span className="text-sky-400">]</span>
         </Link>
 
-        {/* Nav Links — desktop */}
-        <div className="hidden md:flex items-center gap-0.5">
-          {navLinks.map(({ to, label }) => {
-            const active = pathname === to;
-            return (
+        {/* Nav links — only show when logged in */}
+        {user && (
+          <div className="hidden md:flex items-center gap-0.5">
+            {navLinks.map(({ to, label }) => (
               <Link
                 key={to}
                 to={to}
                 className={`text-xs font-medium px-3 py-1.5 rounded-md border transition tracking-wide
-                  ${active
+                  ${pathname === to
                     ? "text-sky-400 bg-sky-400/10 border-sky-400/25"
                     : "text-slate-500 border-transparent hover:text-slate-200 hover:bg-white/5 hover:border-slate-700"
                   }`}
               >
                 {label}
               </Link>
-            );
-          })}
+            ))}
+          </div>
+        )}
 
-          {/* Divider before About */}
-          <div className="w-px h-4 bg-slate-800 mx-1.5" />
+        {/* Public links — only show when logged out */}
+        {!user && (
+          <div className="hidden md:flex items-center gap-0.5">
+            {[{ to: "/about", label: "About" }, { to: "/contact", label: "Contact" }].map(({ to, label }) => (
+              <Link
+                key={to}
+                to={to}
+                className={`text-xs font-medium px-3 py-1.5 rounded-md border transition tracking-wide
+                  ${pathname === to
+                    ? "text-sky-400 bg-sky-400/10 border-sky-400/25"
+                    : "text-slate-500 border-transparent hover:text-slate-200 hover:bg-white/5 hover:border-slate-700"
+                  }`}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
+        )}
 
-          <Link
-            to="/about"
-            className={`text-xs font-medium px-3 py-1.5 rounded-md border transition tracking-wide
-              ${pathname === "/about"
-                ? "text-sky-400 bg-sky-400/10 border-sky-400/25"
-                : "text-slate-500 border-transparent hover:text-slate-200 hover:bg-white/5 hover:border-slate-700"
-              }`}
-          >
-            About
-          </Link>
-
-          <Link
-            to="/contact"
-            className={`text-xs font-medium px-3 py-1.5 rounded-md border transition tracking-wide
-              ${pathname === "/contact"
-                ? "text-sky-400 bg-sky-400/10 border-sky-400/25"
-                : "text-slate-500 border-transparent hover:text-slate-200 hover:bg-white/5 hover:border-slate-700"
-              }`}
-          >
-            Contact
-          </Link>
-        </div>
-
-        {/* Auth */}
+        {/* Right side */}
         <div className="flex items-center gap-2">
+
           {user ? (
-            <>
-              {/* User pill */}
-              <div className="flex items-center gap-2 bg-white/[0.03] border border-slate-800 rounded-lg px-2.5 py-1">
-                <div className="w-5 h-5 rounded-full bg-sky-400/20 flex items-center justify-center">
-                  <span className="text-[10px] font-bold font-mono text-sky-400">
+            /* ── Profile dropdown ── */
+            <div className="relative" ref={dropRef}>
+              <button
+                onClick={() => setDropOpen((v) => !v)}
+                className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg border transition
+                  ${dropOpen
+                    ? "bg-white/[0.06] border-slate-700"
+                    : "bg-white/[0.03] border-slate-800 hover:border-slate-700 hover:bg-white/[0.05]"
+                  }`}
+              >
+                {/* Avatar */}
+                <div className="w-6 h-6 rounded-full bg-sky-400/20 flex items-center justify-center shrink-0">
+                  <span className="text-[11px] font-bold font-mono text-sky-400">
                     {avatarLetter}
                   </span>
                 </div>
-                <span className="text-xs font-mono text-slate-500 hidden sm:block">
+
+                {/* Email — hidden on small screens */}
+                <span className="text-xs font-mono text-slate-400 hidden sm:block max-w-[140px] truncate">
                   {user.email ?? user.username}
                 </span>
-              </div>
 
-              {/* Logout */}
-              <button
-                onClick={logout}
-                className="text-[11px] font-mono font-semibold text-red-400 border border-red-400/20 px-3 py-1.5 rounded-md hover:bg-red-400/10 hover:border-red-400/40 transition tracking-wider"
-              >
-                logout
+                {/* Chevron */}
+                <svg
+                  className={`w-3 h-3 text-slate-600 transition-transform duration-200 ${dropOpen ? "rotate-180" : ""}`}
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
               </button>
-            </>
+
+              {/* Dropdown panel */}
+              {dropOpen && (
+                <div className="absolute right-0 top-full mt-2 w-52 bg-slate-900 border border-slate-800 rounded-xl shadow-xl z-50 overflow-hidden">
+
+                  {/* User info header */}
+                  <div className="px-4 py-3 border-b border-slate-800">
+                    <p className="text-xs font-mono text-slate-600 mb-0.5">signed in as</p>
+                    <p className="text-xs text-slate-300 font-medium truncate">
+                      {user.email ?? user.username}
+                    </p>
+                  </div>
+
+                  {/* Dropdown links */}
+                  <div className="py-1">
+                    <Link
+                      to="/dashboard"
+                      className="flex items-center gap-2.5 px-4 py-2 text-xs text-slate-400 hover:text-slate-200 hover:bg-white/5 transition"
+                    >
+                      <span className="font-mono text-slate-700">→</span>
+                      Dashboard
+                    </Link>
+                    <Link
+                      to="/about"
+                      className="flex items-center gap-2.5 px-4 py-2 text-xs text-slate-400 hover:text-slate-200 hover:bg-white/5 transition"
+                    >
+                      <span className="font-mono text-slate-700">→</span>
+                      About
+                    </Link>
+                    <Link
+                      to="/contact"
+                      className="flex items-center gap-2.5 px-4 py-2 text-xs text-slate-400 hover:text-slate-200 hover:bg-white/5 transition"
+                    >
+                      <span className="font-mono text-slate-700">→</span>
+                      Contact
+                    </Link>
+                  </div>
+
+                  {/* Logout */}
+                  <div className="border-t border-slate-800 py-1">
+                    <button
+                      onClick={() => { logout(); setDropOpen(false); }}
+                      className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-red-400 hover:text-red-300 hover:bg-red-400/5 transition"
+                    >
+                      <span className="font-mono">→</span>
+                      Sign out
+                    </button>
+                  </div>
+
+                </div>
+              )}
+            </div>
+
           ) : (
+            /* ── Logged out buttons ── */
             <>
               <Link
                 to="/login"
@@ -129,7 +187,6 @@ const Navbar = () => {
               >
                 Login
               </Link>
-
               <Link
                 to="/register"
                 className="text-[11px] font-mono font-semibold text-[#090d13] bg-sky-400 hover:bg-sky-300 px-3.5 py-1.5 rounded-md transition tracking-wide"
@@ -138,11 +195,10 @@ const Navbar = () => {
               </Link>
             </>
           )}
-        </div>
 
+        </div>
       </div>
     </nav>
   );
 };
-
 export default Navbar;
