@@ -5,6 +5,8 @@ import { AuthContext } from "../context/AuthContext";
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const { pathname } = useLocation();
+  const [dropOpen, setDropOpen] = useState(false);
+  const dropRef                 = useRef(null);
 
   const navLinks = [
     { to: "/dashboard",     label: "Dashboard"   },
