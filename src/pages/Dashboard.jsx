@@ -73,12 +73,12 @@ const Dashboard = () => {
 
   if (loading) {
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+    <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
       <div className="text-center">
         <p className="text-xs font-mono text-sky-400 tracking-widest uppercase mb-2">
           // loading
         </p>
-        <p className="text-slate-500 text-sm">Fetching your workspace...</p>
+        <p className="text-[var(--text-muted)] text-sm">Fetching your workspace...</p>
       </div>
     </div>
   );
@@ -88,7 +88,7 @@ const Dashboard = () => {
     weekday: "long", year: "numeric", month: "long", day: "numeric",
   });
   return (
-    <div className="min-h-screen bg-[#090d13] text-slate-200 px-6 py-10">
+    <div className="min-h-screen bg-[var(--bg-primary)] text-slate-200 px-6 py-10">
       <div className="max-w-6xl mx-auto">
 
         {/* ── Header ── */}
@@ -97,10 +97,10 @@ const Dashboard = () => {
             <p className="text-xs font-mono text-sky-400 tracking-widest uppercase mb-1">
               // devtrack system
             </p>
-            <h1 className="text-3xl font-bold text-slate-100">Dashboard</h1>
+            <h1 className="text-3xl font-bold text-[var(--text-primary)]">Dashboard</h1>
           </div>
           <div className="text-right">
-            <p className="text-xs text-slate-500 font-mono">{today}</p>
+            <p className="text-xs text-[var(--text-muted)] font-mono">{today}</p>
             <p className="text-xs text-slate-700 font-mono mt-0.5">
               Week {getWeekNumber()} of 52
             </p>
@@ -117,10 +117,10 @@ const Dashboard = () => {
           ].map(({ num, label, border, text }) => (
             <div
               key={label}
-              className={`bg-slate-900 border ${border} rounded-xl p-4 relative overflow-hidden`}
+              className={`bg-[var(--bg-surface)] border ${border} rounded-xl p-4 relative overflow-hidden`}
             >
               <div className={`text-3xl font-bold font-mono ${text} mb-1`}>{num}</div>
-              <div className="text-xs text-slate-500 uppercase tracking-widest font-medium">{label}</div>
+              <div className="text-xs text-[var(--text-muted)] uppercase tracking-widest font-medium">{label}</div>
             </div>
           ))}
         </div>
@@ -129,9 +129,9 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
           {/* Projects — 2 cols */}
-          <div className="md:col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-5">
+          <div className="md:col-span-2 bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--text-secondary)]">
                 Projects
               </span>
               <span className="text-xs font-mono bg-sky-500/10 text-sky-400 border border-sky-500/20 px-2.5 py-0.5 rounded-full">
@@ -174,9 +174,9 @@ const Dashboard = () => {
           </div>
 
           {/* Overdue Assignments */}
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
+          <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--text-secondary)]">
                 Overdue
               </span>
               {overdueAssignments.length > 0 && (
@@ -218,9 +218,9 @@ const Dashboard = () => {
           </div>
 
           {/* Skills */}
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
+          <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--text-secondary)]">
                 Skills
               </span>
               <span className="text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
@@ -261,9 +261,9 @@ const Dashboard = () => {
           </div>
 
           {/* Stale Skills */}
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
+          <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--text-secondary)]">
                 Stale Skills
               </span>
               {staleSkills.length > 0 && (
@@ -305,9 +305,9 @@ const Dashboard = () => {
           </div>
 
           {/* Weekly Priorities */}
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
+          <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--text-secondary)]">
                 This Week
               </span>
               <span className="text-xs font-mono bg-sky-500/10 text-sky-400 border border-sky-500/20 px-2.5 py-0.5 rounded-full">
@@ -324,7 +324,7 @@ const Dashboard = () => {
                     <span className="text-xl font-bold font-mono text-slate-800 leading-tight w-6 shrink-0">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <span className="text-xs text-slate-400 leading-relaxed">
+                    <span className="text-xs text-[var(--text-secondary)] leading-relaxed">
                       {p.top_three_text}
                     </span>
                   </li>
@@ -341,9 +341,9 @@ const Dashboard = () => {
           </div>
 
           {/* Ideas — 2 cols */}
-          <div className="md:col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-5">
+          <div className="md:col-span-2 bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">
+              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--text-secondary)]">
                 Idea Vault
               </span>
               <span className="text-xs font-mono bg-violet-500/10 text-violet-400 border border-violet-500/20 px-2.5 py-0.5 rounded-full">

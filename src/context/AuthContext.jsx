@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
   // Don't render children until we know if user is logged in
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#090d13] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
         <p className="text-xs font-mono text-sky-400 tracking-widest uppercase">
           // restoring session...
         </p>

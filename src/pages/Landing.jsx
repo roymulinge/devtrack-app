@@ -54,12 +54,12 @@ const Landing = () => {
             // now in beta
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-bold text-slate-100 leading-[1.1] tracking-tight mb-5">
+          <h1 className="text-5xl md:text-6xl font-bold text-[var(--text-primary)] leading-[1.1] tracking-tight mb-5">
             One system for your{" "}
             <span className="text-sky-400">entire dev life</span>
           </h1>
 
-          <p className="text-slate-500 text-lg leading-relaxed mb-9 max-w-lg mx-auto">
+          <p className="text-[var(--text-muted)] text-lg leading-relaxed mb-9 max-w-lg mx-auto">
             DevTrack connects your projects, skills, assignments, and ideas into
             one focused workspace. Stop context-switching. Start shipping.
           </p>
@@ -73,20 +73,20 @@ const Landing = () => {
             </Link>
             <Link
               to="/login"
-              className="bg-transparent border border-slate-800 hover:border-slate-600 text-slate-400 hover:text-slate-200 font-mono text-sm px-6 py-3 rounded-lg transition"
+              className="bg-transparent border border-[var(--border)] hover:border-slate-600 text-[var(--text-secondary)] hover:text-slate-200 font-mono text-sm px-6 py-3 rounded-lg transition"
             >
               sign in →
             </Link>
           </div>
 
-          <p className="text-xs font-mono text-slate-800 mt-12 tracking-widest">
+          <p className="text-xs font-mono text-[var(--text-muted)] mt-12 tracking-widest">
             ↓ scroll to learn more
           </p>
         </div>
       </section>
 
       {/* ── Stats bar ── */}
-      <div className="border-y border-slate-800 bg-slate-950/60 py-5 px-6">
+      <div className="border-y border-[var(--border)] bg-slate-950/60 py-5 px-6">
         <div className="max-w-3xl mx-auto flex justify-center gap-12 flex-wrap">
           {[
             { num: "6",    label: "core modules"   },
@@ -96,7 +96,7 @@ const Landing = () => {
           ].map(({ num, label }) => (
             <div key={label} className="text-center">
               <p className="text-2xl font-bold font-mono text-sky-400">{num}</p>
-              <p className="text-xs text-slate-600 mt-0.5">{label}</p>
+              <p className="text-xs text-[var(--text-muted)] mt-0.5">{label}</p>
             </div>
           ))}
         </div>
@@ -108,10 +108,10 @@ const Landing = () => {
           <p className="text-xs font-mono text-sky-400 tracking-widest uppercase text-center mb-2">
             // what devtrack does
           </p>
-          <h2 className="text-3xl font-bold text-slate-100 text-center mb-2">
+          <h2 className="text-3xl font-bold text-[var(--text-primary)] text-center mb-2">
             Everything you need. Nothing you don't.
           </h2>
-          <p className="text-sm text-slate-500 text-center mb-12">
+          <p className="text-sm text-[var(--text-muted)] text-center mb-12">
             Six modules that work together to keep you focused and on track.
           </p>
 
@@ -119,12 +119,12 @@ const Landing = () => {
             {features.map(({ icon, title, desc, accent }) => (
               <div
                 key={title}
-                className="bg-slate-900 border border-slate-800 rounded-xl p-5 relative overflow-hidden hover:border-slate-700 transition"
+                className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-5 relative overflow-hidden hover:border-slate-700 transition"
               >
                 <div className={`absolute top-0 left-0 right-0 h-0.5 ${accent}`} />
                 <div className="text-xl mb-3">{icon}</div>
-                <h3 className="text-sm font-bold text-slate-100 mb-1">{title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed">{desc}</p>
+                <h3 className="text-sm font-bold text-[var(--text-primary)] mb-1">{title}</h3>
+                <p className="text-xs text-[var(--text-muted)] leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
@@ -132,18 +132,18 @@ const Landing = () => {
       </section>
 
       {/* ── Problem / Solution ── */}
-      <section className="px-6 py-16 bg-slate-950/60 border-y border-slate-800">
+      <section className="px-6 py-16 bg-slate-950/60 border-y border-[var(--border)]">
         <div className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-4">
 
           {/* Problem */}
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+          <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-6">
             <p className="text-xs font-bold uppercase tracking-widest text-red-400 mb-4">
               The problem
             </p>
             <ul className="space-y-2.5">
               {problems.map((p) => (
-                <li key={p} className="flex items-start gap-2.5 text-xs text-slate-500 leading-relaxed">
-                  <span className="text-slate-700 mt-0.5 shrink-0">→</span>
+                <li key={p} className="flex items-start gap-2.5 text-xs text-[var(--text-muted)] leading-relaxed">
+                  <span className="text-[var(--text-muted)]/50 mt-0.5 shrink-0">→</span>
                   {p}
                 </li>
               ))}
@@ -151,13 +151,13 @@ const Landing = () => {
           </div>
 
           {/* Solution */}
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+          <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-6">
             <p className="text-xs font-bold uppercase tracking-widest text-emerald-400 mb-4">
               The solution
             </p>
             <ul className="space-y-2.5">
               {solutions.map((s) => (
-                <li key={s} className="flex items-start gap-2.5 text-xs text-slate-400 leading-relaxed">
+                <li key={s} className="flex items-start gap-2.5 text-xs text-[var(--text-secondary)] leading-relaxed">
                   <span className="text-emerald-600 mt-0.5 shrink-0">→</span>
                   {s}
                 </li>
@@ -169,16 +169,16 @@ const Landing = () => {
       </section>
 
       {/* ── Tech stack strip ── */}
-      <section className="px-6 py-10 border-b border-slate-800">
+      <section className="px-6 py-10 border-b border-[var(--border)]">
         <div className="max-w-3xl mx-auto text-center">
-          <p className="text-xs font-mono text-slate-700 uppercase tracking-widest mb-5">
+          <p className="text-xs font-mono text-[var(--text-muted)] uppercase tracking-widest mb-5">
             // built with
           </p>
           <div className="flex justify-center flex-wrap gap-3">
             {["React", "Django", "PostgreSQL", "Django REST Framework", "Simple JWT", "Render"].map((t) => (
               <span
                 key={t}
-                className="text-xs font-mono text-slate-500 bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-full"
+                className="text-xs font-mono text-[var(--text-secondary)] bg-[var(--bg-surface)] border border-[var(--border)] px-3 py-1.5 rounded-full"
               >
                 {t}
               </span>
@@ -189,11 +189,11 @@ const Landing = () => {
 
       {/* ── CTA ── */}
       <section className="px-6 py-20">
-        <div className="max-w-lg mx-auto text-center bg-slate-900 border border-slate-800 rounded-2xl p-10">
-          <h2 className="text-2xl font-bold text-slate-100 mb-3">
+        <div className="max-w-lg mx-auto text-center bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-10">
+          <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-3">
             Ready to get organised?
           </h2>
-          <p className="text-sm text-slate-500 mb-7">
+          <p className="text-sm text-[var(--text-muted)] mb-7">
             Create your free account and start tracking your progress today.
           </p>
           <div className="flex justify-center gap-3 flex-wrap">
@@ -205,13 +205,13 @@ const Landing = () => {
             </Link>
             <Link
               to="/about"
-              className="bg-transparent border border-slate-700 hover:border-slate-500 text-slate-400 hover:text-slate-200 font-mono text-sm px-6 py-2.5 rounded-lg transition"
+              className="bg-transparent border border-[var(--border)] hover:border-slate-600 text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-mono text-sm px-6 py-2.5 rounded-lg transition"
             >
               learn more →
             </Link>
             <Link
               to="/contact"
-              className="bg-transparent border border-slate-700 hover:border-slate-500 text-slate-400 hover:text-slate-200 font-mono text-sm px-6 py-2.5 rounded-lg transition"
+              className="bg-transparent border border-[var(--border)] hover:border-slate-600 text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-mono text-sm px-6 py-2.5 rounded-lg transition"
             >
               contact us →
             </Link>

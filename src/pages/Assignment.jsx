@@ -84,7 +84,7 @@ const Assignments = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#090d13] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
         <p className="text-xs font-mono text-pink-400 tracking-widest uppercase">
           // loading assignments...
         </p>
@@ -100,7 +100,7 @@ const Assignments = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#090d13] text-slate-200 px-6 py-10">
+    <div className="min-h-screen bg-[var(--bg-primary)] text-slate-200 px-6 py-10">
       <div className="max-w-4xl mx-auto">
 
         {/* Header */}
@@ -108,14 +108,14 @@ const Assignments = () => {
           <p className="text-xs font-mono text-pink-400 tracking-widest uppercase mb-1">
             // assignments
           </p>
-          <h1 className="text-3xl font-bold text-slate-100">Assignments</h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <h1 className="text-3xl font-bold text-[var(--text-primary)]">Assignments</h1>
+          <p className="text-sm text-[var(--text-muted)] mt-1">
             Track deadlines and manage your academic workload.
           </p>
         </div>
 
         {/* Form */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 mb-8">
+        <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-6 mb-8">
           <p className="text-xs font-mono text-pink-400 uppercase tracking-widest mb-5">
             + new assignment
           </p>
@@ -124,7 +124,7 @@ const Assignments = () => {
 
             {/* Title — full width */}
             <div>
-              <label className="block text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1.5">
+              <label className="block text-xs text-[var(--text-muted)] uppercase tracking-widest font-semibold mb-1.5">
                 Assignment Title
               </label>
               <input
@@ -133,14 +133,14 @@ const Assignments = () => {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
-                className="w-full bg-[#090d13] border border-slate-800 rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-pink-500/50 transition"
+                className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-pink-500/50 transition"
               />
             </div>
 
             {/* Subject + Project */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1.5">
+                <label className="block text-xs text-[var(--text-muted)] uppercase tracking-widest font-semibold mb-1.5">
                   Subject
                 </label>
                 <input
@@ -148,17 +148,17 @@ const Assignments = () => {
                   placeholder="e.g. Software Engineering"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  className="w-full bg-[#090d13] border border-slate-800 rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-pink-500/50 transition"
+                  className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-pink-500/50 transition"
                 />
               </div>
               <div>
-                <label className="block text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1.5">
+                <label className="block text-xs text-[var(--text-muted)] uppercase tracking-widest font-semibold mb-1.5">
                   Link to Project
                 </label>
                 <select
                   value={projectId}
                   onChange={(e) => setProjectId(e.target.value)}
-                  className="w-full bg-[#090d13] border border-slate-800 rounded-lg px-3 py-2.5 text-sm text-slate-400 focus:outline-none focus:border-pink-500/50 transition"
+                  className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-[var(--text-secondary)] focus:outline-none focus:border-pink-500/50 transition"
                 >
                   <option value="">No project (optional)</option>
                   {projects.map((p) => (
@@ -171,18 +171,18 @@ const Assignments = () => {
             {/* Deadline + Effort */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1.5">
+                <label className="block text-xs text-[var(--text-muted)] uppercase tracking-widest font-semibold mb-1.5">
                   Deadline
                 </label>
                 <input
                   type="datetime-local"
                   value={deadline}
                   onChange={(e) => setDeadline(e.target.value)}
-                  className="w-full bg-[#090d13] border border-slate-800 rounded-lg px-3 py-2.5 text-sm text-slate-400 focus:outline-none focus:border-pink-500/50 transition"
+                  className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-[var(--text-secondary)] focus:outline-none focus:border-pink-500/50 transition"
                 />
               </div>
               <div>
-                <label className="block text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1.5">
+                <label className="block text-xs text-[var(--text-muted)] uppercase tracking-widest font-semibold mb-1.5">
                   Effort Estimate (hours)
                 </label>
                 <input
@@ -191,7 +191,7 @@ const Assignments = () => {
                   min="0"
                   value={effortEstimate}
                   onChange={(e) => setEffortEstimate(e.target.value)}
-                  className="w-full bg-[#090d13] border border-slate-800 rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-pink-500/50 transition"
+                  className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-pink-500/50 transition"
                 />
               </div>
             </div>
@@ -245,7 +245,7 @@ const Assignments = () => {
               return (
                 <li
                   key={a.id}
-                  className={`bg-slate-900 border border-slate-800 rounded-xl p-5 flex items-start gap-4 relative overflow-hidden ${status?.card ?? ""}`}
+                  className={`bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-5 flex items-start gap-4 relative overflow-hidden ${status?.card ?? ""}`}
                 >
                   {/* Top accent */}
                   {status && (
@@ -257,7 +257,7 @@ const Assignments = () => {
 
                   {/* Main content */}
                   <div className="flex-1 min-w-0">
-                    <h2 className="text-sm font-bold text-slate-100 mb-1 truncate">
+                    <h2 className="text-sm font-bold text-[var(--text-primary)] mb-1 truncate">
                       {a.title}
                     </h2>
 
@@ -292,7 +292,7 @@ const Assignments = () => {
                   {/* Right side */}
                   <div className="flex flex-col items-end gap-2 shrink-0">
                     {a.effort_estimate && (
-                      <span className="text-xs font-mono text-slate-600 bg-white/[0.03] border border-slate-800 px-2 py-0.5 rounded-full">
+                      <span className="text-xs font-mono text-slate-600 bg-white/[0.03] border border-[var(--border)] px-2 py-0.5 rounded-full">
                         {a.effort_estimate}h est.
                       </span>
                     )}

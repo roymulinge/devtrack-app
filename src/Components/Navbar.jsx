@@ -35,7 +35,7 @@ const Navbar = () => {
   
    useEffect(() => { setDropOpen(false); }, [pathname]);
    return (
-    <nav className="bg-[#090d13] border-b border-slate-800 relative">
+    <nav className="bg-[var(--bg-primary)] border-b border-[var(--border)] relative">
 
       {/* Bottom glow line */}
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-sky-400/20 to-transparent" />
@@ -45,7 +45,7 @@ const Navbar = () => {
         {/* Logo */}
         <Link
           to="/"
-          className="flex items-center gap-1.5 font-mono text-sm font-bold text-slate-100 tracking-wide hover:text-white transition"
+          className="flex items-center gap-1.5 font-mono text-sm font-bold text-[var(--text-primary)] tracking-wide hover:text-white transition"
         >
           <span className="text-sky-400">[</span>
           <span className="w-1.5 h-1.5 rounded-full bg-sky-400 inline-block" />
@@ -63,7 +63,7 @@ const Navbar = () => {
                 className={`text-xs font-medium px-3 py-1.5 rounded-md border transition tracking-wide
                   ${pathname === to
                     ? "text-sky-400 bg-sky-400/10 border-sky-400/25"
-                    : "text-slate-500 border-transparent hover:text-slate-200 hover:bg-white/5 hover:border-slate-700"
+                    : "text-[var(--text-secondary)] border-transparent hover:text-slate-200 hover:bg-white/5 hover:border-slate-700"
                   }`}
               >
                 {label}
@@ -82,7 +82,7 @@ const Navbar = () => {
                 className={`text-xs font-medium px-3 py-1.5 rounded-md border transition tracking-wide
                   ${pathname === to
                     ? "text-sky-400 bg-sky-400/10 border-sky-400/25"
-                    : "text-slate-500 border-transparent hover:text-slate-200 hover:bg-white/5 hover:border-slate-700"
+                    : "text-[var(--text-secondary)] border-transparent hover:text-slate-200 hover:bg-white/5 hover:border-slate-700"
                   }`}
               >
                 {label}
@@ -103,7 +103,7 @@ const Navbar = () => {
                 className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg border transition
                   ${dropOpen
                     ? "bg-white/[0.06] border-slate-700"
-                    : "bg-white/[0.03] border-slate-800 hover:border-slate-700 hover:bg-white/[0.05]"
+                    : "bg-white/[0.03] border-[var(--border)] hover:border-slate-700 hover:bg-white/[0.05]"
                   }`}
               >
                 {/* Avatar */}
@@ -114,7 +114,7 @@ const Navbar = () => {
                 </div>
 
                 {/* Email — hidden on small screens */}
-                <span className="text-xs font-mono text-slate-400 hidden sm:block max-w-[140px] truncate">
+                <span className="text-xs font-mono text-[var(--text-secondary)] hidden sm:block max-w-[140px] truncate">
                   {user.email ?? user.username}
                 </span>
 
@@ -129,10 +129,10 @@ const Navbar = () => {
 
               {/* Dropdown panel */}
               {dropOpen && (
-                <div className="absolute right-0 top-full mt-2 w-52 bg-slate-900 border border-slate-800 rounded-xl shadow-xl z-50 overflow-hidden">
+                <div className="absolute right-0 top-full mt-2 w-52 bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl shadow-xl z-50 overflow-hidden">
 
                   {/* User info header */}
-                  <div className="px-4 py-3 border-b border-slate-800">
+                  <div className="px-4 py-3 border-b border-[var(--border)]">
                     <p className="text-xs font-mono text-slate-600 mb-0.5">signed in as</p>
                     <p className="text-xs text-slate-300 font-medium truncate">
                       {user.email ?? user.username}
@@ -143,21 +143,21 @@ const Navbar = () => {
                   <div className="py-1">
                     <Link
                       to="/dashboard"
-                      className="flex items-center gap-2.5 px-4 py-2 text-xs text-slate-400 hover:text-slate-200 hover:bg-white/5 transition"
+                      className="flex items-center gap-2.5 px-4 py-2 text-xs text-[var(--text-secondary)] hover:text-slate-200 hover:bg-white/5 transition"
                     >
                       <span className="font-mono text-slate-700">→</span>
                       Dashboard
                     </Link>
                     <Link
                       to="/about"
-                      className="flex items-center gap-2.5 px-4 py-2 text-xs text-slate-400 hover:text-slate-200 hover:bg-white/5 transition"
+                      className="flex items-center gap-2.5 px-4 py-2 text-xs text-[var(--text-secondary)] hover:text-slate-200 hover:bg-white/5 transition"
                     >
                       <span className="font-mono text-slate-700">→</span>
                       About
                     </Link>
                     <Link
                       to="/contact"
-                      className="flex items-center gap-2.5 px-4 py-2 text-xs text-slate-400 hover:text-slate-200 hover:bg-white/5 transition"
+                      className="flex items-center gap-2.5 px-4 py-2 text-xs text-[var(--text-secondary)] hover:text-slate-200 hover:bg-white/5 transition"
                     >
                       <span className="font-mono text-slate-700">→</span>
                       Contact
@@ -167,7 +167,7 @@ const Navbar = () => {
                   
 
                   {/* Logout */}
-                  <div className="border-t border-slate-800 py-1">
+                  <div className="border-t border-[var(--border)] py-1">
                     <button
                       onClick={() => { logout(); setDropOpen(false); }}
                       className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-red-400 hover:text-red-300 hover:bg-red-400/5 transition"
@@ -186,13 +186,13 @@ const Navbar = () => {
             <>
               <Link
                 to="/login"
-                className="text-xs font-medium text-slate-400 hover:text-slate-200 px-3 py-1.5 rounded-md transition"
+                className="text-xs font-medium text-[var(--text-secondary)] hover:text-slate-200 px-3 py-1.5 rounded-md transition"
               >
                 Login
               </Link>
               <Link
                 to="/register"
-                className="text-[11px] font-mono font-semibold text-[#090d13] bg-sky-400 hover:bg-sky-300 px-3.5 py-1.5 rounded-md transition tracking-wide"
+                className="text-[11px] font-mono font-semibold text-[var(--bg-primary)] bg-sky-400 hover:bg-sky-300 px-3.5 py-1.5 rounded-md transition tracking-wide"
               >
                 get started
               </Link>

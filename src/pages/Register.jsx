@@ -62,26 +62,26 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#090d13] flex items-center justify-center px-4 relative overflow-hidden">
+    <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center px-4 relative overflow-hidden">
 
       {/* Background glow — violet tint to differentiate from login */}
       <div className="absolute w-[500px] h-[500px] rounded-full bg-violet-400/5 blur-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
 
       {/* Card */}
-      <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-2xl p-8 relative z-10">
+      <div className="w-full max-w-sm bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-8 relative z-10">
 
         {/* Logo */}
         <div className="flex items-center justify-center gap-1.5 mb-8">
           <span className="text-sky-400 font-mono font-bold text-base">[</span>
           <span className="w-2 h-2 rounded-full bg-sky-400 inline-block" />
-          <span className="font-mono font-bold text-base text-slate-100 tracking-wide">DevTrack</span>
+          <span className="font-mono font-bold text-base text-[var(--text-primary)] tracking-wide">DevTrack</span>
           <span className="text-sky-400 font-mono font-bold text-base">]</span>
         </div>
 
         {/* Heading */}
         <div className="text-center mb-7">
-          <h1 className="text-xl font-bold text-slate-100 mb-1">Create your account</h1>
-          <p className="text-xs font-mono text-slate-600">// start tracking your progress</p>
+          <h1 className="text-xl font-bold text-[var(--text-primary)] mb-1">Create your account</h1>
+          <p className="text-xs font-mono text-[var(--text-muted)]">// start tracking your progress</p>
         </div>
 
         {/* Error */}
@@ -96,7 +96,7 @@ const Register = () => {
 
           {/* Email */}
           <div>
-            <label className="block text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1.5">
+            <label className="block text-xs text-[var(--text-secondary)] uppercase tracking-widest font-semibold mb-1.5">
               Email
             </label>
             <input
@@ -107,13 +107,13 @@ const Register = () => {
               onChange={handleChange}
               required
               autoComplete="email"
-              className="w-full bg-[#090d13] border border-slate-800 rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 transition"
+              className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 transition"
             />
           </div>
 
           {/* Password + strength meter */}
           <div>
-            <label className="block text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1.5">
+            <label className="block text-xs text-[var(--text-secondary)] uppercase tracking-widest font-semibold mb-1.5">
               Password
             </label>
             <input
@@ -124,7 +124,7 @@ const Register = () => {
               onChange={handleChange}
               required
               autoComplete="new-password"
-              className="w-full bg-[#090d13] border border-slate-800 rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 transition"
+              className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 transition"
             />
             {/* Strength bar */}
             {password && (
@@ -134,7 +134,7 @@ const Register = () => {
                     <div
                       key={n}
                       className={`flex-1 h-[2px] rounded-full transition-all duration-300
-                        ${n <= strength.score ? strength.color : "bg-slate-800"}`}
+                        ${n <= strength.score ? strength.color : "bg-[var(--border)]"}`}
                     />
                   ))}
                 </div>
@@ -152,7 +152,7 @@ const Register = () => {
 
           {/* Confirm password */}
           <div>
-            <label className="block text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1.5">
+            <label className="block text-xs text-[var(--text-secondary)] uppercase tracking-widest font-semibold mb-1.5">
               Confirm Password
             </label>
             <input
@@ -163,12 +163,12 @@ const Register = () => {
               onChange={handleChange}
               required
               autoComplete="new-password"
-              className={`w-full bg-[#090d13] border rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none transition
+              className={`w-full bg-[var(--bg-primary)] border rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none transition
                 ${password2 && password !== password2
                   ? "border-red-500/50 focus:border-red-500/50"
                   : password2 && password === password2
                   ? "border-emerald-500/50 focus:border-emerald-500/50"
-                  : "border-slate-800 focus:border-sky-500/50"
+                  : "border-[var(--border)] focus:border-sky-500/50"
                 }`}
             />
             {/* Match indicator */}
@@ -193,14 +193,14 @@ const Register = () => {
 
         {/* Divider */}
         <div className="flex items-center gap-3 my-5">
-          <div className="flex-1 h-px bg-slate-800" />
-          <span className="text-xs font-mono text-slate-700">or</span>
-          <div className="flex-1 h-px bg-slate-800" />
+          <div className="flex-1 h-px bg-[var(--border)]" />
+          <span className="text-xs font-mono text-[var(--text-muted)]/50">or</span>
+          <div className="flex-1 h-px bg-[var(--border)]" />
         </div>
 
         {/* Login link */}
         <div className="flex items-center justify-between">
-          <span className="text-xs text-slate-600">Already have an account?</span>
+          <span className="text-xs text-[var(--text-muted)]">Already have an account?</span>
           <Link
             to="/login"
             className="text-xs font-mono text-sky-400 hover:text-sky-300 transition"
@@ -213,7 +213,7 @@ const Register = () => {
         <div className="mt-6 text-center">
           <Link
             to="/"
-            className="text-xs font-mono text-slate-700 hover:text-slate-500 transition"
+            className="text-xs font-mono text-[var(--text-muted)]/50 hover:text-[var(--text-muted)] transition"
           >
             ← return to home
           </Link>

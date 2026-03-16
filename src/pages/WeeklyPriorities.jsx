@@ -105,7 +105,7 @@ const WeeklyPriorities = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#090d13] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
         <p className="text-xs font-mono text-indigo-400 tracking-widest uppercase">
           // loading planner...
         </p>
@@ -114,7 +114,7 @@ const WeeklyPriorities = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#090d13] text-slate-200 px-6 py-10">
+    <div className="min-h-screen bg-[var(--bg-primary)] text-slate-200 px-6 py-10">
       <div className="max-w-3xl mx-auto">
 
         {/* Header */}
@@ -122,14 +122,14 @@ const WeeklyPriorities = () => {
           <p className="text-xs font-mono text-indigo-400 tracking-widest uppercase mb-1">
             // weekly planner
           </p>
-          <h1 className="text-3xl font-bold text-slate-100">Weekly Planner</h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <h1 className="text-3xl font-bold text-[var(--text-primary)]">Weekly Planner</h1>
+          <p className="text-sm text-[var(--text-muted)] mt-1">
             Set your top 3 priorities for the week and stay focused.
           </p>
         </div>
 
         {/* Form */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 mb-8">
+        <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-6 mb-8">
           <p className="text-xs font-mono text-indigo-400 uppercase tracking-widest mb-5">
             + plan this week
           </p>
@@ -138,7 +138,7 @@ const WeeklyPriorities = () => {
 
             {/* Week start */}
             <div>
-              <label className="block text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1.5">
+              <label className="block text-xs text-[var(--text-muted)] uppercase tracking-widest font-semibold mb-1.5">
                 Week Start (Monday)
               </label>
               <input
@@ -146,13 +146,13 @@ const WeeklyPriorities = () => {
                 value={weekStart}
                 onChange={(e) => setWeekStart(e.target.value)}
                 required
-                className="w-full bg-[#090d13] border border-slate-800 rounded-lg px-3 py-2.5 text-sm text-slate-400 focus:outline-none focus:border-indigo-500/50 transition"
+                className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-[var(--text-secondary)] focus:outline-none focus:border-indigo-500/50 transition"
               />
             </div>
 
             {/* Top 3 textarea */}
             <div>
-              <label className="block text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1.5">
+              <label className="block text-xs text-[var(--text-muted)] uppercase tracking-widest font-semibold mb-1.5">
                 Top 3 Priorities
               </label>
               <p className="text-xs text-slate-700 mb-2">
@@ -164,13 +164,13 @@ const WeeklyPriorities = () => {
                 value={topThreeText}
                 onChange={(e) => setTopThreeText(e.target.value)}
                 required
-                className="w-full bg-[#090d13] border border-slate-800 rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-700 focus:outline-none focus:border-indigo-500/50 transition resize-none leading-relaxed"
+                className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-700 focus:outline-none focus:border-indigo-500/50 transition resize-none leading-relaxed"
               />
             </div>
 
             {/* Notes */}
             <div>
-              <label className="block text-xs text-slate-500 uppercase tracking-widest font-semibold mb-1.5">
+              <label className="block text-xs text-[var(--text-muted)] uppercase tracking-widest font-semibold mb-1.5">
                 Notes <span className="normal-case text-slate-700">(optional)</span>
               </label>
               <input
@@ -178,7 +178,7 @@ const WeeklyPriorities = () => {
                 placeholder="Any extra context or intention for this week..."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full bg-[#090d13] border border-slate-800 rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500/50 transition"
+                className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500/50 transition"
               />
             </div>
 
@@ -232,10 +232,10 @@ const WeeklyPriorities = () => {
               return (
                 <li
                   key={p.id}
-                  className={`bg-slate-900 rounded-xl overflow-hidden relative
+                  className={`bg-[var(--bg-surface)] rounded-xl overflow-hidden relative
                     ${current
                       ? "border border-indigo-500/25 bg-indigo-500/[0.03]"
-                      : "border border-slate-800"
+                      : "border border-[var(--border)]"
                     }`}
                 >
                   {/* Accent top line */}
@@ -245,7 +245,7 @@ const WeeklyPriorities = () => {
                   />
 
                   {/* Card header */}
-                  <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-slate-800">
+                  <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-[var(--border)]">
                     <div className="flex items-center gap-4">
                       <span className="text-2xl font-bold font-mono text-slate-800 leading-none">
                         {weekNum ? String(weekNum).padStart(2, "0") : "--"}
@@ -287,7 +287,7 @@ const WeeklyPriorities = () => {
 
                     {/* Notes */}
                     {p.notes && (
-                      <div className="mt-4 bg-[#090d13] border border-slate-800 rounded-lg px-3 py-2.5">
+                      <div className="mt-4 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5">
                         <p className="text-xs text-slate-600 leading-relaxed">
                           {p.notes}
                         </p>
@@ -296,7 +296,7 @@ const WeeklyPriorities = () => {
                   </div>
 
                   {/* Footer */}
-                  <div className="flex justify-end px-5 py-3 border-t border-slate-800">
+                  <div className="flex justify-end px-5 py-3 border-t border-[var(--border)]">
                     <button
                       onClick={() => deletePriority(p.id)}
                       className="text-xs font-mono text-red-400 border border-red-400/20 px-2.5 py-1 rounded-md hover:bg-red-400/10 hover:border-red-400/40 transition"
