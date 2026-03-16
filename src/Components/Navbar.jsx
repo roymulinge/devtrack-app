@@ -93,6 +93,7 @@ const Navbar = () => {
 
         {/* Right side */}
         <div className="flex items-center gap-2">
+           <ThemeToggle />
 
           {user ? (
             /* ── Profile dropdown ── */
@@ -162,6 +163,8 @@ const Navbar = () => {
                       Contact
                     </Link>
                   </div>
+
+                  
 
                   {/* Logout */}
                   <div className="border-t border-slate-800 py-1">
