@@ -71,18 +71,7 @@ const Dashboard = () => {
   fetchDashboardData();
 }, []);
 
-  if (loading) {
-  return (
-    <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
-      <div className="text-center">
-        <p className="text-xs font-mono text-sky-400 tracking-widest uppercase mb-2">
-          // loading
-        </p>
-        <p className="text-[var(--text-muted)] text-sm">Fetching your workspace...</p>
-      </div>
-    </div>
-  );
-}
+  if (loading) return <PageLoader />;
   
   const today = new Date().toLocaleDateString("en-US", {
     weekday: "long", year: "numeric", month: "long", day: "numeric",
