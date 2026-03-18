@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { Link } from "react-router-dom";
-
+import PageLoader from "../Components/PageLoader";  
 const depthToPercent = (depth) => {
   if (depth === null || depth === undefined) return 40;
   
