@@ -82,9 +82,7 @@ const Skills = () => {
 
         {/* Header */}
         <div className="mb-8">
-          <p className="text-xs font-mono text-emerald-400 tracking-widest uppercase mb-1">
-            // skills
-          </p>
+          
           <h1 className="text-3xl font-bold text-[var(--text-primary)]">Skills</h1>
           <p className="text-sm text-[var(--text-muted)] mt-1">
             Track your technical skills and depth of knowledge.

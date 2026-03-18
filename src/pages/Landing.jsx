@@ -49,10 +49,7 @@ const Landing = () => {
         <div className="relative z-10 max-w-2xl mx-auto text-center">
 
           {/* Tag */}
-          <div className="inline-flex items-center gap-2 font-mono text-xs text-sky-400 bg-sky-400/10 border border-sky-400/20 px-3 py-1.5 rounded-full mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
-            // now in beta
-          </div>
+          
 
           <h1 className="text-5xl md:text-6xl font-bold text-[var(--text-primary)] leading-[1.1] tracking-tight mb-5">
             One system for your{" "}

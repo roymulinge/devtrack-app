@@ -76,9 +76,7 @@ const Ideas = () => {
 
         {/* Header */}
         <div className="mb-8">
-          <p className="text-xs font-mono text-violet-400 tracking-widest uppercase mb-1">
-            // idea vault
-          </p>
+          
           <h1 className="text-3xl font-bold text-[var(--text-primary)]">Ideas</h1>
           <p className="text-sm text-[var(--text-muted)] mt-1">
             Capture, evaluate, and track your startup and product ideas.

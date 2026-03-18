@@ -110,9 +110,7 @@ const WeeklyPriorities = () => {
 
         {/* Header */}
         <div className="mb-8">
-          <p className="text-xs font-mono text-indigo-400 tracking-widest uppercase mb-1">
-            // weekly planner
-          </p>
+          
           <h1 className="text-3xl font-bold text-[var(--text-primary)]">Weekly Planner</h1>
           <p className="text-sm text-[var(--text-muted)] mt-1">
             Set your top 3 priorities for the week and stay focused.

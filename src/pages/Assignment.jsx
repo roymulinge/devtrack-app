@@ -97,9 +97,7 @@ const Assignments = () => {
 
         {/* Header */}
         <div className="mb-8">
-          <p className="text-xs font-mono text-pink-400 tracking-widest uppercase mb-1">
-            // assignments
-          </p>
+          
           <h1 className="text-3xl font-bold text-[var(--text-primary)]">Assignments</h1>
           <p className="text-sm text-[var(--text-muted)] mt-1">
             Track deadlines and manage your academic workload.

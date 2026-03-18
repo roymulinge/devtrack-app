@@ -100,9 +100,7 @@ const Projects = () => {
 
         {/* Header */}
         <div className="mb-8">
-          <p className="text-xs font-mono text-sky-400 tracking-widest uppercase mb-1">
-            // projects
-          </p>
+          
           <h1 className="text-3xl font-bold text-[var(--text-primary)]">Projects</h1>
           <p className="text-sm text-[var(--text-muted)] mt-1">
             Manage and track everything you are building.

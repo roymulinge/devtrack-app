@@ -83,9 +83,7 @@ const Dashboard = () => {
         {/* ── Header ── */}
         <div className="flex items-end justify-between mb-8 flex-wrap gap-4">
           <div>
-            <p className="text-xs font-mono text-sky-400 tracking-widest uppercase mb-1">
-              // devtrack system
-            </p>
+            
             <h1 className="text-3xl font-bold text-[var(--text-primary)]">Dashboard</h1>
           </div>
           <div className="text-right">
