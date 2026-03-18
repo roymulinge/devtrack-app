@@ -79,7 +79,7 @@ const About = () => {
           <h2 className="text-sky-400 font-semibold text-sm uppercase tracking-widest mb-3">
             The Solution
           </h2>
-          <ul className="text-[var(--text-secondary)] text-sm leading-relaxed">
+          <ul className="space-y-2 text-[var(--text-secondary)] text-sm leading-relaxed">
             <li>→ Centralized dashboard with all activities linked</li>
             <li>→ Skills tied to actual projects you are building</li>
             <li>→ Deadline tracking with overdue alerts</li>
@@ -98,7 +98,7 @@ const About = () => {
           {features.map((f) => (
             <div
               key={f.title}
-              className="bg-[var(--bg-surface)] border border-[var(--border)]rounded-xl p-5 hover:border-sky-500/40 transition"
+              className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-5 hover:border-sky-500/40 transition"
             >
               <div className="text-2xl mb-3">{f.icon}</div>
               <h3 className="text-[var(--text-primary)] font-semibold mb-1">{f.title}</h3>

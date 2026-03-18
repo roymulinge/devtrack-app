@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-
+import PageLoader from "../Components/PageLoader";
 // Returns days until deadline (negative = overdue)
 const getDaysUntil = (deadlineStr) => {
   if (!deadlineStr) return null;
@@ -82,15 +82,7 @@ const Assignments = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
-        <p className="text-xs font-mono text-pink-400 tracking-widest uppercase">
-          // loading assignments...
-        </p>
-      </div>
-    );
-  }
+  if (loading) return <PageLoader />;
 
   // Sort: overdue first, then soonest deadline
   const sorted = [...assignments].sort((a, b) => {
