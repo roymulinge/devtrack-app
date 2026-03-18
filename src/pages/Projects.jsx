@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-
+import PageLoader from "../Components/PageLoader";  
 const PRIORITY_OPTIONS = [
   { label: "High",   value: "high",   active: "bg-emerald-500/10 border-emerald-500/40 text-emerald-400" },
   { label: "Medium", value: "medium", active: "bg-sky-500/10     border-sky-500/40     text-sky-400"     },
@@ -92,15 +92,7 @@ const Projects = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
-        <p className="text-xs font-mono text-sky-400 tracking-widest uppercase">
-          // loading projects...
-        </p>
-      </div>
-    );
-  }
+  if (loading) return <PageLoader />;
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-slate-200 px-6 py-10">

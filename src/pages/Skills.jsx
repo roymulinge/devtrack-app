@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-
+import PageLoader from "../Components/PageLoader";
 const DEPTH_CONFIG = {
   1: { label: "lvl 1", color: "#fbbf24", bg: "bg-amber-500/10",  text: "text-amber-400",  border: "border-amber-500/30",  bar: "25%",  accent: "border-t-amber-400/50"  },
   2: { label: "lvl 2", color: "#38bdf8", bg: "bg-sky-500/10",    text: "text-sky-400",    border: "border-sky-500/30",    bar: "50%",  accent: "border-t-sky-400/50"    },
@@ -74,15 +74,7 @@ const Skills = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
-        <p className="text-xs font-mono text-emerald-400 tracking-widest uppercase">
-          // loading skills...
-        </p>
-      </div>
-    );
-  }
+  if (loading) return <PageLoader />;
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-slate-200 px-6 py-10">

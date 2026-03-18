@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-
+import PageLoader from "../Components/PageLoader";
 const complexityColors = {
   1: { bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/20" },
   2: { bg: "bg-sky-500/10",     text: "text-sky-400",     border: "border-sky-500/20"     },
@@ -68,15 +68,7 @@ const Ideas = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
-        <p className="text-xs font-mono text-violet-400 tracking-widest uppercase">
-          // loading ideas...
-        </p>
-      </div>
-    );
-  }
+  if (loading) return <PageLoader />;
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-slate-200 px-6 py-10">

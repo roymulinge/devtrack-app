@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-
+import PageLoader from "../Components/PageLoader";
 // Returns week number of the year for a given date string
 const getWeekNumber = (dateStr) => {
   if (!dateStr) return null;
@@ -103,16 +103,7 @@ const WeeklyPriorities = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">
-        <p className="text-xs font-mono text-indigo-400 tracking-widest uppercase">
-          // loading planner...
-        </p>
-      </div>
-    );
-  }
-
+  if (loading) return <PageLoader />;
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-slate-200 px-6 py-10">
       <div className="max-w-3xl mx-auto">
