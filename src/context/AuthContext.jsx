@@ -66,7 +66,7 @@ export const AuthProvider = ({ children }) => {
         <img
           src={logo}
           alt="DevTrack"
-          className="h-20 w-auto"
+          className="h-25 w-auto"
         />
 
       </div>
