@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import api from "../api/axios";
+import logo from "../assets/logo.png";
 
 export const AuthContext = createContext();
 
@@ -62,12 +63,11 @@ export const AuthProvider = ({ children }) => {
         <div className="w-8 h-8 rounded-full border-2 border-slate-800 border-t-sky-400 animate-spin" />
 
         {/* Logo */}
-        <div className="flex items-center gap-1.5 font-mono text-sm font-bold text-slate-500">
-          <span className="text-sky-400">[</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-sky-400 inline-block" />
-          <span>DevTrack</span>
-          <span className="text-sky-400">]</span>
-        </div>
+        <img
+          src={logo}
+          alt="DevTrack"
+          className="h-20 w-auto"
+        />
 
       </div>
     </div>

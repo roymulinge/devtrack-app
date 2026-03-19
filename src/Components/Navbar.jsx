@@ -48,7 +48,7 @@ const Navbar = () => {
           <img
             src={logo}
             alt="DevTrack"
-            className="h-8 w-auto"
+            className="h-25 w-auto"
           />
         </Link>
 

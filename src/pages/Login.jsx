@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import logo from "../assets/logo.png";
 
 const Login = () => {
   const navigate        = useNavigate();
@@ -34,12 +35,11 @@ const Login = () => {
       <div className="w-full max-w-sm bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-8 relative z-10">
 
         {/* Logo */}
-        <div className="flex items-center justify-center gap-1.5 mb-8">
-          <span className="text-sky-400 font-mono font-bold text-base">[</span>
-          <span className="w-2 h-2 rounded-full bg-sky-400 inline-block" />
-          <span className="font-mono font-bold text-base text-[var(--text-primary)] tracking-wide">DevTrack</span>
-          <span className="text-sky-400 font-mono font-bold text-base">]</span>
-        </div>
+        <img
+          src={logo}
+          alt="DevTrack"
+          className="h-25 w-auto mx-auto mb-8"
+        />
 
         {/* Heading */}
         <div className="text-center mb-7">
