@@ -26,6 +26,7 @@ const Register = () => {
   const [error, setError]       = useState("");
   const [loading, setLoading]   = useState(false);
   const [registered, setRegistered] = useState(false);
+
   const { full_name, email, password, password2 } = formData;
   const strength = getStrength(password);
 
@@ -50,16 +51,71 @@ const Register = () => {
     setLoading(true);
     try {
       await axios.post("/auth/register/", { full_name, email, password, password2 });
-      navigate("/login");
+      setRegistered(true); 
     } catch (err) {
       const data = err.response?.data;
       if (data?.email)    setError(data.email[0]);
       else if (data?.password) setError(data.password[0]);
+      else if (data?.full_name) setError(data.full_name[0]);
+      else if (data?.password2) setError(data.password2[0]);
       else setError("Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
+  if (registered) {
+    return (
+      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center px-4 relative overflow-hidden">
+        <div className="absolute w-[500px] h-[500px] rounded-full bg-sky-400/5 blur-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+
+        <div className="w-full max-w-sm bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-8 text-center relative z-10">
+
+          {/* Logo */}
+          <div className="flex items-center justify-center gap-1.5 font-mono text-sm font-bold mb-8">
+            <span className="text-sky-400">[</span>
+            <span className="w-2 h-2 rounded-full bg-sky-400 inline-block" />
+            <span className="text-[var(--text-primary)] tracking-wide">DevTrack</span>
+            <span className="text-sky-400">]</span>
+          </div>
+
+          {/* Email icon */}
+          <div className="w-14 h-14 rounded-full bg-sky-500/10 border border-sky-500/20 flex items-center justify-center mx-auto mb-5">
+            <svg className="w-7 h-7 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+
+          <h1 className="text-lg font-bold text-[var(--text-primary)] mb-2">
+            Check your email
+          </h1>
+          <p className="text-xs text-[var(--text-muted)] mb-1">
+            We sent a verification link to
+          </p>
+          <p className="text-sm font-mono text-sky-400 mb-5">{email}</p>
+          <p className="text-xs text-[var(--text-muted)] leading-relaxed mb-7">
+            Click the link in the email to activate your account.
+            Check your spam folder if you don't see it within a few minutes.
+          </p>
+
+          {/* Divider */}
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex-1 h-px bg-[var(--border)]" />
+            <span className="text-xs font-mono text-[var(--text-muted)]">or</span>
+            <div className="flex-1 h-px bg-[var(--border)]" />
+          </div>
+
+          <Link
+            to="/login"
+            className="block w-full border border-[var(--border)] hover:border-slate-600 text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-mono text-xs py-2.5 rounded-lg transition text-center"
+          >
+            ← back to sign in
+          </Link>
+
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center px-4 relative overflow-hidden">
