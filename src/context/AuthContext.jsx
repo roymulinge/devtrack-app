@@ -53,6 +53,13 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const googleLogin = async (credential) => {
+    const response = await api.post("/auth/google/", { credential });
+    const { access, refresh } = response.data;
+    localStorage.setItem("access_token", access);
+    localStorage.setItem("refresh_token", refresh);
+    setUser({ token: access });
+  };
   // Don't render children until we know if user is logged in
   if (loading) {
   return (
@@ -76,7 +83,7 @@ export const AuthProvider = ({ children }) => {
 
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, googleLogin }}>
       {children}
     </AuthContext.Provider>
   );
