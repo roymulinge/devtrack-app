@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "../api/axios";
+import logo from "../assets/logo.png";
 
 // Password strength helper
 const getStrength = (pwd) => {
@@ -72,12 +73,11 @@ const Register = () => {
         <div className="w-full max-w-sm bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-8 text-center relative z-10">
 
           {/* Logo */}
-          <div className="flex items-center justify-center gap-1.5 font-mono text-sm font-bold mb-8">
-            <span className="text-sky-400">[</span>
-            <span className="w-2 h-2 rounded-full bg-sky-400 inline-block" />
-            <span className="text-[var(--text-primary)] tracking-wide">DevTrack</span>
-            <span className="text-sky-400">]</span>
-          </div>
+          <img
+            src={logo}
+            alt="DevTrack"
+            className="h-25 w-auto mx-auto mb-5"
+          />
 
           {/* Email icon */}
           <div className="w-14 h-14 rounded-full bg-sky-500/10 border border-sky-500/20 flex items-center justify-center mx-auto mb-5">
@@ -127,17 +127,15 @@ const Register = () => {
       <div className="w-full max-w-sm bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-8 relative z-10">
 
         {/* Logo */}
-        <div className="flex items-center justify-center gap-1.5 mb-8">
-          <span className="text-sky-400 font-mono font-bold text-base">[</span>
-          <span className="w-2 h-2 rounded-full bg-sky-400 inline-block" />
-          <span className="font-mono font-bold text-base text-[var(--text-primary)] tracking-wide">DevTrack</span>
-          <span className="text-sky-400 font-mono font-bold text-base">]</span>
-        </div>
+        <img
+          src={logo}
+          alt="DevTrack"
+          className="h-25 w-auto mx-auto mb-8"
+        />
 
         {/* Heading */}
         <div className="text-center mb-7">
           <h1 className="text-xl font-bold text-[var(--text-primary)] mb-1">Create your account</h1>
-          <p className="text-xs font-mono text-[var(--text-muted)]">// start tracking your progress</p>
         </div>
 
         {/* Error */}

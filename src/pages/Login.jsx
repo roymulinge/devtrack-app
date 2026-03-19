@@ -44,7 +44,6 @@ const Login = () => {
         {/* Heading */}
         <div className="text-center mb-7">
           <h1 className="text-xl font-bold text-[var(--text-primary)] mb-1">Welcome back</h1>
-          <p className="text-xs font-mono text-[var(--text-muted)]">// sign in to your workspace</p>
         </div>
 
         {/* Error */}
