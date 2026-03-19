@@ -2,10 +2,11 @@ import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import logo from "../assets/logo.png";
+import { GoogleLogin } from '@react-oauth/google'
 
 const Login = () => {
   const navigate        = useNavigate();
-  const { login }       = useContext(AuthContext);
+  const { login, googleLogin } = useContext(AuthContext);
   const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
   const [error, setError]       = useState("");
@@ -24,6 +25,15 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+  try {
+    await googleLogin(credentialResponse.credential);
+    navigate("/dashboard");
+  } catch (err) {
+    setError("Google login failed. Please try again.");
+  }
+};
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center px-4 relative overflow-hidden">
