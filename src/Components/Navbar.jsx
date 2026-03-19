@@ -2,27 +2,27 @@ import React, { useContext, useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import ThemeToggle from "../Components/ThemeToggle";
+import logo from "../assets/logo.png";
+
 const Navbar = () => {
-  const { user, logout } = useContext(AuthContext);
-  const { pathname } = useLocation();
+  const { user, logout }        = useContext(AuthContext);
+  const { pathname }            = useLocation();
   const [dropOpen, setDropOpen] = useState(false);
   const dropRef                 = useRef(null);
 
   const navLinks = [
-    { to: "/dashboard",     label: "Dashboard"   },
-    { to: "/projects",      label: "Projects"    },
-    { to: "/skills",        label: "Skills"      },
-    { to: "/ideas",         label: "Ideas"       },
-    { to: "/assignments",   label: "Assignments" },
-    { to: "/weekly-planner",label: "Planner"     },
+    { to: "/dashboard",      label: "Dashboard"   },
+    { to: "/projects",       label: "Projects"    },
+    { to: "/skills",         label: "Skills"      },
+    { to: "/ideas",          label: "Ideas"       },
+    { to: "/assignments",    label: "Assignments" },
+    { to: "/weekly-planner", label: "Planner"     },
   ];
 
-  // First letter of email or username for avatar
   const avatarLetter = user?.email?.[0]?.toUpperCase()
     ?? user?.username?.[0]?.toUpperCase()
     ?? "D";
 
-      // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropRef.current && !dropRef.current.contains(e.target)) {
@@ -32,9 +32,10 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  
-   useEffect(() => { setDropOpen(false); }, [pathname]);
-   return (
+
+  useEffect(() => { setDropOpen(false); }, [pathname]);
+
+  return (
     <nav className="bg-[var(--bg-primary)] border-b border-[var(--border)] relative">
 
       {/* Bottom glow line */}
@@ -43,17 +44,15 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-14">
 
         {/* Logo */}
-        <Link
-          to="/"
-          className="flex items-center gap-1.5 font-mono text-sm font-bold text-[var(--text-primary)] tracking-wide hover:text-white transition"
-        >
-          <span className="text-sky-400">[</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-sky-400 inline-block" />
-          <span>DevTrack</span>
-          <span className="text-sky-400">]</span>
+        <Link to="/" className="flex items-center">
+          <img
+            src={logo}
+            alt="DevTrack"
+            className="h-8 w-auto"
+          />
         </Link>
 
-        {/* Nav links — only show when logged in */}
+        {/* Nav links — logged in */}
         {user && (
           <div className="hidden md:flex items-center gap-0.5">
             {navLinks.map(({ to, label }) => (
@@ -72,7 +71,7 @@ const Navbar = () => {
           </div>
         )}
 
-        {/* Public links — only show when logged out */}
+        {/* Public links — logged out */}
         {!user && (
           <div className="hidden md:flex items-center gap-0.5">
             {[{ to: "/about", label: "About" }, { to: "/contact", label: "Contact" }].map(({ to, label }) => (
@@ -93,10 +92,10 @@ const Navbar = () => {
 
         {/* Right side */}
         <div className="flex items-center gap-2">
-           <ThemeToggle />
+          <ThemeToggle />
 
           {user ? (
-            /* ── Profile dropdown ── */
+            /* Profile dropdown */
             <div className="relative" ref={dropRef}>
               <button
                 onClick={() => setDropOpen((v) => !v)}
@@ -106,19 +105,14 @@ const Navbar = () => {
                     : "bg-white/[0.03] border-[var(--border)] hover:border-slate-700 hover:bg-white/[0.05]"
                   }`}
               >
-                {/* Avatar */}
                 <div className="w-6 h-6 rounded-full bg-sky-400/20 flex items-center justify-center shrink-0">
                   <span className="text-[11px] font-bold font-mono text-sky-400">
                     {avatarLetter}
                   </span>
                 </div>
-
-                {/* Email — hidden on small screens */}
                 <span className="text-xs font-mono text-[var(--text-secondary)] hidden sm:block max-w-[140px] truncate">
                   {user.email ?? user.username}
                 </span>
-
-                {/* Chevron */}
                 <svg
                   className={`w-3 h-3 text-slate-600 transition-transform duration-200 ${dropOpen ? "rotate-180" : ""}`}
                   fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
@@ -131,42 +125,40 @@ const Navbar = () => {
               {dropOpen && (
                 <div className="absolute right-0 top-full mt-2 w-52 bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl shadow-xl z-50 overflow-hidden">
 
-                  {/* User info header */}
+                  {/* User info */}
                   <div className="px-4 py-3 border-b border-[var(--border)]">
                     <p className="text-xs font-mono text-slate-600 mb-0.5">signed in as</p>
-                    <p className="text-xs text-slate-300 font-medium truncate">
+                    <p className="text-xs text-[var(--text-primary)] font-medium truncate">
                       {user.email ?? user.username}
                     </p>
                   </div>
 
-                  {/* Dropdown links */}
+                  {/* Links */}
                   <div className="py-1">
                     <Link
                       to="/dashboard"
-                      className="flex items-center gap-2.5 px-4 py-2 text-xs text-[var(--text-secondary)] hover:text-slate-200 hover:bg-white/5 transition"
+                      className="flex items-center gap-2.5 px-4 py-2 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-white/5 transition"
                     >
                       <span className="font-mono text-slate-700">→</span>
                       Dashboard
                     </Link>
                     <Link
                       to="/about"
-                      className="flex items-center gap-2.5 px-4 py-2 text-xs text-[var(--text-secondary)] hover:text-slate-200 hover:bg-white/5 transition"
+                      className="flex items-center gap-2.5 px-4 py-2 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-white/5 transition"
                     >
                       <span className="font-mono text-slate-700">→</span>
                       About
                     </Link>
                     <Link
                       to="/contact"
-                      className="flex items-center gap-2.5 px-4 py-2 text-xs text-[var(--text-secondary)] hover:text-slate-200 hover:bg-white/5 transition"
+                      className="flex items-center gap-2.5 px-4 py-2 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-white/5 transition"
                     >
                       <span className="font-mono text-slate-700">→</span>
                       Contact
                     </Link>
                   </div>
 
-                  
-
-                  {/* Logout */}
+                  {/* Sign out */}
                   <div className="border-t border-[var(--border)] py-1">
                     <button
                       onClick={() => { logout(); setDropOpen(false); }}
@@ -182,11 +174,11 @@ const Navbar = () => {
             </div>
 
           ) : (
-            /* ── Logged out buttons ── */
+            /* Logged out buttons */
             <>
               <Link
                 to="/login"
-                className="text-xs font-medium text-[var(--text-secondary)] hover:text-slate-200 px-3 py-1.5 rounded-md transition"
+                className="text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] px-3 py-1.5 rounded-md transition"
               >
                 Login
               </Link>
@@ -204,4 +196,5 @@ const Navbar = () => {
     </nav>
   );
 };
+
 export default Navbar;

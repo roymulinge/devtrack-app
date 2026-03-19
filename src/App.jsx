@@ -14,6 +14,7 @@ import Login from "./pages/Login";
 import Landing from "./pages/Landing";
 import About   from "./pages/About";
 import Contact from "./pages/Contact";
+import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
   const location = useLocation();
@@ -30,7 +31,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/about"   element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        
+        <Route path="/verify-email/:token" element={<VerifyEmail />} />
         <Route path="/" element={<Landing />} />
 
                 {/* Protected Routes */}
