@@ -25,7 +25,7 @@ const Register = () => {
   const [formData, setFormData] = useState({ full_name: "", email: "", password: "", password2: "" });
   const [error, setError]       = useState("");
   const [loading, setLoading]   = useState(false);
-
+  const [registered, setRegistered] = useState(false);
   const { full_name, email, password, password2 } = formData;
   const strength = getStrength(password);
 
