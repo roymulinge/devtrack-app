@@ -113,6 +113,17 @@ const Login = () => {
           <div className="flex-1 h-px bg-[var(--border)]" />
         </div>
 
+        <div className="flex justify-center">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => setError("Google login failed. Please try again.")}
+            theme="filled_black"
+            shape="rectangular"
+            text="signin_with"
+            width="100%"
+          />
+        </div>
+
         {/* Register link */}
         <div className="flex items-center justify-between">
           <span className="text-xs text-[var(--text-muted)]">No account yet?</span>

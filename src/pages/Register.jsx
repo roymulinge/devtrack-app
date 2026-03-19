@@ -2,6 +2,10 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "../api/axios";
 import logo from "../assets/logo.png";
+import { GoogleLogin } from '@react-oauth/google'
+import { useContext } from 'react'
+import { AuthContext } from '../context/AuthContext'
+
 
 // Password strength helper
 const getStrength = (pwd) => {
@@ -23,6 +27,7 @@ const getStrength = (pwd) => {
 
 const Register = () => {
   const navigate = useNavigate();
+  const { googleLogin } = useContext(AuthContext);
   const [formData, setFormData] = useState({ full_name: "", email: "", password: "", password2: "" });
   const [error, setError]       = useState("");
   const [loading, setLoading]   = useState(false);
@@ -33,6 +38,14 @@ const Register = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      await googleLogin(credentialResponse.credential);
+      navigate("/dashboard");
+    } catch (err) {
+      setError("Google login failed. Please try again.");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -268,15 +281,33 @@ const Register = () => {
           <div className="flex-1 h-px bg-[var(--border)]" />
         </div>
 
-        {/* Login link */}
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-[var(--text-muted)]">Already have an account?</span>
-          <Link
-            to="/login"
-            className="text-xs font-mono text-sky-400 hover:text-sky-300 transition"
-          >
-            sign in →
-          </Link>
+        {/* Google login */}
+        <div>
+          <div className="flex justify-center mb-5">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError("Google login failed. Please try again.")}
+              theme="filled_black"
+              shape="rectangular"
+              text="signup_with"
+              width="320"
+            />
+          </div>
+
+          {/* Divider */}
+          <div className="flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-[var(--border)]" />
+            <span className="text-xs font-mono text-[var(--text-muted)]/50">or</span>
+            <div className="flex-1 h-px bg-[var(--border)]" />
+          </div>
+
+          {/* Login link */}
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-[var(--text-muted)]">Already have an account?</span>
+            <Link to="/login" className="text-xs font-mono text-sky-400 hover:text-sky-300 transition">
+              sign in →
+            </Link>
+          </div>
         </div>
 
         {/* Back to home */}
