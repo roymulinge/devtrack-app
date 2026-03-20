@@ -1,87 +1,95 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
-import PageLoader from "../Components/PageLoader";  
+import PageLoader from "../Components/PageLoader";
+
 const PRIORITY_OPTIONS = [
   { label: "High",   value: "high",   active: "bg-emerald-500/10 border-emerald-500/40 text-emerald-400" },
   { label: "Medium", value: "medium", active: "bg-sky-500/10     border-sky-500/40     text-sky-400"     },
   { label: "Low",    value: "low",    active: "bg-amber-500/10   border-amber-500/40   text-amber-400"   },
 ];
 
+const DEPTH_COLORS = {
+  beginner:     { bg: "bg-amber-500/10",   text: "text-amber-400",   border: "border-amber-500/30"   },
+  intermediate: { bg: "bg-sky-500/10",     text: "text-sky-400",     border: "border-sky-500/30"     },
+  advanced:     { bg: "bg-violet-500/10",  text: "text-violet-400",  border: "border-violet-500/30"  },
+  expert:       { bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/30" },
+};
+
 const priorityStyle = (p) => {
   const map = {
-    // string values
     high:   { bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/30" },
     medium: { bg: "bg-sky-500/10",     text: "text-sky-400",     border: "border-sky-500/30"     },
     low:    { bg: "bg-amber-500/10",   text: "text-amber-400",   border: "border-amber-500/30"   },
-    // numeric values
-    1:      { bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/30" },
-    2:      { bg: "bg-sky-500/10",     text: "text-sky-400",     border: "border-sky-500/30"     },
-    3:      { bg: "bg-amber-500/10",   text: "text-amber-400",   border: "border-amber-500/30"   },
   };
-  if (p === null || p === undefined) return map.medium;
-  if (typeof p === "number") return map[p] ?? map.medium;
   return map[String(p).toLowerCase()] ?? map.medium;
 };
 
 const statusDot = (status) => {
-  const map = {
-    active:    "bg-emerald-400",
-    paused:    "bg-amber-400",
-    completed: "bg-sky-400",
-  };
-  if (!status) return "bg-slate-600";
+  const map = { active: "bg-emerald-400", paused: "bg-amber-400", completed: "bg-sky-400" };
   return map[String(status).toLowerCase()] ?? "bg-slate-600";
 };
 
 const Projects = () => {
-  const [projects, setProjects]   = useState([]);
-  const [name, setName]           = useState("");
-  const [vision, setVision]       = useState("");
-  const [priority, setPriority]   = useState("high");
-  const [loading, setLoading]     = useState(true);
+  const [projects, setProjects]     = useState([]);
+  const [allSkills, setAllSkills]   = useState([]);
+  const [name, setName]             = useState("");
+  const [vision, setVision]         = useState("");
+  const [priority, setPriority]     = useState("high");
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [loading, setLoading]       = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError]         = useState("");
+  const [error, setError]           = useState("");
+  const [expandedId, setExpandedId] = useState(null);
 
-  const fetchProjects = async () => {
+  const fetchData = async () => {
     try {
-      const res = await api.get("/projects/");
-      setProjects(res.data.results ?? res.data ?? []);
+      const [projectsRes, skillsRes] = await Promise.all([
+        api.get("/projects/"),
+        api.get("/skills/"),
+      ]);
+      setProjects(projectsRes.data.results ?? projectsRes.data ?? []);
+      setAllSkills(skillsRes.data.results ?? skillsRes.data ?? []);
     } catch (err) {
-      console.error("Error fetching projects:", err);
-      setProjects([]);
+      console.error("Error fetching data:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => { fetchProjects(); }, []);
+  useEffect(() => { fetchData(); }, []);
+
+  const toggleSkill = (id) => {
+    setSelectedSkills((prev) =>
+      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
+    );
+  };
 
   const createProject = async (e) => {
-  e.preventDefault();
-  setError("");
-  setSubmitting(true);
-  try {
-    const res = await api.post("/projects/", {
-      name,
-      vision,
-      priority,
-      status: "active",   // ← always start as active
-    });
-    setProjects([res.data, ...projects]);
-    setName("");
-    setVision("");
-    setPriority("high");
-  } catch (err) {
-    console.error("Error creating project:", err);
-    const data = err.response?.data;
-    if (data?.name)     setError(data.name[0]);
-    else if (data?.priority) setError(data.priority[0]);
-    else if (data?.vision)   setError(data.vision[0]);
-    else setError("Failed to create project. Please try again.");
-  } finally {
-    setSubmitting(false);
-  }
-};
+    e.preventDefault();
+    setError("");
+    setSubmitting(true);
+    try {
+      const res = await api.post("/projects/", {
+        name,
+        vision,
+        priority,
+        status: "active",
+        skills: selectedSkills,
+      });
+      setProjects([res.data, ...projects]);
+      setName("");
+      setVision("");
+      setPriority("high");
+      setSelectedSkills([]);
+    } catch (err) {
+      const data = err.response?.data;
+      if (data?.name)          setError(data.name[0]);
+      else if (data?.priority) setError(data.priority[0]);
+      else                     setError("Failed to create project. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const deleteProject = async (id) => {
     try {
@@ -100,7 +108,6 @@ const Projects = () => {
 
         {/* Header */}
         <div className="mb-8">
-          
           <h1 className="text-3xl font-bold text-[var(--text-primary)]">Projects</h1>
           <p className="text-sm text-[var(--text-muted)] mt-1">
             Manage and track everything you are building.
@@ -165,6 +172,41 @@ const Projects = () => {
               </div>
             </div>
 
+            {/* Skills picker */}
+            {allSkills.length > 0 && (
+              <div>
+                <label className="block text-xs text-[var(--text-muted)] uppercase tracking-widest font-semibold mb-2">
+                  Skills used in this project
+                  <span className="text-slate-700 normal-case ml-1">(optional)</span>
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {allSkills.map((skill) => {
+                    const selected = selectedSkills.includes(skill.id);
+                    const d = DEPTH_COLORS[skill.depth_level] ?? DEPTH_COLORS.beginner;
+                    return (
+                      <button
+                        key={skill.id}
+                        type="button"
+                        onClick={() => toggleSkill(skill.id)}
+                        className={`text-xs font-mono px-2.5 py-1 rounded-full border transition
+                          ${selected
+                            ? `${d.bg} ${d.text} ${d.border}`
+                            : "bg-transparent border-[var(--border)] text-slate-600 hover:border-slate-700"
+                          }`}
+                      >
+                        {selected ? "✓ " : ""}{skill.name}
+                      </button>
+                    );
+                  })}
+                </div>
+                {allSkills.length === 0 && (
+                  <p className="text-xs text-slate-700 italic">
+                    No skills yet — add some in the Skills page first.
+                  </p>
+                )}
+              </div>
+            )}
+
             {error && (
               <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
                 {error}
@@ -196,22 +238,22 @@ const Projects = () => {
               // no projects yet
             </p>
             <p className="text-sm text-slate-600 mt-2">
-              Create your first project using the form above.
+              Create your first project above.
             </p>
           </div>
         ) : (
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {projects.map((project) => {
               const p = priorityStyle(project.priority);
+              const isExpanded = expandedId === project.id;
               return (
                 <li
                   key={project.id}
                   className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-5 flex flex-col relative overflow-hidden"
                 >
-                  {/* Top accent */}
                   <div className="absolute top-0 left-0 right-0 h-0.5 bg-sky-400/50" />
 
-                  {/* Name + priority badge */}
+                  {/* Name + priority */}
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <h2 className="text-sm font-bold text-[var(--text-primary)] leading-snug flex-1">
                       {project.name}
@@ -225,15 +267,63 @@ const Projects = () => {
 
                   {/* Vision */}
                   {project.vision ? (
-                    <p className="text-xs text-[var(--text-muted)] leading-relaxed flex-1 mb-4">
+                    <p className="text-xs text-[var(--text-muted)] leading-relaxed mb-3">
                       {project.vision}
                     </p>
                   ) : (
-                    <p className="text-xs text-slate-700 italic flex-1 mb-4">No vision set.</p>
+                    <p className="text-xs text-slate-700 italic mb-3">No vision set.</p>
+                  )}
+
+                  {/* Skills */}
+                  {project.skills_detail?.length > 0 && (
+                    <div className="mb-3">
+                      <p className="text-xs text-slate-600 uppercase tracking-widest font-semibold mb-1.5">
+                        Skills
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {project.skills_detail.map((skill) => {
+                          const d = DEPTH_COLORS[skill.depth_level] ?? DEPTH_COLORS.beginner;
+                          return (
+                            <span
+                              key={skill.id}
+                              className={`text-xs font-mono px-2 py-0.5 rounded-full border ${d.bg} ${d.text} ${d.border}`}
+                            >
+                              {skill.name}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Progress — assignments */}
+                  {project.assignments?.length > 0 && (
+                    <div className="mb-3">
+                      <div className="flex justify-between mb-1">
+                        <p className="text-xs text-slate-600 uppercase tracking-widest font-semibold">
+                          Progress
+                        </p>
+                        <p className="text-xs font-mono text-slate-600">
+                          {project.assignments.filter(a => a.status === "completed").length}/
+                          {project.assignments.length} done
+                        </p>
+                      </div>
+                      <div className="h-[3px] bg-slate-800 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-sky-400 rounded-full transition-all duration-700"
+                          style={{
+                            width: `${Math.round(
+                              (project.assignments.filter(a => a.status === "completed").length /
+                              project.assignments.length) * 100
+                            )}%`
+                          }}
+                        />
+                      </div>
+                    </div>
                   )}
 
                   {/* Footer */}
-                  <div className="flex items-center justify-between pt-3 border-t border-[var(--border)]">
+                  <div className="flex items-center justify-between pt-3 border-t border-[var(--border)] mt-auto">
                     <div className="flex items-center gap-1.5">
                       <div className={`w-1.5 h-1.5 rounded-full ${statusDot(project.status)}`} />
                       <span className="text-xs font-mono text-slate-600">
@@ -259,4 +349,4 @@ const Projects = () => {
   );
 };
 
-export default Projects;
+export default Projects;f
