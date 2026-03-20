@@ -17,7 +17,8 @@ const Ideas = () => {
   const [complexityScore, setComplexityScore] = useState(3);
   const [loading, setLoading]               = useState(true);
   const [submitting, setSubmitting]         = useState(false);
-  const [error, setError]                   = useState("");
+  const [error, setError] = useState("");
+  const [converting, setConverting] = useState(null);                 
 
   const fetchIdeas = async () => {
     try {
@@ -65,6 +66,22 @@ const Ideas = () => {
       setIdeas(ideas.filter((i) => i.id !== id));
     } catch (err) {
       console.error("Error deleting idea:", err);
+    }
+  };
+
+  const convertToProject = async (id) => {
+    setConverting(id);
+    try {
+      await api.post(`/ideas/${id}/convert/`);
+      // Update idea status locally
+      setIdeas(ideas.map((i) =>
+        i.id === id ? { ...i, status: "in_progress", related_project: true } : i
+      ));
+    } catch (err) {
+      const msg = err.response?.data?.error ?? "Failed to convert idea.";
+      alert(msg);
+    } finally {
+      setConverting(null);
     }
   };
 
@@ -240,21 +257,39 @@ const Ideas = () => {
                   </div>
 
                   {/* Footer */}
-                  <div className="flex items-center justify-between mt-4 pt-3 border-t border-[var(--border)]">
-                    <span className="text-xs font-mono text-slate-700">
-                      {idea.created_at
-                        ? new Date(idea.created_at).toLocaleDateString("en-GB", {
-                            day: "numeric", month: "short", year: "numeric",
-                          })
-                        : ""}
-                    </span>
-                    <button
-                      onClick={() => deleteIdea(idea.id)}
-                      className="text-xs font-mono text-red-400 border border-red-400/20 px-2.5 py-1 rounded-md hover:bg-red-400/10 hover:border-red-400/40 transition"
-                    >
-                      delete
-                    </button>
-                  </div>
+                    <div className="flex items-center justify-between mt-4 pt-3 border-t border-[var(--border)]">
+                      <span className="text-xs font-mono text-slate-700">
+                        {idea.created_at
+                          ? new Date(idea.created_at).toLocaleDateString("en-GB", {
+                              day: "numeric", month: "short", year: "numeric",
+                            })
+                          : ""}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        {/* Convert to project button — hidden if already converted */}
+                        {!idea.related_project && (
+                          <button
+                            onClick={() => convertToProject(idea.id)}
+                            disabled={converting === idea.id}
+                            className="text-xs font-mono text-violet-400 border border-violet-400/20 px-2.5 py-1 rounded-md hover:bg-violet-400/10 hover:border-violet-400/40 transition disabled:opacity-40"
+                          >
+                            {converting === idea.id ? "..." : "→ project"}
+                          </button>
+                        )}
+                        {/* Already converted badge */}
+                        {idea.related_project && (
+                          <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-md">
+                            ✓ converted
+                          </span>
+                        )}
+                        <button
+                          onClick={() => deleteIdea(idea.id)}
+                          className="text-xs font-mono text-red-400 border border-red-400/20 px-2.5 py-1 rounded-md hover:bg-red-400/10 hover:border-red-400/40 transition"
+                        >
+                          delete
+                        </button>
+                      </div>
+                    </div>
 
                 </li>
               );
