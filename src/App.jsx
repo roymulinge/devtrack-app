@@ -16,6 +16,7 @@ import About   from "./pages/About";
 import Contact from "./pages/Contact";
 import VerifyEmail from "./pages/VerifyEmail";
 import ChangePassword from "./pages/ChangePassword";
+import DailyFocusWidget from "./Components/DailyFocusWidget";
 
 function App() {
   const location = useLocation();
@@ -106,7 +107,7 @@ function App() {
 
 
     
-      
+       <DailyFocusWidget />
     </>
   )
 }
