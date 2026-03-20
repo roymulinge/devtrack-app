@@ -1,36 +1,35 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import PageLoader from "../Components/PageLoader";
+
 const DEPTH_CONFIG = {
-  1: { label: "lvl 1", color: "#fbbf24", bg: "bg-amber-500/10",  text: "text-amber-400",  border: "border-amber-500/30",  bar: "25%",  accent: "border-t-amber-400/50"  },
-  2: { label: "lvl 2", color: "#38bdf8", bg: "bg-sky-500/10",    text: "text-sky-400",    border: "border-sky-500/30",    bar: "50%",  accent: "border-t-sky-400/50"    },
-  3: { label: "lvl 3", color: "#a78bfa", bg: "bg-violet-500/10", text: "text-violet-400", border: "border-violet-500/30", bar: "75%",  accent: "border-t-violet-400/50" },
-  4: { label: "lvl 4", color: "#34d399", bg: "bg-emerald-500/10",text: "text-emerald-400",border: "border-emerald-500/30",bar: "100%", accent: "border-t-emerald-400/50" },
+  beginner:     { label: "Beginner",     color: "#fbbf24", bg: "bg-amber-500/10",   text: "text-amber-400",   border: "border-amber-500/30",   bar: "25%"  },
+  intermediate: { label: "Intermediate", color: "#38bdf8", bg: "bg-sky-500/10",     text: "text-sky-400",     border: "border-sky-500/30",     bar: "50%"  },
+  advanced:     { label: "Advanced",     color: "#a78bfa", bg: "bg-violet-500/10",  text: "text-violet-400",  border: "border-violet-500/30",  bar: "75%"  },
+  expert:       { label: "Expert",       color: "#34d399", bg: "bg-emerald-500/10", text: "text-emerald-400", border: "border-emerald-500/30", bar: "100%" },
 };
+
+const DEPTH_LEVELS = ["beginner", "intermediate", "advanced", "expert"];
 
 const getDaysAgo = (dateStr) => {
   if (!dateStr) return null;
-  const days = Math.floor((Date.now() - new Date(dateStr)) / 86400000);
-  return days;
+  return Math.floor((Date.now() - new Date(dateStr)) / 86400000);
 };
 
 const Skills = () => {
-  const [skills, setSkills]             = useState([]);
-  const [name, setName]                 = useState("");
-  const [category, setCategory]         = useState("");
-  const [depthLevel, setDepthLevel]     = useState(2);
+  const [skills, setSkills]               = useState([]);
+  const [name, setName]                   = useState("");
+  const [category, setCategory]           = useState("");
+  const [depthLevel, setDepthLevel]       = useState("beginner");
   const [lastPracticed, setLastPracticed] = useState("");
-  const [loading, setLoading]           = useState(true);
-  const [submitting, setSubmitting]     = useState(false);
-  const [error, setError]               = useState("");
+  const [loading, setLoading]             = useState(true);
+  const [submitting, setSubmitting]       = useState(false);
+  const [error, setError]                 = useState("");
 
   const fetchSkills = async () => {
     try {
       const res = await api.get("/skills/");
-      const data = Array.isArray(res.data)
-        ? res.data
-        : res.data.results ?? [];
-      setSkills(data);
+      setSkills(res.data.results ?? res.data ?? []);
     } catch (err) {
       console.error("Error fetching skills:", err);
       setSkills([]);
@@ -49,17 +48,20 @@ const Skills = () => {
       const res = await api.post("/skills/", {
         name,
         category,
-        depth_level:    depthLevel,
+        depth_level:    depthLevel,       // ✅ now sends "beginner" not 2
         last_practiced: lastPracticed || null,
       });
       setSkills([res.data, ...skills]);
       setName("");
       setCategory("");
-      setDepthLevel(2);
+      setDepthLevel("beginner");
       setLastPracticed("");
     } catch (err) {
       console.error("Error creating skill:", err);
-      setError(JSON.stringify(err.response?.data ?? "Unknown error"));
+      const data = err.response?.data;
+      if (data?.name)        setError(data.name[0]);
+      else if (data?.category) setError(data.category[0]);
+      else setError("Failed to create skill. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -82,7 +84,6 @@ const Skills = () => {
 
         {/* Header */}
         <div className="mb-8">
-          
           <h1 className="text-3xl font-bold text-[var(--text-primary)]">Skills</h1>
           <p className="text-sm text-[var(--text-muted)] mt-1">
             Track your technical skills and depth of knowledge.
@@ -146,24 +147,21 @@ const Skills = () => {
                 Depth Level
               </label>
               <div className="grid grid-cols-4 gap-2">
-                {[1, 2, 3, 4].map((n) => {
-                  const cfg = DEPTH_CONFIG[n];
-                  const active = depthLevel === n;
+                {DEPTH_LEVELS.map((level) => {
+                  const cfg    = DEPTH_CONFIG[level];
+                  const active = depthLevel === level;
                   return (
                     <button
-                      key={n}
+                      key={level}
                       type="button"
-                      onClick={() => setDepthLevel(n)}
-                      className={`py-2 rounded-lg text-xs font-mono font-semibold border transition flex flex-col items-center gap-0.5
+                      onClick={() => setDepthLevel(level)}
+                      className={`py-2 rounded-lg text-xs font-mono font-semibold border transition
                         ${active
                           ? `${cfg.bg} ${cfg.border} ${cfg.text}`
                           : "bg-transparent border-[var(--border)] text-slate-600 hover:border-slate-700 hover:text-[var(--text-secondary)]"
                         }`}
                     >
-                      <span>{n}</span>
-                      <span className="text-[9px] opacity-60">
-                        {["Beginner","Intermediate","Advanced","Expert"][n - 1]}
-                      </span>
+                      {cfg.label}
                     </button>
                   );
                 })}
@@ -207,10 +205,7 @@ const Skills = () => {
         ) : (
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {skills.map((skill) => {
-              const level = typeof skill.depth_level === "number"
-                ? skill.depth_level
-                : parseInt(skill.depth_level) || 1;
-              const cfg     = DEPTH_CONFIG[level] ?? DEPTH_CONFIG[1];
+              const cfg     = DEPTH_CONFIG[skill.depth_level] ?? DEPTH_CONFIG.beginner;
               const daysAgo = getDaysAgo(skill.last_practiced);
               const isStale = daysAgo !== null && daysAgo > 7;
 
@@ -219,7 +214,6 @@ const Skills = () => {
                   key={skill.id}
                   className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-5 flex flex-col relative overflow-hidden"
                 >
-                  {/* Top accent line coloured by depth */}
                   <div
                     className="absolute top-0 left-0 right-0 h-0.5"
                     style={{ background: cfg.color }}
