@@ -25,6 +25,7 @@ const Skills = () => {
   const [loading, setLoading]             = useState(true);
   const [submitting, setSubmitting]       = useState(false);
   const [error, setError]                 = useState("");
+  const [practicing, setPracticing] = useState(null);
 
   const fetchSkills = async () => {
     try {
@@ -73,6 +74,18 @@ const Skills = () => {
       setSkills(skills.filter((s) => s.id !== id));
     } catch (err) {
       console.error("Error deleting skill:", err);
+    }
+  };
+
+  const practiceSkill = async (id) => {
+    setPracticing(id);
+    try {
+      const res = await api.post(`/skills/${id}/practice/`);
+      setSkills(skills.map((s) => s.id === id ? res.data : s));
+    } catch (err) {
+      console.error("Error practicing skill:", err);
+    } finally {
+      setPracticing(null);
     }
   };
 
@@ -253,12 +266,23 @@ const Skills = () => {
                         ? `stale — ${daysAgo}d ago`
                         : `${daysAgo}d ago`}
                     </span>
-                    <button
-                      onClick={() => deleteSkill(skill.id)}
-                      className="text-xs font-mono text-red-400 border border-red-400/20 px-2.5 py-1 rounded-md hover:bg-red-400/10 hover:border-red-400/40 transition"
-                    >
-                      delete
-                    </button>
+                    <div className="flex items-center gap-2">
+                      {daysAgo !== 0 && (
+                        <button
+                          onClick={() => practiceSkill(skill.id)}
+                          disabled={practicing === skill.id}
+                          className="text-xs font-mono text-emerald-400 border border-emerald-400/20 px-2.5 py-1 rounded-md hover:bg-emerald-400/10 hover:border-emerald-400/40 transition disabled:opacity-40"
+                        >
+                          {practicing === skill.id ? "..." : "✓ practiced"}
+                        </button>
+                      )}
+                      <button
+                        onClick={() => deleteSkill(skill.id)}
+                        className="text-xs font-mono text-red-400 border border-red-400/20 px-2.5 py-1 rounded-md hover:bg-red-400/10 hover:border-red-400/40 transition"
+                      >
+                        delete
+                      </button>
+                    </div>
                   </div>
 
                 </li>
