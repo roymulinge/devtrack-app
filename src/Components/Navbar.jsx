@@ -156,7 +156,17 @@ const Navbar = () => {
                       <span className="font-mono text-slate-700">→</span>
                       Contact
                     </Link>
+
+                    <Link
+                    to="/change-password"
+                    className="flex items-center gap-2.5 px-4 py-2 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-white/5 transition"
+                    >
+                    <span className="font-mono text-slate-700">→</span>
+                    Change Password
+                    </Link>
                   </div>
+
+                  
 
                   {/* Sign out */}
                   <div className="border-t border-[var(--border)] py-1">
