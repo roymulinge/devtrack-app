@@ -15,6 +15,7 @@ import Landing from "./pages/Landing";
 import About   from "./pages/About";
 import Contact from "./pages/Contact";
 import VerifyEmail from "./pages/VerifyEmail";
+import ChangePassword from "./pages/ChangePassword";
 
 function App() {
   const location = useLocation();
@@ -88,7 +89,15 @@ function App() {
             </ProtectedRoute>
           }
         />
-
+         
+         <Route
+            path="/change-password"
+            element={
+              <ProtectedRoute>
+                <ChangePassword />
+              </ProtectedRoute>
+            }
+          />
 
 
 
