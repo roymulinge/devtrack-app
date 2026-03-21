@@ -296,10 +296,98 @@ const WeeklyPriorities = () => {
             className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-slate-600 transition resize-none"
           />
           <p className="text-xs text-slate-700 mt-1.5">Notes auto-save when you click away</p>
+       </div>
+
+        {/* Weekly Review */}
+        <div className="mt-4 bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-5">
+          
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-xs font-semibold uppercase tracking-widest text-emerald-400">
+              Weekly Review
+            </p>
+            <span className="text-xs font-mono text-slate-600">last 7 days</span>
+          </div>
+
+          {summary ? (
+            <>
+              {/* Execution score */}
+              {(() => {
+                const total     = summary.completed_assignments + summary.overdue_assignments;
+                const percent   = total === 0 ? 100 : Math.round((summary.completed_assignments / total) * 100);
+                const scoreColor = percent >= 80 ? "text-emerald-400" : percent >= 50 ? "text-amber-400" : "text-red-400";
+                const barColor   = percent >= 80 ? "bg-emerald-400" : percent >= 50 ? "bg-amber-400" : "bg-red-400";
+                const label      = percent >= 80 ? "Great week! 🎉" : percent >= 50 ? "Decent progress" : "Needs improvement";
+                return (
+                  <div className="mb-4 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs text-slate-500 uppercase tracking-widest font-semibold">Execution Score</p>
+                      <span className={`text-xl font-bold font-mono ${scoreColor}`}>{percent}%</span>
+                    </div>
+                    <div className="h-[3px] bg-slate-800 rounded-full overflow-hidden mb-2">
+                      <div
+                        className={`h-full rounded-full transition-all duration-700 ${barColor}`}
+                        style={{ width: `${percent}%` }}
+                      />
+                    </div>
+                    <p className="text-xs text-slate-600">{label}</p>
+                  </div>
+                );
+              })()}
+
+              {/* Stats grid */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-[var(--bg-primary)] border border-emerald-500/20 rounded-lg p-3">
+                  <div className="text-xl font-bold font-mono text-emerald-400 mb-0.5">
+                    {summary.completed_assignments}
+                  </div>
+                  <div className="text-xs text-slate-600 uppercase tracking-widest">
+                    Assignments completed
+                  </div>
+                </div>
+                <div className="bg-[var(--bg-primary)] border border-red-500/20 rounded-lg p-3">
+                  <div className="text-xl font-bold font-mono text-red-400 mb-0.5">
+                    {summary.overdue_assignments}
+                  </div>
+                  <div className="text-xs text-slate-600 uppercase tracking-widest">
+                    Still overdue
+                  </div>
+                </div>
+                <div className="bg-[var(--bg-primary)] border border-violet-500/20 rounded-lg p-3">
+                  <div className="text-xl font-bold font-mono text-violet-400 mb-0.5">
+                    {summary.skills_practiced_this_week}
+                  </div>
+                  <div className="text-xs text-slate-600 uppercase tracking-widest">
+                    Skills practiced
+                  </div>
+                </div>
+                <div className="bg-[var(--bg-primary)] border border-sky-500/20 rounded-lg p-3">
+                  <div className="text-xl font-bold font-mono text-sky-400 mb-0.5">
+                    {summary.active_projects}
+                  </div>
+                  <div className="text-xs text-slate-600 uppercase tracking-widest">
+                    Active projects
+                  </div>
+                </div>
+              </div>
+
+              {/* Motivational message */}
+              <div className="mt-4 text-center">
+                <p className="text-xs text-slate-700 font-mono">
+                  {summary.overdue_assignments === 0
+                    ? "// no overdue assignments — clean slate 🚀"
+                    : `// ${summary.overdue_assignments} assignment${summary.overdue_assignments > 1 ? "s" : ""} still pending — let's clear them`
+                  }
+                </p>
+              </div>
+            </>
+          ) : (
+            <p className="text-xs text-slate-600 italic">No data available yet.</p>
+          )}
+
         </div>
 
       </div>
-    </div>
+   </div>
   );
 };
 
