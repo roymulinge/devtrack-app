@@ -6,6 +6,7 @@ import Ideas from "./pages/Ideas";
 import Projects from "./pages/Projects";
 import Skills from "./pages/Skills";
 import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Register from "./pages/Register";
 import Navbar from "./Components/Navbar";
@@ -96,6 +97,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <ChangePassword />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             }
           />

@@ -128,6 +128,7 @@ const Navbar = () => {
                       </div>
                       <div className="py-1">
                         {[
+                          { to: "/profile",         label: "Profile"          },
                           { to: "/dashboard",       label: "Dashboard"        },
                           { to: "/about",           label: "About"            },
                           { to: "/contact",         label: "Contact"          },
@@ -223,6 +224,7 @@ const Navbar = () => {
           <div className="px-3 py-2 border-t border-[var(--border)]">
             <p className="text-[10px] font-mono text-slate-700 uppercase tracking-widest px-2 mb-1">Account</p>
             {[
+              { to: "/profile",         label: "Profile"           },
               { to: "/change-password", label: "Change Password" },
               { to: "/about",           label: "About"           },
               { to: "/contact",         label: "Contact"         },
