@@ -122,18 +122,18 @@ const WeeklyPriorities = () => {
   const weekRange = getWeekRange();
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] text-slate-200 px-6 py-10">
+    <div className="min-h-screen bg-[var(--bg-primary)] text-slate-200 px-4 sm:px-6 py-6 sm:py-10">
       <div className="max-w-3xl mx-auto">
 
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[var(--text-primary)]">Weekly Planner</h1>
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">Weekly Planner</h1>
           <p className="text-sm text-[var(--text-muted)] mt-1">{weekRange}</p>
         </div>
 
         {/* Weekly Summary Bar */}
         {summary && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             {[
               { label: "Completed",      value: summary.completed_assignments,    color: "text-emerald-400", border: "border-emerald-500/20" },
               { label: "Overdue",        value: summary.overdue_assignments,       color: "text-red-400",     border: "border-red-500/20"     },
@@ -253,12 +253,12 @@ const WeeklyPriorities = () => {
               placeholder="Add a priority for this week..."
               value={newPriority}
               onChange={(e) => setNewPriority(e.target.value)}
-              className="flex-1 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500/50 transition"
+              className="flex-1 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500/50 transition"
             />
             <button
               type="submit"
               disabled={submitting || !newPriority.trim()}
-              className="bg-indigo-400 hover:bg-indigo-300 disabled:bg-indigo-400/40 text-[#090d13] font-mono font-bold text-xs px-4 py-2 rounded-lg transition"
+              className="bg-indigo-400 hover:bg-indigo-300 disabled:bg-indigo-400/40 text-[#090d13] font-mono font-bold text-xs px-4 py-3 rounded-lg transition"
             >
               {submitting ? "..." : "add"}
             </button>
@@ -293,7 +293,7 @@ const WeeklyPriorities = () => {
                 console.error("Error saving notes:", err);
               }
             }}
-            className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-slate-600 transition resize-none"
+            className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-slate-600 transition resize-none"
           />
           <p className="text-xs text-slate-700 mt-1.5">Notes auto-save when you click away</p>
        </div>

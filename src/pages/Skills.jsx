@@ -92,19 +92,19 @@ const Skills = () => {
   if (loading) return <PageLoader />;
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] text-slate-200 px-6 py-10">
+    <div className="min-h-screen bg-[var(--bg-primary)] text-slate-200 px-4 sm:px-6 py-6 sm:py-10">
       <div className="max-w-4xl mx-auto">
 
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[var(--text-primary)]">Skills</h1>
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">Skills</h1>
           <p className="text-sm text-[var(--text-muted)] mt-1">
             Track your technical skills and depth of knowledge.
           </p>
         </div>
 
         {/* Form */}
-        <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-6 mb-8">
+        <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
           <p className="text-xs font-mono text-emerald-400 uppercase tracking-widest mb-5">
             + new skill
           </p>
@@ -123,7 +123,7 @@ const Skills = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-emerald-500/50 transition"
+                  className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-emerald-500/50 transition"
                 />
               </div>
               <div>
@@ -136,7 +136,7 @@ const Skills = () => {
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
                   required
-                  className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-emerald-500/50 transition"
+                  className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-emerald-500/50 transition"
                 />
               </div>
             </div>
@@ -150,7 +150,7 @@ const Skills = () => {
                 type="date"
                 value={lastPracticed}
                 onChange={(e) => setLastPracticed(e.target.value)}
-                className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-[var(--text-secondary)] focus:outline-none focus:border-emerald-500/50 transition"
+                className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-3 text-sm text-[var(--text-secondary)] focus:outline-none focus:border-emerald-500/50 transition"
               />
             </div>
 
@@ -190,7 +190,7 @@ const Skills = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full bg-emerald-400 hover:bg-emerald-300 disabled:bg-emerald-400/40 text-[#090d13] font-mono font-bold text-sm py-2.5 rounded-lg transition tracking-wide"
+              className="w-full bg-emerald-400 hover:bg-emerald-300 disabled:bg-emerald-400/40 text-[#090d13] font-mono font-bold text-sm py-3 rounded-lg transition tracking-wide"
             >
               {submitting ? "adding..." : "add skill"}
             </button>
