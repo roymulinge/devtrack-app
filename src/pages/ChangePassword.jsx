@@ -39,8 +39,14 @@ const ChangePassword = () => {
       setSuccess(true);
       setTimeout(() => logout(), 2000);
     } catch (err) {
-      setError(err.response?.data?.error ?? "Failed to change password.");
-    } finally {
+      const data = err.response?.data;
+      if (data?.error)              setError(data.error);
+      else if (data?.old_password)  setError(data.old_password[0]);
+      else if (data?.new_password)  setError(data.new_password[0]);
+      else if (data?.new_password2) setError(data.new_password2[0]);
+      else if (data?.non_field_errors) setError(data.non_field_errors[0]);
+      else setError("Failed to change password. Please try again.");
+    }finally {
       setLoading(false);
     }
   };
