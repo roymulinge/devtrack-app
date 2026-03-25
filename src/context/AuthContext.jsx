@@ -27,10 +27,9 @@ export const AuthProvider = ({ children }) => {
 
       try {
         const res = await api.post("/token/refresh/", { refresh });
-        const newAccess = res.data.access;
-
-        localStorage.setItem("access_token", newAccess);
-        setUser({ token: newAccess });
+        localStorage.setItem("access_token", res.data.access);
+        
+        await fetchUser();
       } catch (err) {
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
@@ -43,15 +42,14 @@ export const AuthProvider = ({ children }) => {
     restoreSession();
   }, []);
 
-  const login = async (email, password) => {
+   const login = async (email, password) => {
     const response = await api.post("/token/", { email, password });
     const { access, refresh } = response.data;
-
     localStorage.setItem("access_token", access);
     localStorage.setItem("refresh_token", refresh);
-    setUser({ token: access });
+    
+    await fetchUser();
   };
-
   const logout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
@@ -63,7 +61,8 @@ export const AuthProvider = ({ children }) => {
     const { access, refresh } = response.data;
     localStorage.setItem("access_token", access);
     localStorage.setItem("refresh_token", refresh);
-    setUser({ token: access });
+    // Same here — fetch full profile after Google login.
+    await fetchUser();
   };
   if (loading) {
   return (
