@@ -94,6 +94,11 @@ const Login = () => {
               autoComplete="current-password"
               className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 transition"
             />
+            <div className="mt-2 text-right">
+              <Link to="/forgot-password" className="text-xs font-mono text-sky-400 hover:text-sky-300 transition">
+                forgot password?
+              </Link>
+            </div>
           </div>
 
           <button
