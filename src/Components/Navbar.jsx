@@ -10,14 +10,14 @@ const getAvatarColor = (email = "") => {
     hash = email.charCodeAt(i) + ((hash << 5) - hash);
   }
   const colors = [
-    ["bg-sky-400/20",     "text-sky-400"    ],
-    ["bg-violet-400/20",  "text-violet-400" ],
-    ["bg-emerald-400/20", "text-emerald-400"],
-    ["bg-rose-400/20",    "text-rose-400"   ],
-    ["bg-amber-400/20",   "text-amber-400"  ],
-    ["bg-pink-400/20",    "text-pink-400"   ],
-    ["bg-teal-400/20",    "text-teal-400"   ],
-    ["bg-orange-400/20",  "text-orange-400" ],
+    { bg: "rgba(56,189,248,0.2)",  text: "#38bdf8" },
+    { bg: "rgba(167,139,250,0.2)", text: "#a78bfa" },
+    { bg: "rgba(52,211,153,0.2)",  text: "#34d399" },
+    { bg: "rgba(251,113,133,0.2)", text: "#fb7185" },
+    { bg: "rgba(251,191,36,0.2)",  text: "#fbbf24" },
+    { bg: "rgba(244,114,182,0.2)", text: "#f472b6" },
+    { bg: "rgba(45,212,191,0.2)",  text: "#2dd4bf" },
+    { bg: "rgba(251,146,60,0.2)",  text: "#fb923c" },
   ];
   const index = Math.abs(hash) % colors.length;
   return colors[index];
@@ -43,7 +43,7 @@ const Navbar = () => {
     ?? user?.username?.[0]?.toUpperCase()
     ?? "D";
 
-  const [avatarBg, avatarText] = getAvatarColor(user?.email ?? user?.username ?? "");
+  const avatarColor = getAvatarColor(user?.email ?? user?.username ?? "");
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -128,8 +128,10 @@ const Navbar = () => {
                         : "bg-white/[0.03] border-[var(--border)] hover:border-slate-700 hover:bg-white/[0.05]"
                       }`}
                   >
-                    <div className={`w-6 h-6 rounded-full ${avatarBg} flex items-center justify-center shrink-0`}>
-                      <span className={`text-[11px] font-bold font-mono ${avatarText}`}>{avatarLetter}</span>
+                    <div style={{ backgroundColor: avatarColor.bg, width: 24, height: 24 }}
+                      className="rounded-full flex items-center justify-center shrink-0">
+                      <span style={{ color: avatarColor.text }}
+                        className="text-[11px] font-bold font-mono">{avatarLetter}</span>
                     </div>
                     <span className="text-xs font-mono text-[var(--text-secondary)] max-w-[140px] truncate">
                       {user.email ?? user.username}
@@ -215,8 +217,10 @@ const Navbar = () => {
 
           {/* User info */}
           <div className="px-4 py-3 border-b border-[var(--border)] flex items-center gap-3">
-            <div className={`w-8 h-8 rounded-full ${avatarBg} flex items-center justify-center shrink-0`}>
-              <span className={`text-xs font-bold font-mono ${avatarText}`}>{avatarLetter}</span>
+            <div style={{ backgroundColor: avatarColor.bg, width: 32, height: 32 }}
+              className="rounded-full flex items-center justify-center shrink-0">
+              <span style={{ color: avatarColor.text }}
+                className="text-xs font-bold font-mono">{avatarLetter}</span>
             </div>
             <p className="text-xs text-[var(--text-secondary)] truncate">{user.email ?? user.username}</p>
           </div>
