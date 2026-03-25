@@ -103,7 +103,7 @@ const Landing = () => {
       <section className="px-6 py-20">
         <div className="max-w-5xl mx-auto">
           <p className="text-xs font-mono text-sky-400 tracking-widest uppercase text-center mb-2">
-            // what devtrack does
+            what devtrack does
           </p>
           <h2 className="text-3xl font-bold text-[var(--text-primary)] text-center mb-2">
             Everything you need. Nothing you don't.
@@ -169,7 +169,7 @@ const Landing = () => {
       <section className="px-6 py-10 border-b border-[var(--border)]">
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-xs font-mono text-[var(--text-muted)] uppercase tracking-widest mb-5">
-            // built with
+            built with
           </p>
           <div className="flex justify-center flex-wrap gap-3">
             {["React", "Django", "PostgreSQL", "Django REST Framework", "Simple JWT", "Render"].map((t) => (

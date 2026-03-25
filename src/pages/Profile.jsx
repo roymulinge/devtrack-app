@@ -115,7 +115,7 @@ const Profile = () => {
                     ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
                     : "bg-amber-500/10 text-amber-400 border-amber-500/30"
                 }`}>
-                  {userData?.is_verified ? "✓ verified" : "unverified"}
+                  {userData?.is_verified ? "verified" : "unverified"}
                 </span>
               </div>
             </div>
@@ -243,7 +243,7 @@ const Profile = () => {
         {/* Danger Zone */}
         <div className="bg-[var(--bg-surface)] border border-red-500/20 rounded-2xl p-4 sm:p-6">
           <p className="text-xs font-mono text-red-400 uppercase tracking-widest mb-4">
-            ⚠ danger zone
+            danger zone
           </p>
 
           {deleteConfirm === "" ? (

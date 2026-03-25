@@ -19,14 +19,12 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
-        // Try to refresh the access token using the refresh token
         const res = await api.post("/token/refresh/", { refresh });
         const newAccess = res.data.access;
 
         localStorage.setItem("access_token", newAccess);
         setUser({ token: newAccess });
       } catch (err) {
-        // Refresh token is also expired — force logout
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
         setUser(null);
@@ -60,7 +58,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("refresh_token", refresh);
     setUser({ token: access });
   };
-  // Don't render children until we know if user is logged in
   if (loading) {
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center">

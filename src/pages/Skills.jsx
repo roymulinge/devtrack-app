@@ -49,7 +49,7 @@ const Skills = () => {
       const res = await api.post("/skills/", {
         name,
         category,
-        depth_level:    depthLevel,       // ✅ now sends "beginner" not 2
+        depth_level:    depthLevel,
         last_practiced: lastPracticed || null,
       });
       setSkills([res.data, ...skills]);
@@ -209,9 +209,9 @@ const Skills = () => {
         {skills.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-xs font-mono text-slate-700 uppercase tracking-widest">
-              // no skills yet
+              no skills yet
             </p>
-            <p className="text-sm text-slate-600 mt-2">
+            <p className="text-xs text-slate-600 mt-2">
               Add your first skill using the form above.
             </p>
           </div>
@@ -234,7 +234,7 @@ const Skills = () => {
 
                   {/* Name + depth badge */}
                   <div className="flex items-start justify-between gap-3 mb-1">
-                    <h2 className="text-sm font-bold text-[var(--text-primary)] leading-snug flex-1">
+                    <h2 className="text-xs font-bold text-[var(--text-primary)] leading-snug flex-1">
                       {skill.name}
                     </h2>
                     <span className={`text-xs font-mono px-2 py-0.5 rounded-full border shrink-0 ${cfg.bg} ${cfg.text} ${cfg.border}`}>
@@ -273,7 +273,7 @@ const Skills = () => {
                           disabled={practicing === skill.id}
                           className="text-xs font-mono text-emerald-400 border border-emerald-400/20 px-2.5 py-1 rounded-md hover:bg-emerald-400/10 hover:border-emerald-400/40 transition disabled:opacity-40"
                         >
-                          {practicing === skill.id ? "..." : "✓ practiced"}
+                          {practicing === skill.id ? "..." : "practiced"}
                         </button>
                       )}
                       <button

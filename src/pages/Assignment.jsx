@@ -239,9 +239,9 @@ const Assignments = () => {
         {sorted.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-xs font-mono text-slate-700 uppercase tracking-widest">
-              // no assignments yet
+              no assignments yet
             </p>
-            <p className="text-sm text-slate-600 mt-2">
+            <p className="text-xs text-slate-600 mt-2">
               Add your first assignment using the form above.
             </p>
           </div>
@@ -269,7 +269,7 @@ const Assignments = () => {
                     <div className="flex-1 min-w-0">
 
                       {/* Title */}
-                      <h2 className={`text-sm font-bold mb-1 truncate ${isDone ? "line-through text-slate-600" : "text-[var(--text-primary)]"}`}>
+                      <h2 className={`text-xs font-bold mb-1 truncate ${isDone ? "line-through text-slate-600" : "text-[var(--text-primary)]"}`}>
                         {a.title}
                       </h2>
 
@@ -320,7 +320,7 @@ const Assignments = () => {
                               onClick={() => updateStatus(a.id, "completed")}
                               className="text-xs font-mono text-emerald-400 border border-emerald-400/20 px-2.5 py-1 rounded-md hover:bg-emerald-400/10 transition"
                             >
-                              mark done ✓
+                            mark done
                             </button>
                           )}
                         </div>

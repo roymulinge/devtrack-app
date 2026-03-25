@@ -42,7 +42,6 @@ const WeeklyPriorities = () => {
       ]);
       setFocus(focusRes.data);
       setSummary(summaryRes.data);
-      // Get current week priorities
       const monday = getMonday();
       const all    = prioritiesRes.data.results ?? prioritiesRes.data ?? [];
       const current = all.find((p) => p.week_start === monday);
@@ -71,19 +70,16 @@ const WeeklyPriorities = () => {
     setError("");
     try {
       const monday = getMonday();
-      // Check if current week exists
       const res = await api.get("/weekly-priorities/");
       const all  = res.data.results ?? res.data ?? [];
       const current = all.find((p) => p.week_start === monday);
 
       if (current) {
-        // Update existing
         await api.patch(`/weekly-priorities/${current.id}/`, {
           top_three_text: updated.join("\n"),
           notes,
         });
       } else {
-        // Create new
         await api.post("/weekly-priorities/", {
           week_start:     monday,
           top_three_text: updated.join("\n"),
@@ -156,7 +152,7 @@ const WeeklyPriorities = () => {
               Assignments Due
             </p>
             {focus?.urgent_assignments?.length === 0 ? (
-              <p className="text-xs text-slate-600 italic">No urgent assignments 🎉</p>
+              <p className="text-xs text-slate-600 italic">No urgent assignments</p>
             ) : (
               <ul className="space-y-2">
                 {focus?.urgent_assignments?.map((a) => {
@@ -195,7 +191,7 @@ const WeeklyPriorities = () => {
               Skills to Practice
             </p>
             {focus?.stale_skills?.length === 0 ? (
-              <p className="text-xs text-slate-600 italic">All skills practiced recently ✓</p>
+              <p className="text-xs text-slate-600 italic">All skills practiced recently</p>
             ) : (
               <ul className="space-y-2">
                 {focus?.stale_skills?.map((s) => (
@@ -239,7 +235,7 @@ const WeeklyPriorities = () => {
                     onClick={() => removePriority(i)}
                     className="text-xs font-mono text-slate-700 hover:text-red-400 transition shrink-0"
                   >
-                    ✕
+                    x
                   </button>
                 </li>
               ))}
@@ -280,7 +276,6 @@ const WeeklyPriorities = () => {
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             onBlur={async () => {
-              // Auto-save notes on blur
               try {
                 const monday  = getMonday();
                 const res     = await api.get("/weekly-priorities/");
@@ -316,7 +311,7 @@ const WeeklyPriorities = () => {
                 const percent   = total === 0 ? 100 : Math.round((summary.completed_assignments / total) * 100);
                 const scoreColor = percent >= 80 ? "text-emerald-400" : percent >= 50 ? "text-amber-400" : "text-red-400";
                 const barColor   = percent >= 80 ? "bg-emerald-400" : percent >= 50 ? "bg-amber-400" : "bg-red-400";
-                const label      = percent >= 80 ? "Great week! 🎉" : percent >= 50 ? "Decent progress" : "Needs improvement";
+                const label      = percent >= 80 ? "Great week" : percent >= 50 ? "Decent progress" : "Needs improvement";
                 return (
                   <div className="mb-4 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg p-4">
                     <div className="flex items-center justify-between mb-2">
@@ -374,8 +369,8 @@ const WeeklyPriorities = () => {
               <div className="mt-4 text-center">
                 <p className="text-xs text-slate-700 font-mono">
                   {summary.overdue_assignments === 0
-                    ? "// no overdue assignments — clean slate 🚀"
-                    : `// ${summary.overdue_assignments} assignment${summary.overdue_assignments > 1 ? "s" : ""} still pending — let's clear them`
+                    ? "no overdue assignments, clean slate"
+                    : `${summary.overdue_assignments} assignment${summary.overdue_assignments > 1 ? "s" : ""} still pending, let's clear them`
                   }
                 </p>
               </div>

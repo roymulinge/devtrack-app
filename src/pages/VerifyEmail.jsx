@@ -5,7 +5,7 @@ import logo from "../assets/logo.png";
 
 const VerifyEmail = () => {
   const { token }           = useParams();
-  const [status, setStatus] = useState("loading"); // loading | success | error | expired
+  const [status, setStatus] = useState("loading");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const VerifyEmail = () => {
         {status === "loading" && (
           <>
             <div className="w-8 h-8 rounded-full border-2 border-slate-800 border-t-sky-400 animate-spin mx-auto mb-4" />
-            <p className="text-xs font-mono text-[var(--text-muted)]">// verifying your email...</p>
+            <p className="text-xs font-mono text-[var(--text-muted)]">verifying your email...</p>
           </>
         )}
 

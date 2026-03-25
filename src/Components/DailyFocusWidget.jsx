@@ -10,7 +10,6 @@ const DailyFocusWidget = () => {
   const [focus, setFocus]     = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Hide on auth pages
   const hide = ["/login", "/register", "/", "/about", "/contact"].includes(location.pathname)
     || location.pathname.startsWith("/verify-email");
 
@@ -44,7 +43,7 @@ const DailyFocusWidget = () => {
           {/* Header */}
           <div className="px-4 py-3 border-b border-[var(--border)] flex items-center justify-between">
             <div>
-              <p className="text-xs font-mono text-sky-400 uppercase tracking-widest">// daily focus</p>
+              <p className="text-xs font-mono text-sky-400 uppercase tracking-widest">daily focus</p>
               <p className="text-xs text-slate-600 mt-0.5">Here's what needs your attention</p>
             </div>
             <button
@@ -151,7 +150,6 @@ const DailyFocusWidget = () => {
             {/* All clear */}
             {!hasItems && (
               <div className="text-center py-4">
-                <p className="text-2xl mb-2">🎉</p>
                 <p className="text-sm font-bold text-emerald-400 mb-1">All clear!</p>
                 <p className="text-xs text-slate-600">No urgent tasks right now.</p>
               </div>

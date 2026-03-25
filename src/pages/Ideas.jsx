@@ -73,7 +73,6 @@ const Ideas = () => {
     setConverting(id);
     try {
       await api.post(`/ideas/${id}/convert/`);
-      // Update idea status locally
       setIdeas(ideas.map((i) =>
         i.id === id ? { ...i, status: "in_progress", related_project: true } : i
       ));
@@ -212,9 +211,9 @@ const Ideas = () => {
         {ideas.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-xs font-mono text-slate-700 uppercase tracking-widest">
-              // no ideas yet
+              no ideas yet
             </p>
-            <p className="text-sm text-slate-600 mt-2">
+            <p className="text-xs text-slate-600 mt-2">
               Add your first idea using the form above.
             </p>
           </div>
@@ -232,7 +231,7 @@ const Ideas = () => {
 
                   {/* Problem + complexity badge */}
                   <div className="flex items-start justify-between gap-3 mb-4">
-                    <p className="text-sm font-semibold text-slate-200 leading-snug flex-1">
+                    <p className="text-xs font-semibold text-slate-200 leading-snug flex-1">
                       {idea.problem_statement}
                     </p>
                     <span className={`text-xs font-mono px-2 py-0.5 rounded-full border shrink-0 ${c.bg} ${c.text} ${c.border}`}>
@@ -273,13 +272,13 @@ const Ideas = () => {
                             disabled={converting === idea.id}
                             className="text-xs font-mono text-violet-400 border border-violet-400/20 px-2.5 py-1 rounded-md hover:bg-violet-400/10 hover:border-violet-400/40 transition disabled:opacity-40"
                           >
-                            {converting === idea.id ? "..." : "→ project"}
+                            {converting === idea.id ? "..." : "convert"}
                           </button>
                         )}
                         {/* Already converted badge */}
                         {idea.related_project && (
                           <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-md">
-                            ✓ converted
+                          converted
                           </span>
                         )}
                         <button

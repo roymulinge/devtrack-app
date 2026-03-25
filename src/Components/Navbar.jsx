@@ -4,6 +4,25 @@ import { AuthContext } from "../context/AuthContext";
 import ThemeToggle from "../Components/ThemeToggle";
 import logo from "../assets/logo.png";
 
+const getAvatarColor = (email = "") => {
+  let hash = 0;
+  for (let i = 0; i < email.length; i++) {
+    hash = email.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const colors = [
+    ["bg-sky-400/20",     "text-sky-400"    ],
+    ["bg-violet-400/20",  "text-violet-400" ],
+    ["bg-emerald-400/20", "text-emerald-400"],
+    ["bg-rose-400/20",    "text-rose-400"   ],
+    ["bg-amber-400/20",   "text-amber-400"  ],
+    ["bg-pink-400/20",    "text-pink-400"   ],
+    ["bg-teal-400/20",    "text-teal-400"   ],
+    ["bg-orange-400/20",  "text-orange-400" ],
+  ];
+  const index = Math.abs(hash) % colors.length;
+  return colors[index];
+};
+
 const Navbar = () => {
   const { user, logout }          = useContext(AuthContext);
   const { pathname }              = useLocation();
@@ -24,6 +43,8 @@ const Navbar = () => {
     ?? user?.username?.[0]?.toUpperCase()
     ?? "D";
 
+  const [avatarBg, avatarText] = getAvatarColor(user?.email ?? user?.username ?? "");
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropRef.current && !dropRef.current.contains(e.target)) {
@@ -34,7 +55,6 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Close everything on route change
   useEffect(() => {
     setDropOpen(false);
     setMenuOpen(false);
@@ -108,8 +128,8 @@ const Navbar = () => {
                         : "bg-white/[0.03] border-[var(--border)] hover:border-slate-700 hover:bg-white/[0.05]"
                       }`}
                   >
-                    <div className="w-6 h-6 rounded-full bg-sky-400/20 flex items-center justify-center shrink-0">
-                      <span className="text-[11px] font-bold font-mono text-sky-400">{avatarLetter}</span>
+                    <div className={`w-6 h-6 rounded-full ${avatarBg} flex items-center justify-center shrink-0`}>
+                      <span className={`text-[11px] font-bold font-mono ${avatarText}`}>{avatarLetter}</span>
                     </div>
                     <span className="text-xs font-mono text-[var(--text-secondary)] max-w-[140px] truncate">
                       {user.email ?? user.username}
@@ -195,8 +215,8 @@ const Navbar = () => {
 
           {/* User info */}
           <div className="px-4 py-3 border-b border-[var(--border)] flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-sky-400/20 flex items-center justify-center shrink-0">
-              <span className="text-xs font-bold font-mono text-sky-400">{avatarLetter}</span>
+            <div className={`w-8 h-8 rounded-full ${avatarBg} flex items-center justify-center shrink-0`}>
+              <span className={`text-xs font-bold font-mono ${avatarText}`}>{avatarLetter}</span>
             </div>
             <p className="text-xs text-[var(--text-secondary)] truncate">{user.email ?? user.username}</p>
           </div>

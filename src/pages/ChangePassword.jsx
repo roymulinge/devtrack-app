@@ -37,7 +37,6 @@ const ChangePassword = () => {
     try {
       await api.post("/auth/change-password/", formData);
       setSuccess(true);
-      // Log out after password change for security
       setTimeout(() => logout(), 2000);
     } catch (err) {
       setError(err.response?.data?.error ?? "Failed to change password.");
@@ -67,8 +66,8 @@ const ChangePassword = () => {
         ) : (
           <>
             <div className="text-center mb-7">
-              <h1 className="text-xl font-bold text-[var(--text-primary)] mb-1">Change Password</h1>
-              <p className="text-xs font-mono text-[var(--text-muted)]">// update your credentials</p>
+              <h1 className="text-base font-bold text-[var(--text-primary)] mb-1">Change Password</h1>
+              <p className="text-xs font-mono text-[var(--text-muted)]">update your credentials</p>
             </div>
 
             {error && (

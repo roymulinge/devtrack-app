@@ -65,7 +65,6 @@ const Register = () => {
     }
   };
 
-  // ── Success screen ──
   if (registered) {
     return (
       <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center px-4 py-8 relative overflow-hidden">
@@ -99,7 +98,6 @@ const Register = () => {
     );
   }
 
-  // ── Register form ──
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center px-4 py-8 relative overflow-hidden">
 
@@ -110,8 +108,8 @@ const Register = () => {
         <img src={logo} alt="DevTrack" className="h-16 sm:h-20 w-auto mx-auto mb-6" />
 
         <div className="text-center mb-6">
-          <h1 className="text-lg sm:text-xl font-bold text-[var(--text-primary)] mb-1">Create your account</h1>
-          <p className="text-xs font-mono text-[var(--text-muted)]">// join the workspace</p>
+          <h1 className="text-base sm:text-lg font-bold text-[var(--text-primary)] mb-1">Create your account</h1>
+          <p className="text-xs font-mono text-[var(--text-muted)]">join the workspace</p>
         </div>
 
         {error && (

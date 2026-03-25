@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 const Contact = () => {
   const [form, setForm]     = useState({ name: "", email: "", subject: "", message: "" });
-  const [status, setStatus] = useState(null); // "sending" | "success" | "error"
+  const [status, setStatus] = useState(null);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -12,12 +12,9 @@ const Contact = () => {
     e.preventDefault();
     setStatus("sending");
 
-    // Replace this URL with your Django endpoint when ready
-    // For now it simulates a successful submission after 1.5s
     await new Promise((res) => setTimeout(res, 1500));
     setStatus("success");
 
-    // Reset form
     setForm({ name: "", email: "", subject: "", message: "" });
   };
 
@@ -73,14 +70,13 @@ const Contact = () => {
         <div className="md:col-span-2 bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-6">
           {status === "success" ? (
             <div className="flex flex-col items-center justify-center h-full py-10 text-center">
-              <div className="text-4xl mb-4">✅</div>
-              <h3 className="text-[var(--text-primary)] font-semibold text-lg mb-2">Message sent!</h3>
-              <p className="text-[var(--text-secondary)] text-sm">
+              <h3 className="text-[var(--text-primary)] font-semibold text-base mb-2">Message sent!</h3>
+              <p className="text-[var(--text-secondary)] text-xs">
                 Thanks for reaching out. I'll reply to your email soon.
               </p>
               <button
                 onClick={() => setStatus(null)}
-                className="mt-6 text-sky-400 text-sm hover:underline"
+                className="mt-6 text-sky-400 text-xs hover:underline"
               >
                 Send another message
               </button>

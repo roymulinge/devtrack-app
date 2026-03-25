@@ -194,7 +194,7 @@ const Projects = () => {
                             : "bg-transparent border-[var(--border)] text-slate-600 hover:border-slate-700"
                           }`}
                       >
-                        {selected ? "✓ " : ""}{skill.name}
+                        {selected ? "" : ""}{skill.name}
                       </button>
                     );
                   })}
@@ -235,9 +235,9 @@ const Projects = () => {
         {projects.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-xs font-mono text-slate-700 uppercase tracking-widest">
-              // no projects yet
+              no projects yet
             </p>
-            <p className="text-sm text-slate-600 mt-2">
+            <p className="text-xs text-slate-600 mt-2">
               Create your first project above.
             </p>
           </div>
@@ -255,7 +255,7 @@ const Projects = () => {
 
                   {/* Name + priority */}
                   <div className="flex items-start justify-between gap-3 mb-3">
-                    <h2 className="text-sm font-bold text-[var(--text-primary)] leading-snug flex-1">
+                    <h2 className="text-xs font-bold text-[var(--text-primary)] leading-snug flex-1">
                       {project.name}
                     </h2>
                     {project.priority && (

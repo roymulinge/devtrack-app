@@ -5,13 +5,11 @@ import PageLoader from "../Components/PageLoader";
 const depthToPercent = (depth) => {
   if (depth === null || depth === undefined) return 40;
   
-  // If it's already a number from the API
   if (typeof depth === "number") {
     const map = { 1: 25, 2: 50, 3: 75, 4: 100 };
     return map[depth] ?? 40;
   }
   
-  // If it's a string
   const map = { beginner: 25, intermediate: 60, advanced: 85, expert: 100 };
   return map[String(depth).toLowerCase()] ?? 40;
 };
@@ -174,7 +172,7 @@ const Dashboard = () => {
             </div>
 
             {overdueAssignments.length === 0 ? (
-              <p className="text-xs text-slate-600 italic">No overdue assignments 🎉</p>
+              <p className="text-xs text-slate-600 italic">No overdue assignments</p>
             ) : (
               <ul className="space-y-2">
                 {overdueAssignments.slice(0, 4).map((a) => (
@@ -261,7 +259,7 @@ const Dashboard = () => {
             </div>
 
             {staleSkills.length === 0 ? (
-              <p className="text-xs text-slate-600 italic">All skills recently practiced ✓</p>
+              <p className="text-xs text-slate-600 italic">All skills recently practiced</p>
             ) : (
               <ul className="space-y-2">
                 {staleSkills.slice(0, 5).map((s) => (
