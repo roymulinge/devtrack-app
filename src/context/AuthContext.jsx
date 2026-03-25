@@ -7,6 +7,13 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  
+  const fetchUser = async () => {
+    const res = await api.get("/auth/me/");
+    setUser(res.data);
+
+  };
+
 
   useEffect(() => {
     const restoreSession = async () => {
