@@ -65,38 +65,37 @@ const Register = () => {
     }
   };
 
-  if (registered) {
-    return (
-      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center px-4 py-8 relative overflow-hidden">
-        <div className="absolute w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] rounded-full bg-sky-400/5 blur-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-        <div className="w-full max-w-sm bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-6 sm:p-8 text-center relative z-10">
-          <img src={logo} alt="DevTrack" className="h-16 sm:h-20 w-auto mx-auto mb-5" />
-          <div className="w-14 h-14 rounded-full bg-sky-500/10 border border-sky-500/20 flex items-center justify-center mx-auto mb-5">
-            <svg className="w-7 h-7 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-          </div>
-          <h1 className="text-lg font-bold text-[var(--text-primary)] mb-2">Check your email</h1>
-          <p className="text-xs text-[var(--text-muted)] mb-1">We sent a verification link to</p>
-          <p className="text-sm font-mono text-sky-400 mb-5 break-all">{email}</p>
-          <p className="text-xs text-[var(--text-muted)] leading-relaxed mb-7">
-            Click the link in the email to activate your account.
-            Check your spam folder if you don't see it within a few minutes.
-          </p>
-          <div className="flex items-center gap-3 mb-5">
-            <div className="flex-1 h-px bg-[var(--border)]" />
-            <span className="text-xs font-mono text-[var(--text-muted)]">or</span>
-            <div className="flex-1 h-px bg-[var(--border)]" />
-          </div>
-          <Link to="/login"
-            className="block w-full border border-[var(--border)] hover:border-slate-600 text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-mono text-xs py-3 rounded-lg transition text-center"
-          >
-            ← back to sign in
-          </Link>
+if (registered) {
+  return (
+    <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center px-4 py-8 relative overflow-hidden">
+      <div className="absolute w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] rounded-full bg-sky-400/5 blur-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+      <div className="w-full max-w-sm bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-6 sm:p-8 text-center relative z-10">
+        <img src={logo} alt="DevTrack" className="h-16 sm:h-20 w-auto mx-auto mb-5" />
+
+        {/* Success icon */}
+        <div className="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-5">
+          <svg className="w-7 h-7 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
         </div>
+
+        <h1 className="text-lg font-bold text-[var(--text-primary)] mb-2">Account created</h1>
+        <p className="text-xs text-[var(--text-muted)] mb-1">Welcome to DevTrack,</p>
+        <p className="text-sm font-mono text-sky-400 mb-5 break-all">{email}</p>
+        <p className="text-xs text-[var(--text-muted)] leading-relaxed mb-7">
+          Your account is ready. Sign in to access your workspace.
+        </p>
+
+        <Link
+          to="/login"
+          className="block w-full bg-sky-400 hover:bg-sky-300 text-[#090d13] font-mono font-bold text-sm py-2.5 rounded-lg transition"
+        >
+          sign in →
+        </Link>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center px-4 py-8 relative overflow-hidden">
