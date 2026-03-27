@@ -11,15 +11,18 @@ const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <GoogleOAuthProvider clientId={clientId}>
+    <GoogleOAuthProvider 
+      clientId={clientId}
+      onScriptLoadError={() => console.warn('Google script failed to load')}
+    >
       <BrowserRouter>
         <ThemeProvider>
           <AuthProvider>
-        <App />
-      </AuthProvider>
-     </ThemeProvider>
+             <App />
+          </AuthProvider>
+        </ThemeProvider>
       
-    </BrowserRouter>
-  </GoogleOAuthProvider>
+      </BrowserRouter>
+    </GoogleOAuthProvider>
   </StrictMode>
 )
