@@ -159,19 +159,6 @@ const Profile = () => {
                 />
               </div>
 
-              <div>
-                <label className="block text-xs text-[var(--text-muted)] uppercase tracking-widest font-semibold mb-1.5">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  value={userData?.email || ""}
-                  disabled
-                  className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-3 text-sm text-slate-600 cursor-not-allowed opacity-60"
-                />
-                <p className="text-xs text-slate-700 mt-1.5">Email cannot be changed</p>
-              </div>
-
               {error && (
                 <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
                   {error}
