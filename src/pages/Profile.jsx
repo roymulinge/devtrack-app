@@ -1,12 +1,13 @@
 import { useEffect, useState, useContext } from "react";
 import api from "../api/axios";
 import { AuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import PageLoader from "../Components/PageLoader";
 
 const Profile = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [userData, setUserData] = useState(null);
   const [stats, setStats] = useState({
@@ -29,10 +30,10 @@ const Profile = () => {
       setUserData(res.data);
       setFullName(res.data.full_name || "");
       setStats({
-        projects_count: res.data.projects_count || 0,
-        skills_count: res.data.skills_count || 0,
-        assignments_count: res.data.assignments_count || 0,
-        ideas_count: res.data.ideas_count || 0,
+        projects_count: res.data.stats?.projects || 0,
+        skills_count: res.data.stats?.skills || 0,
+        assignments_count: res.data.stats?.assignments || 0,
+        ideas_count: res.data.stats?.ideas || 0,
       });
     } catch (err) {
       console.error("Error fetching user data:", err);
@@ -43,7 +44,7 @@ const Profile = () => {
 
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [location]);
 
   const updateFullName = async (e) => {
     e.preventDefault();
@@ -78,7 +79,7 @@ const Profile = () => {
   if (loading) return <PageLoader />;
 
   const avatarLetter = userData?.full_name?.[0]?.toUpperCase() || userData?.email?.[0]?.toUpperCase() || "U";
-  const memberSince = userData?.date_joined ? new Date(userData.date_joined).toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "numeric" }) : "Unknown";
+  const memberSince = userData?.member_since ? new Date(userData.member_since).toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "numeric" }) : "Unknown";
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-slate-200 px-4 sm:px-6 py-6 sm:py-10">
