@@ -131,7 +131,6 @@ const WeeklyPriorities = () => {
         {summary && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             {[
-              { label: "Completed",      value: summary.completed_assignments,    color: "text-emerald-400", border: "border-emerald-500/20" },
               { label: "Overdue",        value: summary.overdue_assignments,       color: "text-red-400",     border: "border-red-500/20"     },
               { label: "Active Projects",value: summary.active_projects,           color: "text-sky-400",     border: "border-sky-500/20"     },
               { label: "Skills Practiced",value: summary.skills_practiced_this_week, color: "text-violet-400", border: "border-violet-500/20" },
