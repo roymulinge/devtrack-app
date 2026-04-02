@@ -305,40 +305,8 @@ const WeeklyPriorities = () => {
 
           {summary ? (
             <>
-              {/* Execution score */}
-              {(() => {
-                const total     = summary.completed_assignments + summary.overdue_assignments;
-                const percent   = total === 0 ? 100 : Math.round((summary.completed_assignments / total) * 100);
-                const scoreColor = percent >= 80 ? "text-emerald-400" : percent >= 50 ? "text-amber-400" : "text-red-400";
-                const barColor   = percent >= 80 ? "bg-emerald-400" : percent >= 50 ? "bg-amber-400" : "bg-red-400";
-                const label      = percent >= 80 ? "Great week" : percent >= 50 ? "Decent progress" : "Needs improvement";
-                return (
-                  <div className="mb-4 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-xs text-slate-500 uppercase tracking-widest font-semibold">Execution Score</p>
-                      <span className={`text-xl font-bold font-mono ${scoreColor}`}>{percent}%</span>
-                    </div>
-                    <div className="h-[3px] bg-slate-800 rounded-full overflow-hidden mb-2">
-                      <div
-                        className={`h-full rounded-full transition-all duration-700 ${barColor}`}
-                        style={{ width: `${percent}%` }}
-                      />
-                    </div>
-                    <p className="text-xs text-slate-600">{label}</p>
-                  </div>
-                );
-              })()}
-
               {/* Stats grid */}
               <div className="grid grid-cols-2 gap-3">
-                <div className="bg-[var(--bg-primary)] border border-emerald-500/20 rounded-lg p-3">
-                  <div className="text-xl font-bold font-mono text-emerald-400 mb-0.5">
-                    {summary.completed_assignments}
-                  </div>
-                  <div className="text-xs text-slate-600 uppercase tracking-widest">
-                    Assignments completed
-                  </div>
-                </div>
                 <div className="bg-[var(--bg-primary)] border border-red-500/20 rounded-lg p-3">
                   <div className="text-xl font-bold font-mono text-red-400 mb-0.5">
                     {summary.overdue_assignments}
