@@ -146,7 +146,7 @@ const About = () => {
           <div className="flex justify-center gap-4 flex-wrap">
             <Link
               to="/register"
-              className="bg-sky-500 hover:bg-sky-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition"
+              className="bg-sky-400 hover:bg-sky-300 text-[#090d13] font-mono font-bold text-sm px-6 py-3 rounded-lg transition tracking-wide"
             >
               Get started
             </Link>

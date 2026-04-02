@@ -196,13 +196,13 @@ const Landing = () => {
           <div className="flex justify-center gap-3 flex-wrap">
             <Link
               to="/register"
-              className="bg-sky-400 hover:bg-sky-300 text-[#090d13] font-mono font-bold text-sm px-6 py-2.5 rounded-lg transition tracking-wide"
+              className="bg-sky-400 hover:bg-sky-300 text-[#090d13] font-mono font-bold text-sm px-6 py-3 rounded-lg transition tracking-wide"
             >
               get started free
             </Link>
             <Link
               to="/about"
-              className="bg-transparent border border-[var(--border)] hover:border-slate-600 text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-mono text-sm px-6 py-2.5 rounded-lg transition"
+              className="bg-transparent border border-[var(--border)] hover:border-slate-600 text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-mono text-sm px-6 py-3 rounded-lg transition"
             >
               learn more →
             </Link>

@@ -201,7 +201,7 @@ const Navbar = () => {
                   Login
                 </Link>
                 <Link to="/register"
-                  className="text-[11px] font-mono font-semibold text-[var(--bg-primary)] bg-sky-400 hover:bg-sky-300 px-3.5 py-1.5 rounded-md transition tracking-wide"
+                  className="bg-sky-400 hover:bg-sky-300 text-[#090d13] font-mono font-bold text-sm px-6 py-3 rounded-lg transition tracking-wide"
                 >
                   get started
                 </Link>
