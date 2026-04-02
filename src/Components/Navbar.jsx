@@ -134,7 +134,7 @@ const Navbar = () => {
                         className="text-[11px] font-bold font-mono">{avatarLetter}</span>
                     </div>
                     <span className="text-xs font-mono text-[var(--text-secondary)] max-w-[140px] truncate">
-                      {user.email ?? user.username}
+                      {user.full_name ?? user.email ?? user.username}
                     </span>
                     <svg className={`w-3 h-3 text-slate-600 transition-transform duration-200 ${dropOpen ? "rotate-180" : ""}`}
                       fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -146,7 +146,7 @@ const Navbar = () => {
                     <div className="absolute right-0 top-full mt-2 w-52 bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl shadow-xl z-50 overflow-hidden">
                       <div className="px-4 py-3 border-b border-[var(--border)]">
                         <p className="text-xs font-mono text-slate-600 mb-0.5">signed in as</p>
-                        <p className="text-xs text-[var(--text-primary)] font-medium truncate">{user.email ?? user.username}</p>
+                        <p className="text-xs text-[var(--text-primary)] font-medium truncate">{user.full_name ?? user.email ?? user.username}</p>
                       </div>
                       <div className="py-1">
                         {[
@@ -222,7 +222,7 @@ const Navbar = () => {
               <span style={{ color: avatarColor.text }}
                 className="text-xs font-bold font-mono">{avatarLetter}</span>
             </div>
-            <p className="text-xs text-[var(--text-secondary)] truncate">{user.email ?? user.username}</p>
+            <p className="text-xs text-[var(--text-secondary)] truncate">{user.full_name ?? user.email ?? user.username}</p>
           </div>
 
           {/* Nav links */}
