@@ -43,22 +43,25 @@ const solutions = [
 const Landing = () => {
   return (
     <div className="bg-white dark:bg-[#0b0f14] text-gray-900 dark:text-white min-h-screen antialiased font-sans">
-      {/* Background decorations */}
+      {/* Refined background – one concept per mode */}
       <div className="relative overflow-hidden">
-        {/* Light mode subtle gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-gray-100/30 dark:hidden pointer-events-none" />
-        {/* Dark mode grid + glows */}
+        {/* Light mode: clean white → very light blue gradient + faint radial highlight */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50/30 to-white dark:hidden pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full bg-blue-400/5 blur-3xl dark:hidden pointer-events-none" />
+
+        {/* Dark mode: subtle grid + single radial glow behind hero */}
         <div className="hidden dark:block absolute inset-0 pointer-events-none">
+          {/* Very low opacity grid */}
           <div
-            className="absolute inset-0 opacity-20"
+            className="absolute inset-0 opacity-10"
             style={{
               backgroundImage:
                 "linear-gradient(#1e293b 1px, transparent 1px), linear-gradient(90deg, #1e293b 1px, transparent 1px)",
               backgroundSize: "48px 48px",
             }}
           />
-          <div className="absolute w-[600px] h-[600px] rounded-full bg-blue-500/10 blur-3xl -top-24 left-1/2 -translate-x-1/2" />
-          <div className="absolute w-[300px] h-[300px] rounded-full bg-blue-500/5 blur-3xl bottom-0 right-[10%]" />
+          {/* Single radial glow behind hero */}
+          <div className="absolute w-[600px] h-[600px] rounded-full bg-blue-500/15 blur-3xl -top-24 left-1/2 -translate-x-1/2" />
         </div>
 
         {/* Hero Section */}
@@ -93,11 +96,10 @@ const Landing = () => {
           </div>
         </section>
 
-        {/* Product Preview Section (MANDATORY) */}
+        {/* Product Preview Section */}
         <section className="px-4 pb-16 md:pb-24">
           <div className="max-w-5xl mx-auto">
             <div className="rounded-xl border border-gray-200 dark:border-[#1f2630] shadow-lg shadow-gray-200/30 dark:shadow-none overflow-hidden bg-white dark:bg-[#11161c]">
-              {/* Placeholder dashboard image / styled mockup */}
               <div className="aspect-[16/9] bg-gradient-to-br from-gray-100 to-gray-200 dark:from-[#1a202c] dark:to-[#0f131a] flex items-center justify-center text-gray-500 dark:text-gray-400">
                 <div className="text-center p-8">
                   <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-500/10 flex items-center justify-center">
@@ -114,7 +116,7 @@ const Landing = () => {
           </div>
         </section>
 
-        {/* Stats Bar (updated content) */}
+        {/* Stats Bar */}
         <div className="border-y border-gray-200 dark:border-[#1f2630] bg-gray-50/50 dark:bg-[#0d1117]/60 py-6 px-4">
           <div className="max-w-4xl mx-auto flex justify-center gap-8 md:gap-16 flex-wrap">
             {[
@@ -130,7 +132,7 @@ const Landing = () => {
           </div>
         </div>
 
-        {/* Features Grid (4 features) */}
+        {/* Features Grid */}
         <section className="px-4 py-20 md:py-28">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-14">
@@ -160,7 +162,7 @@ const Landing = () => {
           </div>
         </section>
 
-        {/* How It Works (3 steps) */}
+        {/* How It Works */}
         <section className="px-4 py-16 bg-gray-50 dark:bg-[#0d1117]/50 border-y border-gray-200 dark:border-[#1f2630]">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl font-bold tracking-tight text-center mb-12">How it works</h2>
@@ -194,7 +196,7 @@ const Landing = () => {
           </div>
         </section>
 
-        {/* Problem / Solution (improved spacing & readability) */}
+        {/* Problem / Solution */}
         <section className="px-4 py-20 md:py-28">
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
             <div className="bg-gray-50 dark:bg-[#11161c] rounded-xl border border-gray-200 dark:border-[#1f2630] p-6 md:p-8">
@@ -226,7 +228,7 @@ const Landing = () => {
           </div>
         </section>
 
-        {/* Final CTA (rewritten) */}
+        {/* Final CTA */}
         <section className="px-4 py-20 md:py-28">
           <div className="max-w-3xl mx-auto text-center bg-gray-50 dark:bg-[#11161c] rounded-2xl border border-gray-200 dark:border-[#1f2630] p-8 md:p-12 shadow-sm">
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-3">
@@ -252,7 +254,7 @@ const Landing = () => {
           </div>
         </section>
 
-        {/* Footer (new) */}
+        {/* Footer */}
         <footer className="border-t border-gray-200 dark:border-[#1f2630] bg-gray-50/30 dark:bg-transparent px-4 py-12">
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between gap-8">
