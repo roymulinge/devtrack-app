@@ -1,27 +1,24 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import { Link } from "react-router-dom";
-import PageLoader from "../Components/PageLoader";  
+import PageLoader from "../Components/PageLoader";
+
 const depthToPercent = (depth) => {
   if (depth === null || depth === undefined) return 40;
-  
   if (typeof depth === "number") {
     const map = { 1: 25, 2: 50, 3: 75, 4: 100 };
     return map[depth] ?? 40;
   }
-  
   const map = { beginner: 25, intermediate: 60, advanced: 85, expert: 100 };
   return map[String(depth).toLowerCase()] ?? 40;
 };
 
 const depthColor = (depth) => {
   if (depth === null || depth === undefined) return "#38bdf8";
-  
   if (typeof depth === "number") {
     const map = { 1: "#fbbf24", 2: "#a78bfa", 3: "#38bdf8", 4: "#34d399" };
     return map[depth] ?? "#38bdf8";
   }
-  
   const map = { beginner: "#fbbf24", intermediate: "#a78bfa", advanced: "#38bdf8", expert: "#34d399" };
   return map[String(depth).toLowerCase()] ?? "#38bdf8";
 };
@@ -31,6 +28,7 @@ const getWeekNumber = () => {
   const start = new Date(now.getFullYear(), 0, 1);
   return Math.ceil(((now - start) / 86400000 + start.getDay() + 1) / 7);
 };
+
 const Dashboard = () => {
   const [ideas, setIdeas] = useState([]);
   const [projects, setProjects] = useState([]);
@@ -40,328 +38,364 @@ const Dashboard = () => {
   const [overdueAssignments, setOverdueAssignments] = useState([]);
   const [staleSkills, setStaleSkills] = useState([]);
 
- useEffect(() => {
-  const fetchDashboardData = async () => {
-    try {
-      const [ideasRes, projectsRes, skillsRes, staleRes, overdueRes, prioritiesRes] =
-        await Promise.all([
-          api.get("/ideas/"),
-          api.get("/projects/"),
-          api.get("/skills/"),
-          api.get("/skills/stale/"),
-          api.get("/assignments/overdue/"),
-          api.get("/weekly-priorities/"),
-        ]);
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const [ideasRes, projectsRes, skillsRes, staleRes, overdueRes, prioritiesRes] =
+          await Promise.all([
+            api.get("/ideas/"),
+            api.get("/projects/"),
+            api.get("/skills/"),
+            api.get("/skills/stale/"),
+            api.get("/assignments/overdue/"),
+            api.get("/weekly-priorities/"),
+          ]);
 
-      setIdeas(ideasRes.data.results        ?? ideasRes.data        ?? []);
-      setProjects(projectsRes.data.results  ?? projectsRes.data     ?? []);
-      setSkills(skillsRes.data.results      ?? skillsRes.data       ?? []);
-      setStaleSkills(staleRes.data.results  ?? staleRes.data        ?? []);
-      setOverdueAssignments(overdueRes.data.results ?? overdueRes.data ?? []);
-      setWeeklyPriorities(prioritiesRes.data.results ?? prioritiesRes.data ?? []);
-    } catch (err) {
-      console.error("Dashboard fetch error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  fetchDashboardData();
-}, []);
+        setIdeas(ideasRes.data.results ?? ideasRes.data ?? []);
+        setProjects(projectsRes.data.results ?? projectsRes.data ?? []);
+        setSkills(skillsRes.data.results ?? skillsRes.data ?? []);
+        setStaleSkills(staleRes.data.results ?? staleRes.data ?? []);
+        setOverdueAssignments(overdueRes.data.results ?? overdueRes.data ?? []);
+        setWeeklyPriorities(prioritiesRes.data.results ?? prioritiesRes.data ?? []);
+      } catch (err) {
+        console.error("Dashboard fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboardData();
+  }, []);
 
   if (loading) return <PageLoader />;
-  
-  const today = new Date().toLocaleDateString("en-US", {
-    weekday: "long", year: "numeric", month: "long", day: "numeric",
-  });
-  return (
-    <div className="min-h-screen bg-[var(--bg-primary)] text-slate-200 px-6 py-10">
-      <div className="max-w-6xl mx-auto">
 
-        {/* ── Header ── */}
-        <div className="flex items-end justify-between mb-8 flex-wrap gap-4">
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  // Helper to get project status badge style
+  const getProjectStatusBadge = (status) => {
+    if (status === "active") return "bg-blue-500/20 text-blue-300";
+    if (status === "paused") return "bg-amber-500/20 text-amber-300";
+    return "bg-gray-500/20 text-gray-300";
+  };
+
+  // Helper for stale days
+  const getDaysAgo = (lastPracticed) => {
+    if (!lastPracticed) return null;
+    return Math.floor((Date.now() - new Date(lastPracticed)) / 86400000);
+  };
+
+  return (
+    <div className="min-h-screen bg-[#080b10] text-white">
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Header with date and action buttons */}
+        <div className="flex justify-between items-center mb-8">
           <div>
-            
-            <h1 className="text-3xl font-bold text-[var(--text-primary)]">Dashboard</h1>
-          </div>
-          <div className="text-right">
-            <p className="text-xs text-[var(--text-muted)] font-mono">{today}</p>
-            <p className="text-xs text-slate-700 font-mono mt-0.5">
-              Week {getWeekNumber()} of 52
+            <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+            <p className="text-gray-400 text-sm mt-1">
+              {formattedDate} · Week {getWeekNumber()} of 52
             </p>
           </div>
+          <div className="flex gap-2">
+            <button className="px-3 py-1.5 rounded-lg border border-white/10 hover:bg-white/5 text-sm text-gray-300 transition-all">
+              Share insights
+            </button>
+            <button className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-sm font-medium shadow-sm transition-all flex items-center gap-1">
+              Focus Mode →
+            </button>
+          </div>
         </div>
 
-        {/* ── Stat Bar ── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-          {[
-            { num: projects.length,           label: "Projects",      color: "sky",    border: "border-sky-500/30",    text: "text-sky-400"   },
-            { num: skills.length,             label: "Skills tracked", color: "emerald", border: "border-emerald-500/30", text: "text-emerald-400" },
-            { num: staleSkills.length,        label: "Stale skills",  color: "amber",  border: "border-amber-500/30",  text: "text-amber-400" },
-            { num: overdueAssignments.length, label: "Overdue",       color: "red",    border: "border-red-500/30",    text: "text-red-400"   },
-          ].map(({ num, label, border, text }) => (
-            <div
-              key={label}
-              className={`bg-[var(--bg-surface)] border ${border} rounded-xl p-4 relative overflow-hidden`}
-            >
-              <div className={`text-3xl font-bold font-mono ${text} mb-1`}>{num}</div>
-              <div className="text-xs text-[var(--text-muted)] uppercase tracking-widest font-medium">{label}</div>
-            </div>
-          ))}
+        {/* Stats row (compact, less emphasis) */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+          <div className="rounded-xl bg-[#0f1217] border border-white/5 p-4 hover:bg-[#161b22] transition-all">
+            <div className="text-gray-400 text-xs uppercase tracking-wide">Active projects</div>
+            <div className="text-2xl font-bold mt-1">{projects.length}</div>
+          </div>
+          <div className="rounded-xl bg-[#0f1217] border border-white/5 p-4 hover:bg-[#161b22] transition-all">
+            <div className="text-gray-400 text-xs uppercase tracking-wide">Skills tracked</div>
+            <div className="text-2xl font-bold mt-1">{skills.length}</div>
+          </div>
+          <div className="rounded-xl bg-[#0f1217] border border-white/5 p-4 hover:bg-[#161b22] transition-all">
+            <div className="text-gray-400 text-xs uppercase tracking-wide">This week</div>
+            <div className="text-2xl font-bold mt-1">{weeklyPriorities.length}</div>
+            <div className="text-xs text-green-500 mt-1">+{Math.min(weeklyPriorities.length, 2)} from last</div>
+          </div>
+          <div className="rounded-xl bg-[#0f1217] border border-white/5 p-4 hover:bg-[#161b22] transition-all">
+            <div className="text-gray-400 text-xs uppercase tracking-wide">Ideas captured</div>
+            <div className="text-2xl font-bold mt-1">{ideas.length}</div>
+          </div>
         </div>
 
-        {/* ── Main Grid ── */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-          {/* Projects — 2 cols */}
-          <div className="md:col-span-2 bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-5">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--text-secondary)]">
-                Projects
+        {/* TODAY'S FOCUS - DOMINANT SECTION */}
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full">
+                Next action
               </span>
-              <span className="text-xs font-mono bg-sky-500/10 text-sky-400 border border-sky-500/20 px-2.5 py-0.5 rounded-full">
-                {projects.length} total
-              </span>
+              <span className="text-xs text-gray-400">• Recommended</span>
             </div>
-
-            {projects.length === 0 ? (
-              <p className="text-xs text-slate-600 italic">No projects yet.</p>
-            ) : (
-              <ul className="divide-y divide-slate-800">
-                {projects.slice(0, 5).map((p) => (
-                  <li key={p.id} className="flex items-center gap-3 py-2.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0" />
-                    <span className="text-sm text-slate-300 flex-1 truncate">{p.name}</span>
-                    {p.status && (
-                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium shrink-0
-                        ${p.status === "active"
-                          ? "bg-emerald-500/10 text-emerald-400"
-                          : p.status === "paused"
-                          ? "bg-amber-500/10 text-amber-400"
-                          : "bg-violet-500/10 text-violet-400"}`}>
-                        {p.status}
-                      </span>
-                    )}
-                    {p.tech_stack && (
-                      <span className="text-xs font-mono text-slate-600 shrink-0">{p.tech_stack}</span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            <Link
-              to="/projects"
-              className="block text-right text-xs text-sky-400 mt-4 hover:text-sky-300 transition"
-            >
-              View all projects →
+            <Link to="/weekly-planner" className="text-sm text-gray-400 hover:text-white flex items-center gap-1">
+              Open planner <span>→</span>
             </Link>
           </div>
-
-          {/* Overdue Assignments */}
-          <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-5">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--text-secondary)]">
-                Overdue
-              </span>
-              {overdueAssignments.length > 0 && (
-                <span className="text-xs font-mono bg-red-500/10 text-red-400 border border-red-500/20 px-2.5 py-0.5 rounded-full">
-                  {overdueAssignments.length} urgent
-                </span>
-              )}
+          <div className="rounded-2xl bg-gradient-to-r from-blue-600/15 to-violet-600/15 border border-blue-500/25 p-6 shadow-[0_0_0_1px_rgba(59,130,246,0.2),0_8px_20px_-8px_rgba(0,0,0,0.5)] hover:bg-[#161b22] transition-all">
+            <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+              <div className="flex-1">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/30 text-blue-300 text-xs font-semibold">
+                  HIGHEST IMPACT
+                </div>
+                <h2 className="text-2xl font-bold mt-3 tracking-tight">
+                  {projects.length > 0 ? projects[0]?.name || "Complete Top Project" : "Start your first project"}
+                </h2>
+                <p className="text-gray-300 text-sm mt-1 max-w-xl">
+                  {projects.length > 0
+                    ? "Focus on this to make the biggest progress this week."
+                    : "Create a project to begin tracking your development journey."}
+                </p>
+                <div className="flex flex-wrap gap-3 mt-5">
+                  {projects.length > 0 ? (
+                    <Link
+                      to={`/projects/${projects[0].id}`}
+                      className="bg-blue-600 hover:bg-blue-500 px-5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 shadow-md transition-all active:scale-95"
+                    >
+                      Resume Work →
+                    </Link>
+                  ) : (
+                    <Link
+                      to="/projects"
+                      className="bg-blue-600 hover:bg-blue-500 px-5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 shadow-md transition-all active:scale-95"
+                    >
+                      Create Project →
+                    </Link>
+                  )}
+                  <button className="border border-white/10 hover:bg-white/5 px-5 py-2.5 rounded-lg text-sm transition-all active:scale-95">
+                    Set as priority
+                  </button>
+                </div>
+              </div>
+              <div className="hidden md:block text-right min-w-[100px]">
+                <div className="text-4xl font-black text-blue-400/40">
+                  {skills.length > 0 ? depthToPercent(skills[0]?.depth_level) : 0}%
+                </div>
+                <div className="text-xs text-gray-500 mt-1">
+                  {skills.length > 0 ? skills[0]?.name : "Skill depth"}
+                </div>
+                <div className="w-full bg-white/10 rounded-full h-1 mt-2">
+                  <div
+                    className="bg-blue-500 h-1 rounded-full"
+                    style={{ width: `${skills.length > 0 ? depthToPercent(skills[0]?.depth_level) : 0}%` }}
+                  />
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
 
-            {overdueAssignments.length === 0 ? (
-              <p className="text-xs text-slate-600 italic">No overdue assignments</p>
-            ) : (
-              <ul className="space-y-2">
-                {overdueAssignments.slice(0, 4).map((a) => (
-                  <li
-                    key={a.id}
-                    className="flex items-start gap-2.5 bg-red-500/5 border border-red-500/15 rounded-lg p-3"
-                  >
-                    <div className="w-1.5 h-1.5 rounded-full bg-red-400 mt-1 shrink-0" />
+        {/* Two column layout: Recent Activity + Alerts & Skill Depth */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Recent Activity (Left) */}
+          <div className="lg:col-span-2">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold tracking-tight">Recent Activity</h2>
+              <Link to="/projects" className="text-sm text-gray-400 hover:text-white">
+                View all →
+              </Link>
+            </div>
+            <div className="space-y-2.5">
+              {/* Projects as activity items */}
+              {projects.slice(0, 2).map((project) => (
+                <div
+                  key={`project-${project.id}`}
+                  className="flex items-center justify-between p-3 rounded-xl bg-[#0f1217] border border-white/5 hover:bg-[#161b22] transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center text-violet-400">
+                      🚀
+                    </div>
                     <div>
-                      <p className="text-xs text-red-300 font-medium">{a.title}</p>
-                      {a.due_date && (
-                        <p className="text-xs font-mono text-red-500 mt-0.5">
-                          Due: {new Date(a.due_date).toLocaleDateString()}
-                        </p>
-                      )}
+                      <span className="font-medium">{project.name}</span>
+                      <span className="text-gray-400 text-xs ml-2 bg-white/5 px-1.5 py-0.5 rounded">
+                        Project
+                      </span>
                     </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            <Link
-              to="/assignments"
-              className="block text-right text-xs text-sky-400 mt-4 hover:text-sky-300 transition"
-            >
-              View assignments →
-            </Link>
-          </div>
-
-          {/* Skills */}
-          <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-5">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--text-secondary)]">
-                Skills
-              </span>
-              <span className="text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
-                {skills.length} tracked
-              </span>
-            </div>
-
-            {skills.length === 0 ? (
-              <p className="text-xs text-slate-600 italic">No skills tracked.</p>
-            ) : (
-              <ul className="space-y-3">
-                {skills.slice(0, 5).map((s) => (
-                  <li key={s.id}>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-xs text-slate-300 font-medium">{s.name}</span>
-                      <span className="text-xs font-mono text-slate-600">{s.depth_level}</span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="text-sm text-gray-400">
+                      {project.status === "active" ? "In progress" : project.status || "Active"}
                     </div>
-                    <div className="h-[3px] bg-slate-800 rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full transition-all duration-700"
-                        style={{
-                          width: `${depthToPercent(s.depth_level)}%`,
-                          background: depthColor(s.depth_level),
-                        }}
+                    <div
+                      className={`text-xs flex items-center gap-1 ${
+                        project.status === "active" ? "text-amber-500" : "text-green-500"
+                      }`}
+                    >
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          project.status === "active" ? "bg-amber-500" : "bg-green-500"
+                        }`}
                       />
+                      {project.status === "active" ? "In progress" : "Active"}
                     </div>
-                  </li>
-                ))}
-              </ul>
-            )}
+                    <Link
+                      to={`/projects/${project.id}`}
+                      className="text-xs text-blue-400 hover:text-blue-300"
+                    >
+                      Resume
+                    </Link>
+                  </div>
+                </div>
+              ))}
 
-            <Link
-              to="/skills"
-              className="block text-right text-xs text-sky-400 mt-4 hover:text-sky-300 transition"
-            >
-              View all skills →
-            </Link>
-          </div>
+              {/* Overdue assignments as activity items */}
+              {overdueAssignments.slice(0, 2).map((assignment) => (
+                <div
+                  key={`overdue-${assignment.id}`}
+                  className="flex items-center justify-between p-3 rounded-xl bg-[#0f1217] border border-white/5 hover:bg-[#161b22] transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center text-red-400">
+                      ⚠️
+                    </div>
+                    <div>
+                      <span className="font-medium">{assignment.title}</span>
+                      <span className="text-gray-400 text-xs ml-2 bg-white/5 px-1.5 py-0.5 rounded">
+                        Assignment
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="text-sm text-red-400">Overdue</div>
+                    <div className="text-xs text-red-400 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 bg-red-400 rounded-full" />
+                      Urgent
+                    </div>
+                    <Link
+                      to={`/assignments/${assignment.id}`}
+                      className="text-xs text-red-400 hover:text-red-300"
+                    >
+                      Review →
+                    </Link>
+                  </div>
+                </div>
+              ))}
 
-          {/* Stale Skills */}
-          <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-5">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--text-secondary)]">
-                Stale Skills
-              </span>
-              {staleSkills.length > 0 && (
-                <span className="text-xs font-mono bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2.5 py-0.5 rounded-full">
-                  needs practice
-                </span>
+              {/* Stale skills as activity items */}
+              {staleSkills.slice(0, 1).map((skill) => (
+                <div
+                  key={`stale-${skill.id}`}
+                  className="flex items-center justify-between p-3 rounded-xl bg-[#0f1217] border border-white/5 hover:bg-[#161b22] transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-400">
+                      📘
+                    </div>
+                    <div>
+                      <span className="font-medium">{skill.name}</span>
+                      <span className="text-gray-400 text-xs ml-2 bg-white/5 px-1.5 py-0.5 rounded">
+                        Skill
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="text-sm text-amber-400">Stale</div>
+                    <div className="text-xs text-amber-400 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 bg-amber-400 rounded-full" />
+                      {getDaysAgo(skill.last_practiced)}d ago
+                    </div>
+                    <Link to="/skills" className="text-xs text-blue-400 hover:text-blue-300">
+                      Practice
+                    </Link>
+                  </div>
+                </div>
+              ))}
+
+              {/* If no activities, show placeholder */}
+              {projects.length === 0 && overdueAssignments.length === 0 && staleSkills.length === 0 && (
+                <div className="p-3 rounded-xl bg-[#0f1217] border border-white/5 text-center text-gray-500 text-sm">
+                  No recent activity. Start by creating a project or adding a skill.
+                </div>
               )}
             </div>
-
-            {staleSkills.length === 0 ? (
-              <p className="text-xs text-slate-600 italic">All skills recently practiced</p>
-            ) : (
-              <ul className="space-y-2">
-                {staleSkills.slice(0, 5).map((s) => (
-                  <li
-                    key={s.id}
-                    className="flex items-center gap-2.5 bg-amber-500/5 border border-amber-500/15 rounded-lg p-2.5"
-                  >
-                    <div className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
-                    <span className="text-xs text-amber-200 flex-1">{s.name}</span>
-                    {s.last_practiced && (
-                      <span className="text-xs font-mono text-amber-700 shrink-0">
-                        {Math.floor(
-                          (Date.now() - new Date(s.last_practiced)) / 86400000
-                        )}d ago
-                      </span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            <Link
-              to="/skills"
-              className="block text-right text-xs text-sky-400 mt-4 hover:text-sky-300 transition"
-            >
-              Go practice →
-            </Link>
           </div>
 
-          {/* Weekly Priorities */}
-          <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-5">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--text-secondary)]">
-                This Week
-              </span>
-              <span className="text-xs font-mono bg-sky-500/10 text-sky-400 border border-sky-500/20 px-2.5 py-0.5 rounded-full">
-                priorities
-              </span>
+          {/* Right column: Skill Depth + Alerts (Overdue/Stale) */}
+          <div>
+            {/* Skill Depth Card */}
+            <div className="rounded-xl bg-[#0f1217] border border-white/5 p-5 mb-6 hover:bg-[#161b22] transition-all">
+              <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wide">
+                Skill Depth
+              </h3>
+              <div className="mt-3 space-y-4">
+                {skills.length === 0 ? (
+                  <p className="text-xs text-gray-500 italic">No skills tracked yet.</p>
+                ) : (
+                  skills.slice(0, 3).map((skill) => (
+                    <div key={skill.id}>
+                      <div className="flex justify-between text-sm">
+                        <span>{skill.name}</span>
+                        <span className="text-gray-400">{depthToPercent(skill.depth_level)}%</span>
+                      </div>
+                      <div className="w-full bg-white/10 rounded-full h-1.5 mt-1">
+                        <div
+                          className="h-1.5 rounded-full"
+                          style={{
+                            width: `${depthToPercent(skill.depth_level)}%`,
+                            backgroundColor: depthColor(skill.depth_level),
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+              <Link
+                to="/skills"
+                className="mt-5 w-full text-center text-sm text-gray-400 hover:text-white border-t border-white/5 pt-3 flex items-center justify-center gap-1"
+              >
+                Go practice →
+              </Link>
             </div>
 
-            {weeklyPriorities.length === 0 ? (
-              <p className="text-xs text-slate-600 italic">No priorities set yet.</p>
-            ) : (
-              <ol className="divide-y divide-slate-800">
-                {weeklyPriorities.slice(0, 3).map((p, i) => (
-                  <li key={p.id} className="flex items-start gap-3 py-2.5">
-                    <span className="text-xl font-bold font-mono text-slate-800 leading-tight w-6 shrink-0">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="text-xs text-[var(--text-secondary)] leading-relaxed">
-                      {p.top_three_text}
-                    </span>
-                  </li>
-                ))}
-              </ol>
-            )}
-
-            <Link
-              to="/weekly-planner"
-              className="block text-right text-xs text-sky-400 mt-4 hover:text-sky-300 transition"
-            >
-              Open planner →
-            </Link>
-          </div>
-
-          {/* Ideas — 2 cols */}
-          <div className="md:col-span-2 bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-5">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-semibold uppercase tracking-widest text-[var(--text-secondary)]">
-                Idea Vault
-              </span>
-              <span className="text-xs font-mono bg-violet-500/10 text-violet-400 border border-violet-500/20 px-2.5 py-0.5 rounded-full">
-                {ideas.length} ideas
-              </span>
+            {/* Alerts: Overdue & Stale combined */}
+            <div className="rounded-xl bg-[#0f1217] border border-white/5 p-5 hover:bg-[#161b22] transition-all">
+              <div className="flex items-center gap-2 text-amber-400 mb-3">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 8v4M12 16h.01" />
+                </svg>
+                <span className="text-sm font-semibold">Stale skills</span>
+              </div>
+              <p className="text-gray-300 text-sm">
+                {staleSkills.length === 0
+                  ? "All skills recently practiced — great!"
+                  : `${staleSkills.length} skill${staleSkills.length > 1 ? "s" : ""} need practice`}
+              </p>
+              <div className="h-px bg-white/10 my-4"></div>
+              <div className="flex items-center gap-2 text-red-400 mb-3">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 8v4M12 16h.01" />
+                </svg>
+                <span className="text-sm font-semibold">Overdue</span>
+              </div>
+              <p className="text-gray-300 text-sm">
+                {overdueAssignments.length === 0
+                  ? "No overdue assignments — clear."
+                  : `${overdueAssignments.length} assignment${overdueAssignments.length > 1 ? "s" : ""} overdue`}
+              </p>
+              <Link
+                to="/assignments"
+                className="mt-4 text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1"
+              >
+                Manage assignments →
+              </Link>
             </div>
-
-            {ideas.length === 0 ? (
-              <p className="text-xs text-slate-600 italic">No ideas captured yet.</p>
-            ) : (
-              <ul className="divide-y divide-slate-800">
-                {ideas.slice(0, 4).map((idea) => (
-                  <li key={idea.id} className="flex items-start gap-3 py-2.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-violet-400 mt-1.5 shrink-0" />
-                    <span className="text-sm text-slate-300 flex-1 truncate">
-                      {idea.problem_statement}
-                    </span>
-                    {idea.potential && (
-                      <span className="text-xs font-mono text-slate-600 shrink-0">{idea.potential}</span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            <Link
-              to="/ideas"
-              className="block text-right text-xs text-sky-400 mt-4 hover:text-sky-300 transition"
-            >
-              View all ideas →
-            </Link>
           </div>
-
         </div>
       </div>
     </div>
