@@ -44,11 +44,11 @@ const DailyFocusWidget = () => {
           <div className="px-4 py-3 border-b border-[var(--border)] flex items-center justify-between">
             <div>
               <p className="text-xs font-mono text-sky-400 uppercase tracking-widest">daily focus</p>
-              <p className="text-xs text-slate-600 mt-0.5">Here's what needs your attention</p>
+              <p className="text-xs text-[var(--text-muted)] mt-0.5">Here's what needs your attention</p>
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="text-slate-600 hover:text-slate-400 transition"
+              className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -69,10 +69,10 @@ const DailyFocusWidget = () => {
                     <li key={a.id} className="flex items-start gap-2 bg-red-500/5 border border-red-500/15 rounded-lg p-2.5">
                       <div className="w-1.5 h-1.5 rounded-full bg-red-400 mt-1 shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs text-slate-300 font-medium truncate">{a.title}</p>
+                        <p className="text-xs text-[var(--text-primary)] font-medium truncate">{a.title}</p>
                         <p className="text-xs font-mono mt-0.5">
                           {a.days === null
-                            ? <span className="text-slate-600">no deadline</span>
+                            ? <span className="text-[var(--text-muted)]">no deadline</span>
                             : a.days < 0
                             ? <span className="text-red-400">{Math.abs(a.days)}d overdue</span>
                             : a.days === 0
@@ -105,7 +105,7 @@ const DailyFocusWidget = () => {
                     <li key={s.id} className="flex items-start gap-2 bg-amber-500/5 border border-amber-500/15 rounded-lg p-2.5">
                       <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1 shrink-0" />
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs text-slate-300 font-medium truncate">{s.name}</p>
+                        <p className="text-xs text-[var(--text-primary)] font-medium truncate">{s.name}</p>
                         <p className="text-xs font-mono text-amber-600 mt-0.5">
                           {s.days_ago === null ? "never practiced" : `${s.days_ago}d ago`}
                         </p>
@@ -133,7 +133,7 @@ const DailyFocusWidget = () => {
                   {focus.overdue_projects.map((p) => (
                     <li key={p.id} className="flex items-start gap-2 bg-violet-500/5 border border-violet-500/15 rounded-lg p-2.5">
                       <div className="w-1.5 h-1.5 rounded-full bg-violet-400 mt-1 shrink-0" />
-                      <p className="text-xs text-slate-300 font-medium truncate">{p.name}</p>
+                      <p className="text-xs text-[var(--text-primary)] font-medium truncate">{p.name}</p>
                     </li>
                   ))}
                 </ul>
@@ -151,7 +151,7 @@ const DailyFocusWidget = () => {
             {!hasItems && (
               <div className="text-center py-4">
                 <p className="text-sm font-bold text-emerald-400 mb-1">All clear!</p>
-                <p className="text-xs text-slate-600">No urgent tasks right now.</p>
+                <p className="text-xs text-[var(--text-muted)]">No urgent tasks right now.</p>
               </div>
             )}
 
@@ -167,7 +167,7 @@ const DailyFocusWidget = () => {
             ? "bg-sky-400 text-[#090d13]"
             : hasItems
             ? "bg-[var(--bg-surface)] border border-red-500/30 text-red-400 hover:border-red-500/60"
-            : "bg-[var(--bg-surface)] border border-[var(--border)] text-slate-500 hover:border-slate-600"
+            : "bg-[var(--bg-surface)] border border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--border)]"
           }`}
       >
         {/* Target icon */}
