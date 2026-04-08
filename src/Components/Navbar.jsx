@@ -25,7 +25,7 @@ const NavLink = ({ to, label, isActive, className = "", onClick }) => (
     className={`text-xs font-medium px-3 py-1.5 rounded-md border transition tracking-wide
       ${isActive
         ? "text-sky-400 bg-sky-400/10 border-sky-400/25"
-        : "text-[var(--text-secondary)] border-transparent hover:text-slate-200 hover:bg-white/5 hover:border-slate-700"
+        : "text-[var(--text-secondary)] border-transparent hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)] hover:border-[var(--border)]"
       } ${className}`}
     role="menuitem"
   >
@@ -40,10 +40,10 @@ const DropdownLink = ({ to, label, onClick }) => (
   <Link
     to={to}
     onClick={onClick}
-    className="flex items-center gap-2.5 px-4 py-2 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-white/5 transition"
+    className="flex items-center gap-2.5 px-4 py-2 text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)] transition"
     role="menuitem"
   >
-    <span className="font-mono text-slate-700">→</span>
+    <span className="font-mono text-[var(--text-muted)]">→</span>
     {label}
   </Link>
 );
@@ -130,8 +130,8 @@ const ProfileDropdown = ({ user, dropOpen, setDropOpen, dropRef, onLogout }) => 
         aria-label={`User menu for ${userDisplay}`}
         className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg border transition
           ${dropOpen
-            ? "bg-white/[0.06] border-slate-700"
-            : "bg-white/[0.03] border-[var(--border)] hover:border-slate-700 hover:bg-white/[0.05]"
+            ? "bg-[var(--bg-surface)] border-[var(--border)]"
+            : "bg-[var(--bg-surface)] border-[var(--border)] hover:border-[var(--border)] hover:bg-[var(--bg-surface-hover)]"
           }`}
       >
         <AvatarBadge user={user} size="sm" />
@@ -139,7 +139,7 @@ const ProfileDropdown = ({ user, dropOpen, setDropOpen, dropRef, onLogout }) => 
           {userDisplay}
         </span>
         <svg
-          className={`w-3 h-3 text-slate-600 transition-transform duration-200 ${
+          className={`w-3 h-3 text-[var(--text-muted)] transition-transform duration-200 ${
             dropOpen ? "rotate-180" : ""
           }`}
           fill="none"
@@ -164,7 +164,7 @@ const ProfileDropdown = ({ user, dropOpen, setDropOpen, dropRef, onLogout }) => 
         >
           {/* Header */}
           <div className="px-4 py-3 border-b border-[var(--border)]">
-            <p className="text-xs font-mono text-slate-600 mb-0.5">signed in as</p>
+            <p className="text-xs font-mono text-[var(--text-muted)] mb-0.5">signed in as</p>
             <p className="text-xs text-[var(--text-primary)] font-medium truncate">
               {userDisplay}
             </p>
@@ -217,7 +217,7 @@ const MobileMenu = ({ user, menuOpen, setMenuOpen, pathname, onLogout }) => {
         aria-label="Toggle navigation menu"
         aria-expanded={menuOpen}
         aria-controls="mobile-menu"
-        className="md:hidden flex items-center justify-center w-8 h-8 rounded-lg border border-[var(--border)] text-slate-400 hover:text-slate-200 hover:border-slate-600 transition"
+        className="md:hidden flex items-center justify-center w-8 h-8 rounded-lg border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:border-[var(--border)] transition"
       >
         {menuOpen ? (
           <svg
@@ -270,7 +270,7 @@ const MobileMenu = ({ user, menuOpen, setMenuOpen, pathname, onLogout }) => {
 
           {/* Navigation links */}
           <div className="px-3 py-2">
-            <p className="text-[10px] font-mono text-slate-700 uppercase tracking-widest px-2 mb-1">
+            <p className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-widest px-2 mb-1">
               Navigate
             </p>
             {NAV_LINKS.map(({ to, label }) => (
@@ -281,11 +281,11 @@ const MobileMenu = ({ user, menuOpen, setMenuOpen, pathname, onLogout }) => {
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition mb-0.5
                   ${pathname === to
                     ? "text-sky-400 bg-sky-400/10"
-                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-white/5"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)]"
                   }`}
                 role="menuitem"
               >
-                <span className="font-mono text-slate-700 text-xs">→</span>
+                <span className="font-mono text-[var(--text-muted)] text-xs">→</span>
                 {label}
               </Link>
             ))}
@@ -293,7 +293,7 @@ const MobileMenu = ({ user, menuOpen, setMenuOpen, pathname, onLogout }) => {
 
           {/* Account links */}
           <div className="px-3 py-2 border-t border-[var(--border)]">
-            <p className="text-[10px] font-mono text-slate-700 uppercase tracking-widest px-2 mb-1">
+            <p className="text-[10px] font-mono text-[var(--text-muted)] uppercase tracking-widest px-2 mb-1">
               Account
             </p>
             {MOBILE_ACCOUNT_ITEMS.map(({ to, label }) => (
@@ -301,10 +301,10 @@ const MobileMenu = ({ user, menuOpen, setMenuOpen, pathname, onLogout }) => {
                 key={to}
                 to={to}
                 onClick={handleMenuItemClick}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-white/5 transition mb-0.5"
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface-hover)] transition mb-0.5"
                 role="menuitem"
               >
-                <span className="font-mono text-slate-700 text-xs">→</span>
+                <span className="font-mono text-[var(--text-muted)] text-xs">→</span>
                 {label}
               </Link>
             ))}
@@ -409,7 +409,7 @@ const Navbar = () => {
                   to="/register"
                   className="bg-sky-400 hover:bg-sky-300 text-[#090d13] font-mono font-bold text-sm px-6 py-3 rounded-lg transition tracking-wide"
                 >
-                  get started
+                  Get started
                 </Link>
               </>
             )}
