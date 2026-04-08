@@ -53,9 +53,10 @@ const ChangePassword = () => {
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center px-4 relative overflow-hidden">
-      <div className="absolute w-[500px] h-[500px] rounded-full bg-sky-400/5 blur-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+      {/* Background glow */}
+      <div className="absolute w-[500px] h-[500px] rounded-full bg-blue-500/5 blur-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
 
-      <div className="w-full max-w-sm bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-8 relative z-10">
+      <div className="w-full max-w-sm bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-8 relative z-10">
 
         <img src={logo} alt="DevTrack" className="h-25 w-auto mx-auto mb-8" />
 
@@ -94,7 +95,7 @@ const ChangePassword = () => {
                   value={formData.old_password}
                   onChange={handleChange}
                   required
-                  className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-sky-500/50 transition"
+                  className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent transition-all"
                 />
               </div>
 
@@ -109,7 +110,7 @@ const ChangePassword = () => {
                   value={formData.new_password}
                   onChange={handleChange}
                   required
-                  className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-sky-500/50 transition"
+                  className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent transition-all"
                 />
               </div>
 
@@ -124,12 +125,12 @@ const ChangePassword = () => {
                   value={formData.new_password2}
                   onChange={handleChange}
                   required
-                  className={`w-full bg-[var(--bg-primary)] border rounded-lg px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none transition
+                  className={`w-full bg-black/40 border rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent transition-all
                     ${formData.new_password2 && formData.new_password !== formData.new_password2
                       ? "border-red-500/50"
                       : formData.new_password2 && formData.new_password === formData.new_password2
                       ? "border-emerald-500/50"
-                      : "border-[var(--border)] focus:border-sky-500/50"
+                      : "border-white/10"
                     }`}
                 />
                 {formData.new_password2 && (
@@ -144,9 +145,9 @@ const ChangePassword = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-sky-400 hover:bg-sky-300 disabled:bg-sky-400/40 text-[#090d13] font-mono font-bold text-sm py-2.5 rounded-lg transition tracking-wide mt-2"
+                className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white font-medium text-sm py-2.5 rounded-lg transition-all active:scale-95 mt-2"
               >
-                {loading ? "updating..." : "update password"}
+                {loading ? "Updating..." : "Update password"}
               </button>
             </form>
 
