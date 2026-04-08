@@ -43,7 +43,7 @@ const stack = [
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] text-slate-200">
+    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
 
       {/* Hero */}
       <section className="max-w-4xl mx-auto px-6 pt-20 pb-16 text-center">
@@ -124,7 +124,7 @@ const About = () => {
               </p>
               <ul className="space-y-1">
                 {s.items.map((item) => (
-                  <li key={item} className="text-slate-300 text-sm">
+                  <li key={item} className="text-[var(--text-secondary)] text-sm">
                     {item}
                   </li>
                 ))}
@@ -152,7 +152,7 @@ const About = () => {
             </Link>
             <Link
               to="/contact"
-              className="border border-slate-700 hover:border-slate-500 text-slate-300 hover:text-white px-6 py-2.5 rounded-lg text-sm font-medium transition"
+              className="border border-[var(--border)] hover:border-[var(--text-muted)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] px-6 py-2.5 rounded-lg text-sm font-medium transition"
             >
               Contact us
             </Link>
