@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom"; // Added Link here
 import api from "../api/axios";
 import { AuthContext } from "../context/AuthContext";
-import { useNavigate, useLocation } from "react-router-dom";
 import PageLoader from "../Components/PageLoader";
 
 const Profile = () => {
