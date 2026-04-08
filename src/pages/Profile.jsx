@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom"; // Added Link here
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import api from "../api/axios";
 import { AuthContext } from "../context/AuthContext";
 import PageLoader from "../Components/PageLoader";
@@ -94,7 +94,7 @@ const Profile = () => {
         </div>
 
         {/* User Card */}
-        <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
+        <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pb-6 border-b border-[var(--border)]">
             {/* Avatar */}
             <div className="w-16 h-16 rounded-full bg-sky-400/20 flex items-center justify-center shrink-0">
@@ -139,7 +139,7 @@ const Profile = () => {
         </div>
 
         {/* Edit Profile Form */}
-        <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
+        <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
           <p className="text-xs font-mono text-sky-400 uppercase tracking-widest mb-5">
             {editing ? "edit profile" : "account settings"}
           </p>
@@ -155,7 +155,7 @@ const Profile = () => {
                   placeholder="Your full name"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-3 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-sky-500/50 transition"
+                  className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent transition-all"
                 />
               </div>
 
@@ -169,9 +169,9 @@ const Profile = () => {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="flex-1 bg-sky-400 hover:bg-sky-300 disabled:bg-sky-400/40 text-[#090d13] font-mono font-bold text-sm py-3 rounded-lg transition tracking-wide"
+                  className="flex-1 bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white font-medium text-sm py-2.5 rounded-lg transition-all active:scale-95"
                 >
-                  {submitting ? "saving..." : "save changes"}
+                  {submitting ? "Saving..." : "Save changes"}
                 </button>
                 <button
                   type="button"
@@ -180,9 +180,9 @@ const Profile = () => {
                     setFullName(userData?.full_name || "");
                     setError("");
                   }}
-                  className="flex-1 bg-transparent border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-primary)] font-mono font-bold text-sm py-3 rounded-lg transition"
+                  className="flex-1 bg-transparent border border-white/10 text-[var(--text-secondary)] hover:bg-white/5 font-medium text-sm py-2.5 rounded-lg transition-all"
                 >
-                  cancel
+                  Cancel
                 </button>
               </div>
             </form>
@@ -204,23 +204,23 @@ const Profile = () => {
 
               <button
                 onClick={() => setEditing(true)}
-                className="w-full bg-transparent border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-primary)] font-mono font-bold text-sm py-3 rounded-lg transition"
+                className="w-full bg-transparent border border-white/10 text-[var(--text-secondary)] hover:bg-white/5 font-medium text-sm py-2.5 rounded-lg transition-all"
               >
-                edit profile
+                Edit profile
               </button>
             </div>
           )}
         </div>
 
         {/* Security */}
-        <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
+        <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-4 sm:p-6 mb-6 sm:mb-8">
           <p className="text-xs font-mono text-emerald-400 uppercase tracking-widest mb-5">
             security
           </p>
           <div className="space-y-3">
             <Link
               to="/change-password"
-              className="w-full flex items-center justify-between px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg hover:bg-[var(--bg-surface-hover)] transition"
+              className="w-full flex items-center justify-between px-4 py-3 bg-black/40 border border-white/10 rounded-lg hover:bg-white/5 transition"
             >
               <span className="text-sm text-[var(--text-secondary)]">Change Password</span>
               <span className="text-[var(--text-muted)]">→</span>
@@ -229,7 +229,7 @@ const Profile = () => {
         </div>
 
         {/* Danger Zone */}
-        <div className="bg-[var(--bg-surface)] border border-red-500/20 rounded-2xl p-4 sm:p-6">
+        <div className="bg-[var(--bg-surface)] border border-red-500/20 rounded-xl p-4 sm:p-6">
           <p className="text-xs font-mono text-red-400 uppercase tracking-widest mb-4">
             danger zone
           </p>
@@ -241,9 +241,9 @@ const Profile = () => {
               </p>
               <button
                 onClick={() => setDeleteConfirm("PENDING")}
-                className="w-full bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 text-red-400 font-mono font-bold text-sm py-3 rounded-lg transition"
+                className="w-full bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 text-red-400 font-medium text-sm py-2.5 rounded-lg transition-all"
               >
-                delete account
+                Delete account
               </button>
             </div>
           ) : (
@@ -257,22 +257,22 @@ const Profile = () => {
                   placeholder="Type DELETE to confirm"
                   value={deleteConfirm === "PENDING" ? "" : deleteConfirm}
                   onChange={(e) => setDeleteConfirm(e.target.value.toUpperCase())}
-                  className="w-full bg-[var(--bg-primary)] border border-red-500/30 rounded-lg px-3 py-3 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-red-500/50 transition"
+                  className="w-full bg-black/40 border border-red-500/30 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent transition-all"
                 />
               </div>
               <div className="flex gap-3">
                 <button
                   onClick={deleteAccount}
                   disabled={deleteConfirm !== "DELETE" || deleting}
-                  className="flex-1 bg-red-600 hover:bg-red-500 disabled:bg-red-600/40 text-white font-mono font-bold text-sm py-3 rounded-lg transition"
+                  className="flex-1 bg-red-600 hover:bg-red-500 disabled:bg-red-600/50 disabled:cursor-not-allowed text-white font-medium text-sm py-2.5 rounded-lg transition-all active:scale-95"
                 >
-                  {deleting ? "deleting..." : "permanently delete"}
+                  {deleting ? "Deleting..." : "Permanently delete"}
                 </button>
                 <button
                   onClick={() => setDeleteConfirm("")}
-                  className="flex-1 bg-transparent border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-primary)] font-mono font-bold text-sm py-3 rounded-lg transition"
+                  className="flex-1 bg-transparent border border-white/10 text-[var(--text-secondary)] hover:bg-white/5 font-medium text-sm py-2.5 rounded-lg transition-all"
                 >
-                  cancel
+                  Cancel
                 </button>
               </div>
             </div>
