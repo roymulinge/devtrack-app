@@ -46,7 +46,7 @@ const ChangePassword = () => {
       else if (data?.new_password2) setError(data.new_password2[0]);
       else if (data?.non_field_errors) setError(data.non_field_errors[0]);
       else setError("Failed to change password. Please try again.");
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -94,7 +94,7 @@ const ChangePassword = () => {
                   value={formData.old_password}
                   onChange={handleChange}
                   required
-                  className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 transition"
+                  className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-sky-500/50 transition"
                 />
               </div>
 
@@ -109,7 +109,7 @@ const ChangePassword = () => {
                   value={formData.new_password}
                   onChange={handleChange}
                   required
-                  className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 transition"
+                  className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-sky-500/50 transition"
                 />
               </div>
 
@@ -124,7 +124,7 @@ const ChangePassword = () => {
                   value={formData.new_password2}
                   onChange={handleChange}
                   required
-                  className={`w-full bg-[var(--bg-primary)] border rounded-lg px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none transition
+                  className={`w-full bg-[var(--bg-primary)] border rounded-lg px-3 py-2.5 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none transition
                     ${formData.new_password2 && formData.new_password !== formData.new_password2
                       ? "border-red-500/50"
                       : formData.new_password2 && formData.new_password === formData.new_password2
