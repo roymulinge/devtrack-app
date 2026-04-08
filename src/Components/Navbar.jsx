@@ -360,8 +360,8 @@ const Navbar = () => {
         role="navigation"
         aria-label="Main navigation"
       >
-        {/* Bottom glow line */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-sky-400/20 to-transparent" />
+        {/* Bottom glow line - changed to blue-500/20 for consistency */}
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14">
           {/* Logo */}
@@ -407,7 +407,7 @@ const Navbar = () => {
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-sky-400 hover:bg-sky-300 text-[#090d13] font-mono font-bold text-sm px-6 py-3 rounded-lg transition tracking-wide"
+                  className="bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm px-6 py-2.5 rounded-lg transition-all active:scale-95"
                 >
                   Get started
                 </Link>
