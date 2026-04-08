@@ -39,10 +39,10 @@ const Login = () => {
     <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center px-4 py-8 relative overflow-hidden">
 
       {/* Background glow */}
-      <div className="absolute w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] rounded-full bg-sky-400/5 blur-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+      <div className="absolute w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] rounded-full bg-blue-500/5 blur-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
 
       {/* Card */}
-      <div className="w-full max-w-sm bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-6 sm:p-8 relative z-10">
+      <div className="w-full max-w-sm bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-6 sm:p-8 relative z-10">
 
         {/* Logo */}
         <img
@@ -77,7 +77,7 @@ const Login = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 transition"
+              className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent transition-all"
             />
           </div>
 
@@ -92,10 +92,10 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
-              className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 transition"
+              className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent transition-all"
             />
             <div className="mt-2 text-right">
-              <Link to="/forgot-password" className="text-xs font-mono text-sky-400 hover:text-sky-300 transition">
+              <Link to="/forgot-password" className="text-xs font-mono text-blue-400 hover:text-blue-300 transition">
                 forgot password?
               </Link>
             </div>
@@ -104,9 +104,9 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-sky-400 hover:bg-sky-300 disabled:bg-sky-400/40 text-[#090d13] font-mono font-bold text-sm py-3 rounded-lg transition tracking-wide mt-2"
+            className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white font-medium text-sm py-2.5 rounded-lg transition-all active:scale-95 mt-2"
           >
-            {loading ? "signing in..." : "sign in"}
+            {loading ? "Signing in..." : "Sign in"}
           </button>
         </form>
 
@@ -132,7 +132,7 @@ const Login = () => {
         {/* Register link */}
         <div className="flex items-center justify-between">
           <span className="text-xs text-[var(--text-muted)]">No account yet?</span>
-          <Link to="/register" className="text-xs font-mono text-sky-400 hover:text-sky-300 transition">
+          <Link to="/register" className="text-xs font-mono text-blue-400 hover:text-blue-300 transition">
             register →
           </Link>
         </div>
