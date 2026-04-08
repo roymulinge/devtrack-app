@@ -14,10 +14,10 @@ const getStrength = (pwd) => {
   if (/[^A-Za-z0-9]/.test(pwd))  score++;
   const map = {
     0: { label: "",            color: "" },
-    1: { label: "weak",        color: "bg-red-400"     },
-    2: { label: "medium",      color: "bg-amber-400"   },
-    3: { label: "strong",      color: "bg-sky-400"     },
-    4: { label: "very strong", color: "bg-emerald-400" },
+    1: { label: "weak",        color: "bg-red-500"     },
+    2: { label: "medium",      color: "bg-amber-500"   },
+    3: { label: "strong",      color: "bg-blue-500"     },
+    4: { label: "very strong", color: "bg-emerald-500" },
   };
   return { score, ...map[score] };
 };
@@ -65,44 +65,44 @@ const Register = () => {
     }
   };
 
-if (registered) {
-  return (
-    <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center px-4 py-8 relative overflow-hidden">
-      <div className="absolute w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] rounded-full bg-sky-400/5 blur-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-      <div className="w-full max-w-sm bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-6 sm:p-8 text-center relative z-10">
-        <img src={logo} alt="DevTrack" className="h-16 sm:h-20 w-auto mx-auto mb-5" />
+  if (registered) {
+    return (
+      <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center px-4 py-8 relative overflow-hidden">
+        <div className="absolute w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] rounded-full bg-blue-500/5 blur-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+        <div className="w-full max-w-sm bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-6 sm:p-8 text-center relative z-10">
+          <img src={logo} alt="DevTrack" className="h-16 sm:h-20 w-auto mx-auto mb-5" />
 
-        {/* Success icon */}
-        <div className="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-5">
-          <svg className="w-7 h-7 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-          </svg>
+          {/* Success icon */}
+          <div className="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-5">
+            <svg className="w-7 h-7 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+
+          <h1 className="text-lg font-bold text-[var(--text-primary)] mb-2">Account created</h1>
+          <p className="text-xs text-[var(--text-muted)] mb-1">Welcome to DevTrack,</p>
+          <p className="text-sm font-mono text-blue-400 mb-5 break-all">{email}</p>
+          <p className="text-xs text-[var(--text-muted)] leading-relaxed mb-7">
+            Your account is ready. Sign in to access your workspace.
+          </p>
+
+          <Link
+            to="/login"
+            className="block w-full bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm py-2.5 rounded-lg transition-all active:scale-95"
+          >
+            Sign in →
+          </Link>
         </div>
-
-        <h1 className="text-lg font-bold text-[var(--text-primary)] mb-2">Account created</h1>
-        <p className="text-xs text-[var(--text-muted)] mb-1">Welcome to DevTrack,</p>
-        <p className="text-sm font-mono text-sky-400 mb-5 break-all">{email}</p>
-        <p className="text-xs text-[var(--text-muted)] leading-relaxed mb-7">
-          Your account is ready. Sign in to access your workspace.
-        </p>
-
-        <Link
-          to="/login"
-          className="block w-full bg-sky-400 hover:bg-sky-300 text-[#090d13] font-mono font-bold text-sm py-2.5 rounded-lg transition"
-        >
-          sign in →
-        </Link>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] flex items-center justify-center px-4 py-8 relative overflow-hidden">
 
       <div className="absolute w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] rounded-full bg-violet-400/5 blur-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
 
-      <div className="w-full max-w-sm bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-6 sm:p-8 relative z-10">
+      <div className="w-full max-w-sm bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-6 sm:p-8 relative z-10">
 
         <img src={logo} alt="DevTrack" className="h-16 sm:h-20 w-auto mx-auto mb-6" />
 
@@ -127,7 +127,7 @@ if (registered) {
             <input
               type="text" name="full_name" placeholder="John Doe"
               value={full_name} onChange={handleChange} required
-              className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 transition"
+              className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent transition-all"
             />
           </div>
 
@@ -139,7 +139,7 @@ if (registered) {
             <input
               type="email" name="email" placeholder="you@example.com"
               value={email} onChange={handleChange} required autoComplete="email"
-              className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 transition"
+              className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent transition-all"
             />
           </div>
 
@@ -151,17 +151,17 @@ if (registered) {
             <input
               type="password" name="password" placeholder="••••••••"
               value={password} onChange={handleChange} required autoComplete="new-password"
-              className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 transition"
+              className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent transition-all"
             />
             {password && (
               <div className="mt-2">
                 <div className="flex gap-1 mb-1">
                   {[1, 2, 3, 4].map((n) => (
-                    <div key={n} className={`flex-1 h-[2px] rounded-full transition-all duration-300 ${n <= strength.score ? strength.color : "bg-[var(--border)]"}`} />
+                    <div key={n} className={`flex-1 h-[2px] rounded-full transition-all duration-300 ${n <= strength.score ? strength.color : "bg-white/10"}`} />
                   ))}
                 </div>
                 <p className={`text-xs font-mono ${
-                  strength.score <= 1 ? "text-red-400" : strength.score === 2 ? "text-amber-400" : strength.score === 3 ? "text-sky-400" : "text-emerald-400"
+                  strength.score <= 1 ? "text-red-400" : strength.score === 2 ? "text-amber-400" : strength.score === 3 ? "text-blue-400" : "text-emerald-400"
                 }`}>{strength.label}</p>
               </div>
             )}
@@ -175,8 +175,8 @@ if (registered) {
             <input
               type="password" name="password2" placeholder="••••••••"
               value={password2} onChange={handleChange} required autoComplete="new-password"
-              className={`w-full bg-[var(--bg-primary)] border rounded-lg px-3 py-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none transition
-                ${password2 && password !== password2 ? "border-red-500/50" : password2 && password === password2 ? "border-emerald-500/50" : "border-[var(--border)] focus:border-sky-500/50"}`}
+              className={`w-full bg-black/40 border rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent transition-all
+                ${password2 && password !== password2 ? "border-red-500/50" : password2 && password === password2 ? "border-emerald-500/50" : "border-white/10"}`}
             />
             {password2 && (
               <p className={`text-xs font-mono mt-1 ${password === password2 ? "text-emerald-400" : "text-red-400"}`}>
@@ -187,9 +187,9 @@ if (registered) {
 
           <button
             type="submit" disabled={loading}
-            className="w-full bg-sky-400 hover:bg-sky-300 disabled:bg-sky-400/40 text-[#090d13] font-mono font-bold text-sm py-3 rounded-lg transition tracking-wide mt-2"
+            className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/50 disabled:cursor-not-allowed text-white font-medium text-sm py-2.5 rounded-lg transition-all active:scale-95 mt-2"
           >
-            {loading ? "creating account..." : "create account"}
+            {loading ? "Creating account..." : "Create account"}
           </button>
 
         </form>
@@ -216,7 +216,7 @@ if (registered) {
         {/* Login link */}
         <div className="flex items-center justify-between">
           <span className="text-xs text-[var(--text-muted)]">Already have an account?</span>
-          <Link to="/login" className="text-xs font-mono text-sky-400 hover:text-sky-300 transition">
+          <Link to="/login" className="text-xs font-mono text-blue-400 hover:text-blue-300 transition">
             sign in →
           </Link>
         </div>
