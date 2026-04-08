@@ -82,12 +82,12 @@ const Profile = () => {
   const memberSince = userData?.member_since ? new Date(userData.member_since).toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "numeric" }) : "Unknown";
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] text-slate-200 px-4 sm:px-6 py-6 sm:py-10">
+    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] px-4 sm:px-6 py-6 sm:py-10">
       <div className="max-w-2xl mx-auto">
 
         {/* Header */}
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">Profile</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Profile</h1>
           <p className="text-sm text-[var(--text-muted)] mt-1">
             Manage your account settings and information.
           </p>
@@ -103,12 +103,12 @@ const Profile = () => {
 
             {/* User info */}
             <div className="flex-1 min-w-0">
-              <h2 className="text-lg sm:text-xl font-bold text-[var(--text-primary)] truncate">
+              <h2 className="text-lg sm:text-xl font-bold truncate">
                 {userData?.full_name || "User"}
               </h2>
               <p className="text-sm text-[var(--text-muted)] mt-1 truncate">{userData?.email}</p>
               <div className="flex items-center gap-2 mt-2 flex-wrap">
-                <span className="text-xs font-mono text-slate-600">
+                <span className="text-xs font-mono text-[var(--text-muted)]">
                   Member since {memberSince}
                 </span>
                 <span className={`text-xs font-mono px-2 py-0.5 rounded-full border ${
@@ -155,7 +155,7 @@ const Profile = () => {
                   placeholder="Your full name"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-sky-500/50 transition"
+                  className="w-full bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg px-3 py-3 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-sky-500/50 transition"
                 />
               </div>
 
@@ -180,7 +180,7 @@ const Profile = () => {
                     setFullName(userData?.full_name || "");
                     setError("");
                   }}
-                  className="flex-1 bg-transparent border border-[var(--border)] text-[var(--text-secondary)] hover:border-slate-700 hover:text-slate-200 font-mono font-bold text-sm py-3 rounded-lg transition"
+                  className="flex-1 bg-transparent border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-primary)] font-mono font-bold text-sm py-3 rounded-lg transition"
                 >
                   cancel
                 </button>
@@ -192,19 +192,19 @@ const Profile = () => {
                 <label className="block text-xs text-[var(--text-muted)] uppercase tracking-widest font-semibold mb-1.5">
                   Full Name
                 </label>
-                <p className="text-sm text-[var(--text-primary)]">{userData?.full_name || "Not set"}</p>
+                <p className="text-sm">{userData?.full_name || "Not set"}</p>
               </div>
 
               <div>
                 <label className="block text-xs text-[var(--text-muted)] uppercase tracking-widest font-semibold mb-1.5">
                   Email
                 </label>
-                <p className="text-sm text-[var(--text-primary)]">{userData?.email}</p>
+                <p className="text-sm">{userData?.email}</p>
               </div>
 
               <button
                 onClick={() => setEditing(true)}
-                className="w-full bg-transparent border border-[var(--border)] text-[var(--text-secondary)] hover:border-slate-700 hover:text-slate-200 hover:bg-white/5 font-mono font-bold text-sm py-3 rounded-lg transition tracking-wide"
+                className="w-full bg-transparent border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-primary)] font-mono font-bold text-sm py-3 rounded-lg transition"
               >
                 edit profile
               </button>
@@ -218,13 +218,13 @@ const Profile = () => {
             security
           </p>
           <div className="space-y-3">
-            <a
-              href="/change-password"
-              className="w-full flex items-center justify-between px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg hover:border-slate-700 hover:bg-white/5 transition"
+            <Link
+              to="/change-password"
+              className="w-full flex items-center justify-between px-4 py-3 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg hover:bg-[var(--bg-surface-hover)] transition"
             >
               <span className="text-sm text-[var(--text-secondary)]">Change Password</span>
               <span className="text-[var(--text-muted)]">→</span>
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -241,7 +241,7 @@ const Profile = () => {
               </p>
               <button
                 onClick={() => setDeleteConfirm("PENDING")}
-                className="w-full bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 text-red-400 font-mono font-bold text-sm py-3 rounded-lg transition tracking-wide"
+                className="w-full bg-red-500/10 border border-red-500/30 hover:bg-red-500/20 text-red-400 font-mono font-bold text-sm py-3 rounded-lg transition"
               >
                 delete account
               </button>
@@ -257,20 +257,20 @@ const Profile = () => {
                   placeholder="Type DELETE to confirm"
                   value={deleteConfirm === "PENDING" ? "" : deleteConfirm}
                   onChange={(e) => setDeleteConfirm(e.target.value.toUpperCase())}
-                  className="w-full bg-[var(--bg-primary)] border border-red-500/30 rounded-lg px-3 py-3 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-red-500/50 transition"
+                  className="w-full bg-[var(--bg-primary)] border border-red-500/30 rounded-lg px-3 py-3 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-red-500/50 transition"
                 />
               </div>
               <div className="flex gap-3">
                 <button
                   onClick={deleteAccount}
                   disabled={deleteConfirm !== "DELETE" || deleting}
-                  className="flex-1 bg-red-600 hover:bg-red-500 disabled:bg-red-600/40 text-white font-mono font-bold text-sm py-3 rounded-lg transition tracking-wide"
+                  className="flex-1 bg-red-600 hover:bg-red-500 disabled:bg-red-600/40 text-white font-mono font-bold text-sm py-3 rounded-lg transition"
                 >
                   {deleting ? "deleting..." : "permanently delete"}
                 </button>
                 <button
                   onClick={() => setDeleteConfirm("")}
-                  className="flex-1 bg-transparent border border-[var(--border)] text-[var(--text-secondary)] hover:border-slate-700 hover:text-slate-200 font-mono font-bold text-sm py-3 rounded-lg transition"
+                  className="flex-1 bg-transparent border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-primary)] font-mono font-bold text-sm py-3 rounded-lg transition"
                 >
                   cancel
                 </button>
