@@ -66,12 +66,13 @@ const Assignments = () => {
         deadline:      deadline   || null,
         status:        "not_started",
       });
-      setAssignments([res.data, ...assignments]);
-      setTitle("");
-      setSubject("");
-      setProjectId("");
-      setSkillId("");
-      setDeadline("");
+      // ← refetch instead of prepending res.data
+    await fetchData();
+    setTitle("");
+    setSubject("");
+    setProjectId("");
+    setSkillId("");
+    setDeadline("");
     } catch (err) {
       console.error("Error creating assignment:", err);
       const data = err.response?.data;
