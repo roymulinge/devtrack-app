@@ -50,12 +50,17 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
    const login = async (email, password) => {
-    const response = await api.post("/token/", { email, password });
+    try{
+    const response = await api.post("/auth/login/", { email, password });
     const { access, refresh } = response.data;
     localStorage.setItem("access_token", access);
     localStorage.setItem("refresh_token", refresh);
     
     await fetchUser();
+  } catch (err) {
+     // Throw error so login page can show the error message 
+    throw err;
+  }
   };
   const logout = () => {
     localStorage.removeItem("access_token");
