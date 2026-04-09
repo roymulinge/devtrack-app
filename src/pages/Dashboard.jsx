@@ -96,7 +96,7 @@ const Dashboard = () => {
     setSettingPriority(true);
     try {
       const focusProject = dashboard.active_projects[0];
-      await api.post("/planning/weekly-priorities/", {
+      await api.post("/weekly-priorities/", {
         top_three_text: `Complete ${focusProject.name}`,
         week_start:     new Date().toISOString().split("T")[0],
       });
