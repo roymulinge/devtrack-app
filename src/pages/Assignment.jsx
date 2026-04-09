@@ -234,8 +234,8 @@ const Assignments = () => {
               const days    = getDaysUntil(a.deadline);
               const dl      = deadlineStyle(days);
               const sc      = STATUS_CONFIG[a.status] ?? STATUS_CONFIG.not_started;
-              const linked  = projects.find((p) => p.id === a.project);
-              const skill   = skills.find((s) => s.id === a.related_skill);
+              const linked = projects.find((p) => p.id === a.project?.id ?? a.project);
+              const skill  = skills.find((s)  => s.id === a.related_skill?.id ?? a.related_skill);
               const isDone  = a.status === "completed";
 
               return (

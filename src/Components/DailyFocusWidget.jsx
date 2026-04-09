@@ -9,26 +9,36 @@ const DailyFocusWidget = () => {
   const [open, setOpen]       = useState(false);
   const [focus, setFocus]     = useState(null);
   const [loading, setLoading] = useState(true);
+  const [failed, setFailed]   = useState(false);   // ← tracks 502/network errors
 
   const hide = ["/login", "/register", "/", "/about", "/contact"].includes(location.pathname)
     || location.pathname.startsWith("/verify-email");
 
   useEffect(() => {
     if (!user || hide) return;
+
+    let cancelled = false;
+
     const fetchFocus = async () => {
+      setFailed(false);
       try {
         const res = await api.get("/planning/daily-focus/");
-        setFocus(res.data);
+        if (!cancelled) setFocus(res.data);
       } catch (err) {
         console.error("Focus fetch error:", err);
+        // 502 = server sleeping on Render free tier — fail silently, don't crash
+        if (!cancelled) setFailed(true);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
+
     fetchFocus();
+    return () => { cancelled = true; };
   }, [user, location.pathname]);
 
-  if (!user || hide || loading) return null;
+  // Don't render anything if hidden, loading, or fetch failed (502 etc.)
+  if (!user || hide || loading || failed) return null;
 
   const totalUrgent = focus?.total_urgent ?? 0;
   const hasItems    = totalUrgent > 0;
@@ -36,11 +46,9 @@ const DailyFocusWidget = () => {
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
 
-      {/* Expanded panel */}
       {open && focus && (
         <div className="w-80 bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl shadow-2xl overflow-hidden">
 
-          {/* Header */}
           <div className="px-4 py-3 border-b border-[var(--border)] flex items-center justify-between">
             <div>
               <p className="text-xs font-mono text-sky-400 uppercase tracking-widest">daily focus</p>
@@ -58,7 +66,6 @@ const DailyFocusWidget = () => {
 
           <div className="p-4 space-y-4 max-h-96 overflow-y-auto">
 
-            {/* Urgent Assignments */}
             {focus.urgent_assignments?.length > 0 && (
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest text-red-400 mb-2">
@@ -94,7 +101,6 @@ const DailyFocusWidget = () => {
               </div>
             )}
 
-            {/* Stale Skills */}
             {focus.stale_skills?.length > 0 && (
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest text-amber-400 mb-2">
@@ -123,7 +129,6 @@ const DailyFocusWidget = () => {
               </div>
             )}
 
-            {/* Overdue Projects */}
             {focus.overdue_projects?.length > 0 && (
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest text-violet-400 mb-2">
@@ -147,7 +152,6 @@ const DailyFocusWidget = () => {
               </div>
             )}
 
-            {/* All clear */}
             {!hasItems && (
               <div className="text-center py-4">
                 <p className="text-sm font-bold text-emerald-400 mb-1">All clear!</p>
@@ -159,7 +163,6 @@ const DailyFocusWidget = () => {
         </div>
       )}
 
-      {/* Floating button */}
       <button
         onClick={() => setOpen((v) => !v)}
         className={`relative w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-all duration-200
@@ -170,14 +173,12 @@ const DailyFocusWidget = () => {
             : "bg-[var(--bg-surface)] border border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--border)]"
           }`}
       >
-        {/* Target icon */}
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <circle cx="12" cy="12" r="10" />
           <circle cx="12" cy="12" r="6" />
           <circle cx="12" cy="12" r="2" />
         </svg>
 
-        {/* Urgent count badge */}
         {hasItems && !open && (
           <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold font-mono flex items-center justify-center">
             {totalUrgent > 9 ? "9+" : totalUrgent}

@@ -3,19 +3,16 @@ import api from "../api/axios";
 import { Link, useNavigate } from "react-router-dom";
 import PageLoader from "../Components/PageLoader";
 
-// Maps depth_level string to a percentage for the skill bar display
 const depthToPercent = (depth) => {
   const map = { beginner: 25, intermediate: 60, advanced: 85, expert: 100 };
   return map[String(depth).toLowerCase()] ?? 40;
 };
 
-// Maps depth_level string to a color for the skill bar
 const depthColor = (depth) => {
   const map = { beginner: "#fbbf24", intermediate: "#a78bfa", advanced: "#38bdf8", expert: "#34d399" };
   return map[String(depth).toLowerCase()] ?? "#38bdf8";
 };
 
-// Gets current week number out of 52 for the header display
 const getWeekNumber = () => {
   const now   = new Date();
   const start = new Date(now.getFullYear(), 0, 1);
@@ -25,22 +22,20 @@ const getWeekNumber = () => {
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  // Single state object for all dashboard data from /core/dashboard/
-  // Replaces the 6 separate useState calls that matched the 6 old API calls
-  const [dashboard, setDashboard] = useState(null);
-  const [loading, setLoading]     = useState(true);
-
-  // UI-only state — not data, these stay
-  const [focusMode, setFocusMode]         = useState(false);
+  const [dashboard, setDashboard]             = useState(null);
+  const [loading, setLoading]                 = useState(true);
+  const [error, setError]                     = useState(false);
+  const [focusMode, setFocusMode]             = useState(false);
   const [settingPriority, setSettingPriority] = useState(false);
 
   const fetchDashboardData = async () => {
+    setError(false);
     try {
-      // ONE request replaces 6 — backend does all the aggregation
       const res = await api.get("/core/dashboard/");
       setDashboard(res.data);
     } catch (err) {
       console.error("Dashboard fetch error:", err);
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -50,7 +45,6 @@ const Dashboard = () => {
     fetchDashboardData();
   }, []);
 
-  // Shares a text summary using Web Share API or clipboard fallback
   const handleShareInsights = async () => {
     if (!dashboard) return;
     const summary =
@@ -75,33 +69,30 @@ const Dashboard = () => {
 
   const toggleFocusMode = () => setFocusMode(!focusMode);
 
-  // Calls /next-action/ which returns the most important thing to work on
   const handleResumeWork = async () => {
     try {
       const res    = await api.get("/planning/next-action/");
       const action = res.data;
-      // Navigate to list pages — detail routes don't exist yet
-      if (action.type === "project")    navigate("/projects");
+      if (action.type === "project")         navigate("/projects");
       else if (action.type === "assignment") navigate("/assignments");
-      else navigate("/projects");
+      else                                   navigate("/projects");
     } catch (err) {
       console.error("Failed to get next action", err);
       navigate("/projects");
     }
   };
 
-  // Posts the first active project as this week's priority
+  // Fixed: removed top_three_text — field no longer exists on WeeklyPriority model
   const handleSetPriority = async () => {
     if (!dashboard?.active_projects?.length) return;
     setSettingPriority(true);
     try {
       const focusProject = dashboard.active_projects[0];
       await api.post("/weekly-priorities/", {
-        top_three_text: `Complete ${focusProject.name}`,
-        week_start:     new Date().toISOString().split("T")[0],
+        week_start: new Date().toISOString().split("T")[0],
+        notes:      `Focus: ${focusProject.name}`,   // ← use notes instead
       });
       alert("Added to weekly priorities!");
-      // Re-fetch dashboard to update this_week data
       fetchDashboardData();
     } catch (err) {
       console.error("Failed to set priority", err);
@@ -113,21 +104,27 @@ const Dashboard = () => {
 
   if (loading) return <PageLoader />;
 
-  if (!dashboard) return (
-  <div className="min-h-screen flex items-center justify-center text-[var(--text-muted)]">
-    Failed to load dashboard. Please refresh.
-  </div>
-);
+  // Error state — shown when fetch fails (e.g. server waking up from sleep)
+  if (error || !dashboard) return (
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4 text-[var(--text-muted)]">
+      <p className="text-lg font-semibold text-[var(--text-primary)]">Failed to load dashboard</p>
+      <p className="text-sm">The server may be waking up. Please wait a moment.</p>
+      <button
+        onClick={() => { setLoading(true); fetchDashboardData(); }}
+        className="mt-2 px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-all"
+      >
+        Retry
+      </button>
+    </div>
+  );
 
-  // Destructure dashboard data for cleaner JSX below
-  // Each variable maps directly to a key in the /core/dashboard/ response
   const {
-    counts,               // { projects, skills, assignments, ideas }
-    overdue_assignments,  // list of AssignmentBriefSerializer objects
-    stale_skills,         // list of SkillBriefSerializer objects
-    active_projects,      // list of ProjectBriefSerializer objects
-    this_week,            // WeeklyPrioritySerializer or null
-    focus,                // { level, message, type, id }
+    counts,
+    overdue_assignments,
+    stale_skills,
+    active_projects,
+    this_week,
+    focus,
   } = dashboard;
 
   const today         = new Date();
@@ -135,13 +132,11 @@ const Dashboard = () => {
     weekday: "long", year: "numeric", month: "long", day: "numeric",
   });
 
-  // Calculates how many days ago a skill was practiced for display
   const getDaysAgo = (lastPracticed) => {
     if (!lastPracticed) return null;
     return Math.floor((Date.now() - new Date(lastPracticed)) / 86400000);
   };
 
-  // Focus mode — full screen single project view
   if (focusMode) {
     return (
       <div className="fixed inset-0 bg-[var(--bg-primary)] z-50 flex items-center justify-center p-6">
@@ -151,7 +146,6 @@ const Dashboard = () => {
               <span className="text-xs font-semibold uppercase tracking-wider text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full">
                 FOCUS MODE
               </span>
-              {/* Show the backend focus message in focus mode */}
               <h2 className="text-3xl font-bold mt-4 text-[var(--text-primary)]">
                 {focus?.message ?? "You're on track"}
               </h2>
@@ -213,7 +207,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Stats row — uses counts from /core/dashboard/ */}
+        {/* Stats row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
           <div className="rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] p-4 hover:bg-[var(--bg-surface-hover)] transition-all">
             <div className="text-[var(--text-muted)] text-xs uppercase tracking-wide">Active projects</div>
@@ -233,7 +227,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* FOCUS CARD — powered by backend _compute_focus() */}
+        {/* FOCUS CARD */}
         <div className="mb-12">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
@@ -258,7 +252,6 @@ const Dashboard = () => {
           }`}>
             <div className="flex flex-col md:flex-row justify-between items-start gap-4">
               <div className="flex-1">
-                {/* Focus level badge — critical/high/medium/clear */}
                 <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
                   focus?.level === "critical" ? "bg-red-500/30 text-red-300" :
                   focus?.level === "high"     ? "bg-amber-500/30 text-amber-300" :
@@ -268,7 +261,6 @@ const Dashboard = () => {
                   {focus?.level?.toUpperCase() ?? "CLEAR"}
                 </div>
 
-                {/* Focus message from backend _compute_focus() */}
                 <h2 className="text-2xl font-bold mt-3 tracking-tight">
                   {focus?.message ?? "You're on track. Plan your week."}
                 </h2>
@@ -290,12 +282,9 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* Skill depth display — first stale skill or first active skill */}
               <div className="hidden md:block text-right min-w-[100px]">
                 <div className="text-4xl font-black text-blue-400/40">
-                  {stale_skills?.length > 0
-                    ? depthToPercent(stale_skills[0]?.depth_level)
-                    : 0}%
+                  {stale_skills?.length > 0 ? depthToPercent(stale_skills[0]?.depth_level) : 0}%
                 </div>
                 <div className="text-xs text-[var(--text-muted)] mt-1">
                   {stale_skills?.length > 0 ? stale_skills[0]?.name : "All skills fresh"}
@@ -314,7 +303,6 @@ const Dashboard = () => {
         {/* Two column layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-          {/* Recent Activity — overdue + stale from dashboard response */}
           <div className="lg:col-span-2">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold tracking-tight">Recent Activity</h2>
@@ -324,7 +312,6 @@ const Dashboard = () => {
             </div>
             <div className="space-y-2.5">
 
-              {/* Active projects from dashboard */}
               {active_projects?.slice(0, 2).map((project) => (
                 <div key={`project-${project.id}`} className="flex items-center justify-between p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] hover:bg-[var(--bg-surface-hover)] transition-all">
                   <div className="flex items-center gap-3">
@@ -344,7 +331,6 @@ const Dashboard = () => {
                 </div>
               ))}
 
-              {/* Overdue assignments from dashboard */}
               {overdue_assignments?.slice(0, 2).map((assignment) => (
                 <div key={`overdue-${assignment.id}`} className="flex items-center justify-between p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] hover:bg-[var(--bg-surface-hover)] transition-all">
                   <div className="flex items-center gap-3">
@@ -364,7 +350,6 @@ const Dashboard = () => {
                 </div>
               ))}
 
-              {/* Stale skills from dashboard */}
               {stale_skills?.slice(0, 1).map((skill) => (
                 <div key={`stale-${skill.id}`} className="flex items-center justify-between p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] hover:bg-[var(--bg-surface-hover)] transition-all">
                   <div className="flex items-center gap-3">
@@ -384,7 +369,6 @@ const Dashboard = () => {
                 </div>
               ))}
 
-              {/* Empty state */}
               {!active_projects?.length && !overdue_assignments?.length && !stale_skills?.length && (
                 <div className="p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] text-center text-[var(--text-muted)] text-sm">
                   No recent activity. Start by creating a project or adding a skill.
@@ -393,9 +377,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Right column */}
           <div>
-            {/* Skill depth card */}
             <div className="rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] p-5 mb-6">
               <h3 className="text-sm font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Skill Depth</h3>
               <div className="mt-3 space-y-4">
@@ -423,7 +405,6 @@ const Dashboard = () => {
               </Link>
             </div>
 
-            {/* Alerts card */}
             <div className="rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] p-5">
               <div className="flex items-center gap-2 text-amber-400 mb-3">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
