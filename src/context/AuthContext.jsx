@@ -9,8 +9,15 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   
   const fetchUser = async () => {
-    const res = await api.get("/auth/me/");
-    setUser(res.data);
+    try{
+      const res = await api.get("/auth/me/");
+      setUser(res.data);
+    } catch (err){
+      //token exists but is invalid - clear everything
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      setUser(null);
+    }
 
   };
 
