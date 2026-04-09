@@ -1,7 +1,7 @@
 
 import AppContent from "./AppContent";
 import { useContext } from "react";
-import { BrowserRouter as Router, Routes, Route,useLocation } from "react-router-dom";
+import { BrowserRouter as Router,  } from "react-router-dom";
 
 function App() {
   return (
