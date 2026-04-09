@@ -113,6 +113,12 @@ const Dashboard = () => {
 
   if (loading) return <PageLoader />;
 
+  if (!dashboard) return (
+  <div className="min-h-screen flex items-center justify-center text-[var(--text-muted)]">
+    Failed to load dashboard. Please refresh.
+  </div>
+);
+
   // Destructure dashboard data for cleaner JSX below
   // Each variable maps directly to a key in the /core/dashboard/ response
   const {
