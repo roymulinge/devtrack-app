@@ -104,7 +104,7 @@ function AppContent(){
 
 
     
-       <DailyFocusWidget />
+      {user && <DailyFocusWidget />} 
     </>
   )
 }
