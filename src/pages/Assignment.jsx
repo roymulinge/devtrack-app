@@ -90,11 +90,12 @@ const Assignments = () => {
   };
 
   const deleteAssignment = async (id) => {
-    if (!window.confirm("Delete this assignment?")) return;
     try {
       await api.delete(`/assignments/${id}/`);
       setAssignments((prev) => prev.filter((a) => a.id !== id));
     } catch (err) {
+      const message = err.response?.data?.detail || "Failed to delete assignment. Please try again.";
+      setError(message);
       console.error("Error deleting assignment:", err);
     }
   };
