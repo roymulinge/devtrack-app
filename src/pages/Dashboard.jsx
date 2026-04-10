@@ -27,6 +27,7 @@ const Dashboard = () => {
   const [error, setError]                     = useState(false);
   const [focusMode, setFocusMode]             = useState(false);
   const [settingPriority, setSettingPriority] = useState(false);
+  const [priorityToast, setPriorityToast] = useState("");
 
   const fetchDashboardData = async () => {
     setError(false);
@@ -92,11 +93,13 @@ const Dashboard = () => {
         week_start: new Date().toISOString().split("T")[0],
         notes:      `Focus: ${focusProject.name}`,   // ← use notes instead
       });
-      alert("Added to weekly priorities!");
+      setPriorityToast("✓ Added to this week's priorities");
+      setTimeout(() => setPriorityToast(""), 3000);
+      
       fetchDashboardData();
     } catch (err) {
       console.error("Failed to set priority", err);
-      alert("Could not set priority. Please try again.");
+     
     } finally {
       setSettingPriority(false);
     }
