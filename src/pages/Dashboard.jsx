@@ -27,7 +27,7 @@ const Dashboard = () => {
   const [error, setError]                     = useState(false);
   const [focusMode, setFocusMode]             = useState(false);
   const [settingPriority, setSettingPriority] = useState(false);
-  const [priorityToast, setPriorityToast] = useState("");
+  const [priorityToast, setPriorityToast]     = useState("");
 
   const fetchDashboardData = async () => {
     setError(false);
@@ -42,9 +42,7 @@ const Dashboard = () => {
     }
   };
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
+  useEffect(() => { fetchDashboardData(); }, []);
 
   const handleShareInsights = async () => {
     if (!dashboard) return;
@@ -57,14 +55,10 @@ const Dashboard = () => {
       `Ideas: ${dashboard.counts.ideas}`;
 
     if (navigator.share) {
-      try {
-        await navigator.share({ title: "My DevTrack Progress", text: summary });
-      } catch (err) {
-        console.log("Share cancelled");
-      }
+      try { await navigator.share({ title: "My DevTrack Progress", text: summary }); }
+      catch (_) {}
     } else {
       await navigator.clipboard.writeText(summary);
-      alert("Dashboard summary copied to clipboard!");
     }
   };
 
@@ -77,29 +71,49 @@ const Dashboard = () => {
       if (action.type === "project")         navigate("/projects");
       else if (action.type === "assignment") navigate("/assignments");
       else                                   navigate("/projects");
-    } catch (err) {
-      console.error("Failed to get next action", err);
+    } catch (_) {
       navigate("/projects");
     }
   };
 
-  // Fixed: removed top_three_text — field no longer exists on WeeklyPriority model
   const handleSetPriority = async () => {
     if (!dashboard?.active_projects?.length) return;
     setSettingPriority(true);
     try {
       const focusProject = dashboard.active_projects[0];
-      await api.post("/weekly-priorities/", {
-        week_start: new Date().toISOString().split("T")[0],
-        notes:      `Focus: ${focusProject.name}`,   // ← use notes instead
-      });
+      const monday = new Date();
+      monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
+      const weekStart = monday.toISOString().split("T")[0];
+
+      const listRes  = await api.get("/weekly-priorities/");
+      const all      = listRes.data.results ?? listRes.data ?? [];
+      const existing = all.find((p) => p.week_start === weekStart);
+
+      if (existing) {
+        await api.post("/planning/priority-items/", {
+          weekly_priority: existing.id,
+          order:           (existing.items?.length ?? 0) + 1,
+          text:            focusProject.name,
+        });
+      } else {
+        const created = await api.post("/weekly-priorities/", {
+          week_start: weekStart,
+          notes: "",
+        });
+        await api.post("/planning/priority-items/", {
+          weekly_priority: created.data.id,
+          order:           1,
+          text:            focusProject.name,
+        });
+      }
+
       setPriorityToast("✓ Added to this week's priorities");
       setTimeout(() => setPriorityToast(""), 3000);
-      
       fetchDashboardData();
     } catch (err) {
       console.error("Failed to set priority", err);
-     
+      setPriorityToast("✗ Could not set priority");
+      setTimeout(() => setPriorityToast(""), 3000);
     } finally {
       setSettingPriority(false);
     }
@@ -107,7 +121,6 @@ const Dashboard = () => {
 
   if (loading) return <PageLoader />;
 
-  // Error state — shown when fetch fails (e.g. server waking up from sleep)
   if (error || !dashboard) return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-4 text-[var(--text-muted)]">
       <p className="text-lg font-semibold text-[var(--text-primary)]">Failed to load dashboard</p>
@@ -121,24 +134,11 @@ const Dashboard = () => {
     </div>
   );
 
-  const {
-    counts,
-    overdue_assignments,
-    stale_skills,
-    active_projects,
-    this_week,
-    focus,
-  } = dashboard;
+  const { counts, overdue_assignments, stale_skills, active_projects, focus } = dashboard;
 
-  const today         = new Date();
-  const formattedDate = today.toLocaleDateString("en-US", {
+  const formattedDate = new Date().toLocaleDateString("en-US", {
     weekday: "long", year: "numeric", month: "long", day: "numeric",
   });
-
-  const getDaysAgo = (lastPracticed) => {
-    if (!lastPracticed) return null;
-    return Math.floor((Date.now() - new Date(lastPracticed)) / 86400000);
-  };
 
   if (focusMode) {
     return (
@@ -186,7 +186,6 @@ const Dashboard = () => {
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <div className="max-w-7xl mx-auto px-6 py-8">
 
-        {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
@@ -210,27 +209,20 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Stats row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-          <div className="rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] p-4 hover:bg-[var(--bg-surface-hover)] transition-all">
-            <div className="text-[var(--text-muted)] text-xs uppercase tracking-wide">Active projects</div>
-            <div className="text-2xl font-bold mt-1">{counts.projects}</div>
-          </div>
-          <div className="rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] p-4 hover:bg-[var(--bg-surface-hover)] transition-all">
-            <div className="text-[var(--text-muted)] text-xs uppercase tracking-wide">Skills tracked</div>
-            <div className="text-2xl font-bold mt-1">{counts.skills}</div>
-          </div>
-          <div className="rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] p-4 hover:bg-[var(--bg-surface-hover)] transition-all">
-            <div className="text-[var(--text-muted)] text-xs uppercase tracking-wide">Assignments</div>
-            <div className="text-2xl font-bold mt-1">{counts.assignments}</div>
-          </div>
-          <div className="rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] p-4 hover:bg-[var(--bg-surface-hover)] transition-all">
-            <div className="text-[var(--text-muted)] text-xs uppercase tracking-wide">Ideas captured</div>
-            <div className="text-2xl font-bold mt-1">{counts.ideas}</div>
-          </div>
+          {[
+            { label: "Active projects",  value: counts.projects },
+            { label: "Skills tracked",   value: counts.skills },
+            { label: "Assignments",      value: counts.assignments },
+            { label: "Ideas captured",   value: counts.ideas },
+          ].map(({ label, value }) => (
+            <div key={label} className="rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] p-4 hover:bg-[var(--bg-surface-hover)] transition-all">
+              <div className="text-[var(--text-muted)] text-xs uppercase tracking-wide">{label}</div>
+              <div className="text-2xl font-bold mt-1">{value}</div>
+            </div>
+          ))}
         </div>
 
-        {/* FOCUS CARD */}
         <div className="mb-12">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
@@ -245,21 +237,18 @@ const Dashboard = () => {
           </div>
 
           <div className={`rounded-2xl border p-6 shadow-lg transition-all ${
-            focus?.level === "critical"
-              ? "bg-gradient-to-r from-red-600/15 to-orange-600/15 border-red-500/25"
-              : focus?.level === "high"
-              ? "bg-gradient-to-r from-amber-600/15 to-orange-600/15 border-amber-500/25"
-              : focus?.level === "medium"
-              ? "bg-gradient-to-r from-blue-600/15 to-violet-600/15 border-blue-500/25"
-              : "bg-gradient-to-r from-green-600/15 to-emerald-600/15 border-green-500/25"
+            focus?.level === "critical" ? "bg-gradient-to-r from-red-600/15 to-orange-600/15 border-red-500/25"
+            : focus?.level === "high"   ? "bg-gradient-to-r from-amber-600/15 to-orange-600/15 border-amber-500/25"
+            : focus?.level === "medium" ? "bg-gradient-to-r from-blue-600/15 to-violet-600/15 border-blue-500/25"
+            :                             "bg-gradient-to-r from-green-600/15 to-emerald-600/15 border-green-500/25"
           }`}>
             <div className="flex flex-col md:flex-row justify-between items-start gap-4">
               <div className="flex-1">
                 <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${
-                  focus?.level === "critical" ? "bg-red-500/30 text-red-300" :
-                  focus?.level === "high"     ? "bg-amber-500/30 text-amber-300" :
-                  focus?.level === "medium"   ? "bg-blue-500/30 text-blue-300" :
-                                               "bg-green-500/30 text-green-300"
+                  focus?.level === "critical" ? "bg-red-500/30 text-red-300"
+                  : focus?.level === "high"   ? "bg-amber-500/30 text-amber-300"
+                  : focus?.level === "medium" ? "bg-blue-500/30 text-blue-300"
+                  :                             "bg-green-500/30 text-green-300"
                 }`}>
                   {focus?.level?.toUpperCase() ?? "CLEAR"}
                 </div>
@@ -268,20 +257,31 @@ const Dashboard = () => {
                   {focus?.message ?? "You're on track. Plan your week."}
                 </h2>
 
-                <div className="flex flex-wrap gap-3 mt-5">
+                <div className="flex flex-wrap items-start gap-3 mt-5">
                   <button
                     onClick={handleResumeWork}
                     className="bg-blue-600 hover:bg-blue-500 px-5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 text-white shadow-md transition-all active:scale-95"
                   >
                     Resume Work →
                   </button>
-                  <button
-                    onClick={handleSetPriority}
-                    disabled={settingPriority || !active_projects?.length}
-                    className="border border-[var(--border)] hover:bg-[var(--bg-surface)] px-5 py-2.5 rounded-lg text-sm transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed text-[var(--text-primary)]"
-                  >
-                    {settingPriority ? "Adding..." : "Set as priority"}
-                  </button>
+                  <div className="flex flex-col gap-1">
+                    <button
+                      onClick={handleSetPriority}
+                      disabled={settingPriority || !active_projects?.length}
+                      className="border border-[var(--border)] hover:bg-[var(--bg-surface)] px-5 py-2.5 rounded-lg text-sm transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed text-[var(--text-primary)]"
+                    >
+                      {settingPriority ? "Adding..." : "Set as priority"}
+                    </button>
+                    {priorityToast && (
+                      <span className={`text-xs px-2 py-0.5 rounded ${
+                        priorityToast.startsWith("✓")
+                          ? "text-emerald-400 bg-emerald-500/10"
+                          : "text-red-400 bg-red-500/10"
+                      }`}>
+                        {priorityToast}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -303,18 +303,13 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Two column layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
           <div className="lg:col-span-2">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold tracking-tight">Recent Activity</h2>
-              <Link to="/projects" className="text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)]">
-                View all →
-              </Link>
+              <Link to="/projects" className="text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)]">View all →</Link>
             </div>
             <div className="space-y-2.5">
-
               {active_projects?.slice(0, 2).map((project) => (
                 <div key={`project-${project.id}`} className="flex items-center justify-between p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] hover:bg-[var(--bg-surface-hover)] transition-all">
                   <div className="flex items-center gap-3">
@@ -326,8 +321,7 @@ const Dashboard = () => {
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="text-xs text-emerald-400 flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                      {project.status}
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />{project.status}
                     </div>
                     <Link to="/projects" className="text-xs text-blue-400 hover:text-blue-300">Resume</Link>
                   </div>
@@ -345,8 +339,7 @@ const Dashboard = () => {
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="text-xs text-red-400 flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 bg-red-400 rounded-full" />
-                      Overdue
+                      <span className="w-1.5 h-1.5 bg-red-400 rounded-full" />Overdue
                     </div>
                     <Link to="/assignments" className="text-xs text-red-400 hover:text-red-300">Review →</Link>
                   </div>
@@ -364,8 +357,7 @@ const Dashboard = () => {
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="text-xs text-amber-400 flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 bg-amber-400 rounded-full" />
-                      Stale
+                      <span className="w-1.5 h-1.5 bg-amber-400 rounded-full" />Stale
                     </div>
                     <Link to="/skills" className="text-xs text-blue-400 hover:text-blue-300">Practice</Link>
                   </div>
@@ -416,9 +408,7 @@ const Dashboard = () => {
                 <span className="text-sm font-semibold">Stale skills</span>
               </div>
               <p className="text-[var(--text-secondary)] text-sm">
-                {!stale_skills?.length
-                  ? "All skills recently practiced — great!"
-                  : `${stale_skills.length} skill${stale_skills.length > 1 ? "s" : ""} need practice`}
+                {!stale_skills?.length ? "All skills recently practiced — great!" : `${stale_skills.length} skill${stale_skills.length > 1 ? "s" : ""} need practice`}
               </p>
 
               <div className="h-px bg-[var(--border)] my-4" />
@@ -430,9 +420,7 @@ const Dashboard = () => {
                 <span className="text-sm font-semibold">Overdue</span>
               </div>
               <p className="text-[var(--text-secondary)] text-sm">
-                {!overdue_assignments?.length
-                  ? "No overdue assignments — clear."
-                  : `${overdue_assignments.length} assignment${overdue_assignments.length > 1 ? "s" : ""} overdue`}
+                {!overdue_assignments?.length ? "No overdue assignments — clear." : `${overdue_assignments.length} assignment${overdue_assignments.length > 1 ? "s" : ""} overdue`}
               </p>
               <Link to="/assignments" className="mt-4 text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1">
                 Manage assignments →
