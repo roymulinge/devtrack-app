@@ -35,6 +35,8 @@ const Assignments = () => {
   const [loading, setLoading]         = useState(true);
   const [submitting, setSubmitting]   = useState(false);
   const [error, setError]             = useState("");
+  const [editingId, setEditingId]     = useState(null);
+  const [editData, setEditData]       = useState({});
 
   const fetchData = async () => {
     const [assignRes, projRes, skillsRes] = await Promise.allSettled([
@@ -97,6 +99,47 @@ const Assignments = () => {
       const message = err.response?.data?.detail || "Failed to delete assignment. Please try again.";
       setError(message);
       console.error("Error deleting assignment:", err);
+    }
+  };
+
+  const startEditing = (assignment) => {
+    setEditingId(assignment.id);
+    setEditData({
+      title: assignment.title,
+      subject: assignment.subject,
+      project: assignment.project,
+      related_skill: assignment.related_skill,
+      deadline: assignment.deadline,
+    });
+  };
+
+  const cancelEditing = () => {
+    setEditingId(null);
+    setEditData({});
+  };
+
+  const updateAssignment = async (e, id) => {
+    e.preventDefault();
+    setError("");
+    setSubmitting(true);
+    try {
+      const res = await api.patch(`/assignments/${id}/`, {
+        title: editData.title,
+        subject: editData.subject || "",
+        project: editData.project || null,
+        related_skill: editData.related_skill || null,
+        deadline: editData.deadline || null,
+      });
+      setAssignments((prev) => prev.map((a) => (a.id === id ? res.data : a)));
+      setEditingId(null);
+      setEditData({});
+    } catch (err) {
+      const data = err.response?.data;
+      if (data?.title)         setError(data.title[0]);
+      else if (data?.deadline) setError(data.deadline[0]);
+      else                     setError("Failed to update assignment. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -223,6 +266,7 @@ const Assignments = () => {
               const isDone = a.status === "completed";
               const linked = projects.find((p) => toNum(p.id) === toNum(a.project));
               const skill  = skills.find((s)  => toNum(s.id) === toNum(a.related_skill));
+              const isEditing = editingId === a.id;
 
               return (
                 <div
@@ -233,61 +277,151 @@ const Assignments = () => {
                     <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: dl.accent }} />
                   )}
 
-                  <div className="flex flex-col md:flex-row md:items-start gap-4">
-                    <div className="flex-1">
-                      <h3 className={`text-base font-semibold ${isDone ? "line-through text-gray-500" : "text-white"}`}>
-                        {a.title}
-                      </h3>
-                      {a.subject && <p className="text-sm text-gray-400 mt-0.5">{a.subject}</p>}
-
-                      <div className="flex flex-wrap gap-2 mt-3">
-                        <span className={`text-xs px-2 py-0.5 rounded-full border ${sc.bg} ${sc.text} ${sc.border}`}>
-                          {sc.label}
-                        </span>
-                        {dl && a.status !== "completed" && (
-                          <span className={`text-xs px-2 py-0.5 rounded-full border ${dl.badge}`}>{dl.label}</span>
-                        )}
-                        {linked && (
-                          <span className="text-xs text-gray-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full">
-                            {linked.name}
-                          </span>
-                        )}
-                        {skill && (
-                          <span className="text-xs text-violet-400 bg-violet-500/10 border border-violet-500/30 px-2 py-0.5 rounded-full">
-                            {skill.name}
-                          </span>
-                        )}
+                  {isEditing ? (
+                    <form onSubmit={(e) => updateAssignment(e, a.id)} className="space-y-4">
+                      <div>
+                        <label className="text-sm font-medium text-gray-300">Assignment title</label>
+                        <input
+                          type="text"
+                          value={editData.title}
+                          onChange={(e) => setEditData({ ...editData, title: e.target.value })}
+                          required
+                          className="mt-1 w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        />
                       </div>
 
-                      {!isDone && (
-                        <div className="flex gap-2 mt-4">
-                          {a.status === "not_started" && (
-                            <button
-                              onClick={() => updateStatus(a.id, "in_progress")}
-                              className="text-xs text-blue-400 border border-blue-400/20 px-3 py-1 rounded-md hover:bg-blue-400/10 transition-all"
-                            >
-                              Start →
-                            </button>
-                          )}
-                          {a.status === "in_progress" && (
-                            <button
-                              onClick={() => updateStatus(a.id, "completed")}
-                              className="text-xs text-emerald-400 border border-emerald-400/20 px-3 py-1 rounded-md hover:bg-emerald-400/10 transition-all"
-                            >
-                              Mark done
-                            </button>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-sm font-medium text-gray-300">Subject</label>
+                          <input
+                            type="text"
+                            value={editData.subject}
+                            onChange={(e) => setEditData({ ...editData, subject: e.target.value })}
+                            className="mt-1 w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-300">Link to project</label>
+                          <select
+                            value={editData.project || ""}
+                            onChange={(e) => setEditData({ ...editData, project: e.target.value || null })}
+                            className="mt-1 w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          >
+                            <option value="">No project</option>
+                            {projects.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-300">Related skill</label>
+                          <select
+                            value={editData.related_skill || ""}
+                            onChange={(e) => setEditData({ ...editData, related_skill: e.target.value || null })}
+                            className="mt-1 w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          >
+                            <option value="">No skill</option>
+                            {skills.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-300">Deadline</label>
+                          <input
+                            type="datetime-local"
+                            value={editData.deadline || ""}
+                            onChange={(e) => setEditData({ ...editData, deadline: e.target.value })}
+                            className="mt-1 w-full bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          />
+                        </div>
+                      </div>
+
+                      {error && (
+                        <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2">{error}</p>
+                      )}
+
+                      <div className="flex gap-2">
+                        <button
+                          type="submit"
+                          disabled={submitting}
+                          className="bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/50 disabled:cursor-not-allowed px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                        >
+                          {submitting ? "Saving..." : "Save"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={cancelEditing}
+                          disabled={submitting}
+                          className="bg-gray-600 hover:bg-gray-500 disabled:bg-gray-600/50 disabled:cursor-not-allowed px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
+                    <>
+                      <div className="flex flex-col md:flex-row md:items-start gap-4">
+                        <div className="flex-1">
+                          <h3 className={`text-base font-semibold ${isDone ? "line-through text-gray-500" : "text-white"}`}>
+                            {a.title}
+                          </h3>
+                          {a.subject && <p className="text-sm text-gray-400 mt-0.5">{a.subject}</p>}
+
+                          <div className="flex flex-wrap gap-2 mt-3">
+                            <span className={`text-xs px-2 py-0.5 rounded-full border ${sc.bg} ${sc.text} ${sc.border}`}>
+                              {sc.label}
+                            </span>
+                            {dl && a.status !== "completed" && (
+                              <span className={`text-xs px-2 py-0.5 rounded-full border ${dl.badge}`}>{dl.label}</span>
+                            )}
+                            {linked && (
+                              <span className="text-xs text-gray-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded-full">
+                                {linked.name}
+                              </span>
+                            )}
+                            {skill && (
+                              <span className="text-xs text-violet-400 bg-violet-500/10 border border-violet-500/30 px-2 py-0.5 rounded-full">
+                                {skill.name}
+                              </span>
+                            )}
+                          </div>
+
+                          {!isDone && (
+                            <div className="flex gap-2 mt-4">
+                              {a.status === "not_started" && (
+                                <button
+                                  onClick={() => updateStatus(a.id, "in_progress")}
+                                  className="text-xs text-blue-400 border border-blue-400/20 px-3 py-1 rounded-md hover:bg-blue-400/10 transition-all"
+                                >
+                                  Start →
+                                </button>
+                              )}
+                              {a.status === "in_progress" && (
+                                <button
+                                  onClick={() => updateStatus(a.id, "completed")}
+                                  className="text-xs text-emerald-400 border border-emerald-400/20 px-3 py-1 rounded-md hover:bg-emerald-400/10 transition-all"
+                                >
+                                  Mark done
+                                </button>
+                              )}
+                            </div>
                           )}
                         </div>
-                      )}
-                    </div>
 
-                    <button
-                      onClick={() => deleteAssignment(a.id)}
-                      className="text-xs text-red-400 border border-red-400/20 px-2.5 py-1 rounded-md hover:bg-red-400/10 transition-all shrink-0 self-start"
-                    >
-                      Delete
-                    </button>
-                  </div>
+                        <div className="flex gap-2 shrink-0 self-start">
+                          <button
+                            onClick={() => startEditing(a)}
+                            className="text-xs text-blue-400 border border-blue-400/20 px-2.5 py-1 rounded-md hover:bg-blue-400/10 transition-all"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => deleteAssignment(a.id)}
+                            className="text-xs text-red-400 border border-red-400/20 px-2.5 py-1 rounded-md hover:bg-red-400/10 transition-all"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               );
             })}
