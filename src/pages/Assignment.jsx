@@ -3,6 +3,8 @@ import api from "../api/axios";
 import PageLoader from "../Components/PageLoader";
 import { Link } from "react-router-dom";
 
+const toNum = (v) => (v == null ? null : Number(v));
+
 const getDaysUntil = (deadlineStr) => {
   if (!deadlineStr) return null;
   return Math.ceil((new Date(deadlineStr) - Date.now()) / 86400000);
@@ -35,20 +37,23 @@ const Assignments = () => {
   const [error, setError]             = useState("");
 
   const fetchData = async () => {
-    try {
-      const [assignRes, projRes, skillsRes] = await Promise.all([
+    
+      const [assignRes, projRes, skillsRes] = await Promise.allSettled([
         api.get("/assignments/"),
         api.get("/projects/"),
         api.get("/skills/"),
       ]);
-      setAssignments(assignRes.data.results ?? assignRes.data ?? []);
-      setProjects(projRes.data.results      ?? projRes.data   ?? []);
-      setSkills(skillsRes.data.results      ?? skillsRes.data ?? []);
-    } catch (err) {
-      console.error("Error loading assignments:", err);
-    } finally {
-      setLoading(false);
+       if (assignRes.status === "fulfilled") {
+      setAssignments(assignRes.value.data.results ?? assignRes.value.data ?? []);
     }
+    if (projRes.status === "fulfilled") {
+      setProjects(projRes.value.data.results ?? projRes.value.data ?? []);
+    }
+    if (skillsRes.status === "fulfilled") {
+      setSkills(skillsRes.value.data.results ?? skillsRes.value.data ?? []);
+    }
+
+    setLoading(false);
   };
 
   useEffect(() => { fetchData(); }, []);
@@ -58,7 +63,7 @@ const Assignments = () => {
     setError("");
     setSubmitting(true);
     try {
-      const res = await api.post("/assignments/", {
+       await api.post("/assignments/", {
         title,
         subject:       subject    || "",
         project:       projectId  || null,
@@ -87,7 +92,7 @@ const Assignments = () => {
   const updateStatus = async (id, newStatus) => {
     try {
       const res = await api.patch(`/assignments/${id}/`, { status: newStatus });
-      setAssignments(assignments.map((a) => a.id === id ? res.data : a));
+      setAssignments((prev) => prev.map((a) => a.id === id ? res.data : a));
     } catch (err) {
       console.error("Error updating status:", err);
     }
@@ -97,7 +102,7 @@ const Assignments = () => {
     if (!window.confirm("Are you sure you want to delete this assignment?")) return;
     try {
       await api.delete(`/assignments/${id}/`);
-      setAssignments(assignments.filter((a) => a.id !== id));
+      setAssignments((prev) => prev.filter((a) => a.id !== id));
     } catch (err) {
       console.error("Error deleting assignment:", err);
     }
@@ -106,8 +111,8 @@ const Assignments = () => {
   if (loading) return <PageLoader />;
 
   const sorted = [...assignments].sort((a, b) => {
-    const da = getDaysUntil(a.deadline) ?? 9999;
-    const db = getDaysUntil(b.deadline) ?? 9999;
+   const da = getDaysUntil(a.deadline) ?? 9999;
+    const db = getDaysUntil(b.deadline) ?? 9999; 
     return da - db;
   });
 
@@ -234,8 +239,8 @@ const Assignments = () => {
               const days    = getDaysUntil(a.deadline);
               const dl      = deadlineStyle(days);
               const sc      = STATUS_CONFIG[a.status] ?? STATUS_CONFIG.not_started;
-              const linked = projects.find((p) => p.id === a.project?.id ?? a.project);
-              const skill  = skills.find((s)  => s.id === a.related_skill?.id ?? a.related_skill);
+              const linked = projects.find((p) => toNum(p.id) === toNum(a.project));
+              const skill  = skills.find((s)  => toNum(s.id) === toNum(a.related_skill));
               const isDone  = a.status === "completed";
 
               return (
