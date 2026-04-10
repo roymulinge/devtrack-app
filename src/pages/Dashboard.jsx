@@ -107,12 +107,12 @@ const Dashboard = () => {
         });
       }
 
-      setPriorityToast("✓ Added to this week's priorities");
+      setPriorityToast("Added to this week's priorities");
       setTimeout(() => setPriorityToast(""), 3000);
       fetchDashboardData();
     } catch (err) {
       console.error("Failed to set priority", err);
-      setPriorityToast("✗ Could not set priority");
+      setPriorityToast("Could not set priority");
       setTimeout(() => setPriorityToast(""), 3000);
     } finally {
       setSettingPriority(false);
@@ -160,7 +160,7 @@ const Dashboard = () => {
                   onClick={handleResumeWork}
                   className="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-lg text-sm font-medium text-white"
                 >
-                  Continue →
+                  Continue
                 </button>
                 <button
                   onClick={toggleFocusMode}
@@ -176,7 +176,7 @@ const Dashboard = () => {
           onClick={toggleFocusMode}
           className="absolute top-4 right-4 text-[var(--text-muted)] hover:text-[var(--text-primary)] text-sm"
         >
-          ✕
+          ×
         </button>
       </div>
     );
@@ -204,7 +204,7 @@ const Dashboard = () => {
               onClick={toggleFocusMode}
               className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-sm font-medium text-white shadow-sm transition-all flex items-center gap-1"
             >
-              Focus Mode →
+              Focus Mode
             </button>
           </div>
         </div>
@@ -232,7 +232,7 @@ const Dashboard = () => {
               <span className="text-xs text-[var(--text-muted)]">· Recommended by DevTrack</span>
             </div>
             <Link to="/weekly-planner" className="text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] flex items-center gap-1">
-              Open planner <span>→</span>
+              Open planner
             </Link>
           </div>
 
@@ -262,7 +262,7 @@ const Dashboard = () => {
                     onClick={handleResumeWork}
                     className="bg-blue-600 hover:bg-blue-500 px-5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 text-white shadow-md transition-all active:scale-95"
                   >
-                    Resume Work →
+                    Resume Work
                   </button>
                   <div className="flex flex-col gap-1">
                     <button
@@ -274,7 +274,7 @@ const Dashboard = () => {
                     </button>
                     {priorityToast && (
                       <span className={`text-xs px-2 py-0.5 rounded ${
-                        priorityToast.startsWith("✓")
+                        priorityToast.startsWith("Added")
                           ? "text-emerald-400 bg-emerald-500/10"
                           : "text-red-400 bg-red-500/10"
                       }`}>
@@ -307,7 +307,7 @@ const Dashboard = () => {
           <div className="lg:col-span-2">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold tracking-tight">Recent Activity</h2>
-              <Link to="/projects" className="text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)]">View all →</Link>
+              <Link to="/projects" className="text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)]">View all</Link>
             </div>
             <div className="space-y-2.5">
               {active_projects?.slice(0, 2).map((project) => (
@@ -331,7 +331,7 @@ const Dashboard = () => {
               {overdue_assignments?.slice(0, 2).map((assignment) => (
                 <div key={`overdue-${assignment.id}`} className="flex items-center justify-between p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] hover:bg-[var(--bg-surface-hover)] transition-all">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center text-red-400">⚠️</div>
+                    <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center text-red-400">!</div>
                     <div>
                       <span className="font-medium">{assignment.title}</span>
                       <span className="text-[var(--text-muted)] text-xs ml-2 bg-white/5 px-1.5 py-0.5 rounded">Assignment</span>
@@ -341,7 +341,7 @@ const Dashboard = () => {
                     <div className="text-xs text-red-400 flex items-center gap-1">
                       <span className="w-1.5 h-1.5 bg-red-400 rounded-full" />Overdue
                     </div>
-                    <Link to="/assignments" className="text-xs text-red-400 hover:text-red-300">Review →</Link>
+                    <Link to="/assignments" className="text-xs text-red-400 hover:text-red-300">Review</Link>
                   </div>
                 </div>
               ))}
@@ -373,33 +373,6 @@ const Dashboard = () => {
           </div>
 
           <div>
-            <div className="rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] p-5 mb-6">
-              <h3 className="text-sm font-semibold text-[var(--text-secondary)] uppercase tracking-wide">Skill Depth</h3>
-              <div className="mt-3 space-y-4">
-                {!stale_skills?.length ? (
-                  <p className="text-xs text-[var(--text-muted)] italic">All skills recently practiced.</p>
-                ) : (
-                  stale_skills.slice(0, 3).map((skill) => (
-                    <div key={skill.id}>
-                      <div className="flex justify-between text-sm">
-                        <span>{skill.name}</span>
-                        <span className="text-[var(--text-muted)]">{depthToPercent(skill.depth_level)}%</span>
-                      </div>
-                      <div className="w-full bg-white/10 rounded-full h-1.5 mt-1">
-                        <div
-                          className="h-1.5 rounded-full"
-                          style={{ width: `${depthToPercent(skill.depth_level)}%`, backgroundColor: depthColor(skill.depth_level) }}
-                        />
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-              <Link to="/skills" className="mt-5 w-full text-center text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] border-t border-[var(--border)] pt-3 flex items-center justify-center gap-1">
-                Go practice →
-              </Link>
-            </div>
-
             <div className="rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] p-5">
               <div className="flex items-center gap-2 text-amber-400 mb-3">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -423,7 +396,7 @@ const Dashboard = () => {
                 {!overdue_assignments?.length ? "No overdue assignments — clear." : `${overdue_assignments.length} assignment${overdue_assignments.length > 1 ? "s" : ""} overdue`}
               </p>
               <Link to="/assignments" className="mt-4 text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1">
-                Manage assignments →
+                Manage assignments
               </Link>
             </div>
           </div>

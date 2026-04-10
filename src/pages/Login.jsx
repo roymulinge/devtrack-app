@@ -133,14 +133,14 @@ const Login = () => {
         <div className="flex items-center justify-between">
           <span className="text-xs text-[var(--text-muted)]">No account yet?</span>
           <Link to="/register" className="text-xs font-mono text-blue-400 hover:text-blue-300 transition">
-            register →
+            register
           </Link>
         </div>
 
         {/* Back to home */}
         <div className="mt-6 text-center">
           <Link to="/" className="text-xs font-mono text-[var(--text-muted)]/50 hover:text-[var(--text-muted)] transition">
-            ← return to home
+            return to home
           </Link>
         </div>
 

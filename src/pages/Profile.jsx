@@ -223,7 +223,7 @@ const Profile = () => {
               className="w-full flex items-center justify-between px-4 py-3 bg-black/40 border border-white/10 rounded-lg hover:bg-white/5 transition"
             >
               <span className="text-sm text-[var(--text-secondary)]">Change Password</span>
-              <span className="text-[var(--text-muted)]">→</span>
+              <span className="text-[var(--text-muted)]">|</span>
             </Link>
           </div>
         </div>

@@ -156,7 +156,7 @@ const ChangePassword = () => {
                 to="/dashboard"
                 className="text-xs font-mono text-[var(--text-muted)]/50 hover:text-[var(--text-muted)] transition"
               >
-                ← back to dashboard
+                back to dashboard
               </Link>
             </div>
           </>

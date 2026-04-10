@@ -3,32 +3,32 @@ import { Link } from "react-router-dom";
 
 const features = [
   {
-    icon: "🗂",
+    icon: "[]",
     title: "Project Management",
     desc: "Organize and track your personal dev projects from idea to completion.",
   },
   {
-    icon: "🧠",
+    icon: "()",
     title: "Skill Tracking",
     desc: "Log skills with depth levels and last practice dates to stay sharp.",
   },
   {
-    icon: "📚",
+    icon: "[]",
     title: "Assignment Monitor",
     desc: "Never miss a deadline — track academic assignments with due date alerts.",
   },
   {
-    icon: "💡",
+    icon: "*",
     title: "Idea Vault",
     desc: "Capture and evaluate startup or product ideas in a structured way.",
   },
   {
-    icon: "📅",
+    icon: "[]",
     title: "Weekly Planner",
     desc: "Generate weekly priorities that connect your skills, projects, and tasks.",
   },
   {
-    icon: "📊",
+    icon: "[]",
     title: "Dashboard Overview",
     desc: "See overdue tasks, stale skills, and active projects at a glance.",
   },
@@ -68,11 +68,11 @@ const About = () => {
             The Problem
           </h2>
           <ul className="space-y-2 text-[var(--text-secondary)] text-sm leading-relaxed">
-            <li>→ Disconnected tools for notes, tasks, and projects</li>
-            <li>→ Learning not linked to real project practice</li>
-            <li>→ Assignments and personal work competing for attention</li>
-            <li>→ Ideas lost without a structured capture system</li>
-            <li>→ No unified view of progress or priorities</li>
+            <li>Disconnected tools for notes, tasks, and projects</li>
+            <li>Learning not linked to real project practice</li>
+            <li>Assignments and personal work competing for attention</li>
+            <li>Ideas lost without a structured capture system</li>
+            <li>No unified view of progress or priorities</li>
           </ul>
         </div>
         <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-6">
@@ -80,11 +80,11 @@ const About = () => {
             The Solution
           </h2>
           <ul className="space-y-2 text-[var(--text-secondary)] text-sm leading-relaxed">
-            <li>→ Centralized dashboard with all activities linked</li>
-            <li>→ Skills tied to actual projects you are building</li>
-            <li>→ Deadline tracking with overdue alerts</li>
-            <li>→ Structured idea vault with evaluation fields</li>
-            <li>→ Weekly priority generator for focused execution</li>
+            <li>Centralized dashboard with all activities linked</li>
+            <li>Skills tied to actual projects you are building</li>
+            <li>Deadline tracking with overdue alerts</li>
+            <li>Structured idea vault with evaluation fields</li>
+            <li>Weekly priority generator for focused execution</li>
           </ul>
         </div>
       </section>

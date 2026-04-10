@@ -147,7 +147,7 @@ const WeeklyPriorities = () => {
           <div className="rounded-xl bg-[#0f1217] border border-white/5 p-5 hover:bg-[#161b22] transition-all">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-400">Due this week</h2>
-              <Link to="/assignments" className="text-xs text-gray-400 hover:text-white">View all →</Link>
+              <Link to="/assignments" className="text-xs text-gray-400 hover:text-white">View all</Link>
             </div>
             {!focus?.urgent_assignments?.length ? (
               <p className="text-sm text-gray-500 text-center py-6">No urgent assignments 🎉</p>
@@ -176,7 +176,7 @@ const WeeklyPriorities = () => {
           <div className="rounded-xl bg-[#0f1217] border border-white/5 p-5 hover:bg-[#161b22] transition-all">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-400">Skills to practice</h2>
-              <Link to="/skills" className="text-xs text-gray-400 hover:text-white">Go practice →</Link>
+              <Link to="/skills" className="text-xs text-gray-400 hover:text-white">Go practice</Link>
             </div>
             {!focus?.stale_skills?.length ? (
               <p className="text-sm text-gray-500 text-center py-6">All skills fresh ✨</p>
@@ -275,7 +275,7 @@ const WeeklyPriorities = () => {
               {summary.overdue_assignments === 0 ? (
                 <p className="text-xs text-gray-500 text-center mt-4">✨ Clean slate – no overdue assignments!</p>
               ) : (
-                <p className="text-xs text-amber-400 text-center mt-4">⚠️ {summary.overdue_assignments} assignment(s) pending – let's clear them.</p>
+                <p className="text-xs text-amber-400 text-center mt-4">Alert: {summary.overdue_assignments} assignment(s) pending. Let's clear them.</p>
               )}
             </>
           ) : (

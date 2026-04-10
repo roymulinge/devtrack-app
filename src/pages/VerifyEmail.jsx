@@ -56,7 +56,7 @@ const VerifyEmail = () => {
               to="/login"
               className="block w-full bg-sky-400 hover:bg-sky-300 text-[#090d13] font-mono font-bold text-sm py-2.5 rounded-lg transition"
             >
-              sign in →
+              sign in
             </Link>
           </>
         )}

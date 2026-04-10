@@ -390,7 +390,7 @@ const Assignments = () => {
                                   onClick={() => updateStatus(a.id, "in_progress")}
                                   className="text-xs text-blue-400 border border-blue-400/20 px-3 py-1 rounded-md hover:bg-blue-400/10 transition-all"
                                 >
-                                  Start →
+                                  Start
                                 </button>
                               )}
                               {a.status === "in_progress" && (

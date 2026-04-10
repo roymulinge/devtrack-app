@@ -90,7 +90,7 @@ const Register = () => {
             to="/login"
             className="block w-full bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm py-2.5 rounded-lg transition-all active:scale-95"
           >
-            Sign in →
+            Sign in
           </Link>
         </div>
       </div>
@@ -217,14 +217,14 @@ const Register = () => {
         <div className="flex items-center justify-between">
           <span className="text-xs text-[var(--text-muted)]">Already have an account?</span>
           <Link to="/login" className="text-xs font-mono text-blue-400 hover:text-blue-300 transition">
-            sign in →
+            sign in
           </Link>
         </div>
 
         {/* Back to home */}
         <div className="mt-6 text-center">
           <Link to="/" className="text-xs font-mono text-[var(--text-muted)]/50 hover:text-[var(--text-muted)] transition">
-            ← return to home
+            return to home
           </Link>
         </div>
 
