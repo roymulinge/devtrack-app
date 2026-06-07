@@ -1209,6 +1209,14 @@ const Landing = () => {
           0%, 100% { opacity: 1; }
           50%       { opacity: 0; }
         }
+        /* Image slides in from right */
+        .animate-hero-img {
+          animation: heroFadeLeft 0.9s ease 0.3s both;
+        }
+        @keyframes heroFadeLeft {
+          from { opacity: 0; transform: translateX(32px); }
+          to   { opacity: 1; transform: translateX(0); }
+        }
 
         /* ── Dark mode overrides ──────────────────────── */
         @media (prefers-color-scheme: dark) {
