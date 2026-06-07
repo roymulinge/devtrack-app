@@ -10,7 +10,7 @@ import {
   HOW_IT_WORKS,
   STATS_HIGHLIGHTS,
 } from "./landingData";
-import herodeveloper from "../assests/hero-developer.png"
+import herodeveloper from "../assets/hero-developer.png"
 
 // ─────────────────────────────────────────────
 // ANIMATION HOOK — watches when element enters viewport
