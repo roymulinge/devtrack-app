@@ -10,6 +10,7 @@ import {
   HOW_IT_WORKS,
   STATS_HIGHLIGHTS,
 } from "./landingData";
+import herodeveloper from "../assests/hero-developer.png"
 
 // ─────────────────────────────────────────────
 // ANIMATION HOOK — watches when element enters viewport
@@ -201,205 +202,359 @@ function Particle({ style }) {
 // HERO SECTION
 // ─────────────────────────────────────────────
 const HeroSection = () => {
-  // Track mouse position for the spotlight glow effect
-  const [mouse, setMouse] = useState({ x: 50, y: 50 });
-
+  // Mouse position state for the spotlight glow that follows the cursor
+  // x and y are percentages of the window width/height (0-100)
+  const [mouse, setMouse] = useState({ x: 30, y: 50 });
+ 
+  // Called on every mouse move — converts pixel coords to percentages
   function handleMouseMove(e) {
-    // Convert pixel position to percentage of window
     setMouse({
       x: (e.clientX / window.innerWidth) * 100,
       y: (e.clientY / window.innerHeight) * 100,
     });
   }
-
+ 
   return (
     <section
       onMouseMove={handleMouseMove}
-      style={{ position: "relative", padding: "7rem 1.5rem 5rem", overflow: "hidden" }}
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        // Generous top padding so content doesn't feel cramped below navbar
+        padding: "6rem 1.5rem 5rem",
+      }}
     >
-      {/* Mouse-following spotlight — follows cursor smoothly */}
+      {/* ── MOUSE SPOTLIGHT ─────────────────────────────────
+          A radial gradient that repositions itself on every
+          mouse move. pointerEvents:none means it never blocks
+          clicks on buttons or links underneath it.
+      ──────────────────────────────────────────────────────── */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          // Radial gradient centered on mouse position
-          background: `radial-gradient(ellipse 60% 50% at ${mouse.x}% ${mouse.y}%, rgba(59,130,246,0.08) 0%, transparent 70%)`,
+          background: `radial-gradient(ellipse 55% 60% at ${mouse.x}% ${mouse.y}%, rgba(59,130,246,0.07) 0%, transparent 70%)`,
           pointerEvents: "none",
-          // Smooth transition so it doesn't jump
-          transition: "background 0.1s ease",
+          transition: "background 0.12s ease",
           zIndex: 0,
         }}
       />
-
-      {/* Floating background particles */}
-      <Particle style={{ width: 6, height: 6, background: "rgba(59,130,246,0.25)", top: "20%", left: "10%", duration: "7s", delay: "0s" }} />
-      <Particle style={{ width: 4, height: 4, background: "rgba(99,102,241,0.2)", top: "60%", left: "5%", duration: "9s", delay: "1s" }} />
-      <Particle style={{ width: 5, height: 5, background: "rgba(59,130,246,0.15)", top: "30%", right: "8%", duration: "8s", delay: "2s" }} />
-      <Particle style={{ width: 3, height: 3, background: "rgba(139,92,246,0.2)", top: "70%", right: "15%", duration: "6s", delay: "0.5s" }} />
-      <Particle style={{ width: 6, height: 6, background: "rgba(59,130,246,0.1)", top: "80%", left: "20%", duration: "10s", delay: "3s" }} />
-
-      <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center", position: "relative", zIndex: 1 }}>
-
-        {/* Badge — slides down from above */}
-        <div
-          className="animate-hero-badge"
-          style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 28 }}
-        >
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              fontSize: 12,
-              fontFamily: "DM Mono, monospace",
-              color: "rgb(59,130,246)",
-              border: "1px solid rgba(59,130,246,0.25)",
-              background: "rgba(59,130,246,0.06)",
-              padding: "5px 14px",
-              borderRadius: 999,
-              letterSpacing: "0.02em",
-            }}
+ 
+      {/* ── FLOATING PARTICLES ──────────────────────────────
+          Subtle dots that float up and down. They use the
+          Particle component defined earlier in the file.
+          Keep them in the LEFT half only so they don't
+          compete with the image on the right.
+      ──────────────────────────────────────────────────────── */}
+      <Particle style={{ width: 5, height: 5, background: "rgba(59,130,246,0.2)",  top: "25%", left: "4%",  duration: "7s",  delay: "0s"   }} />
+      <Particle style={{ width: 3, height: 3, background: "rgba(99,102,241,0.18)", top: "55%", left: "8%",  duration: "9s",  delay: "1.2s" }} />
+      <Particle style={{ width: 4, height: 4, background: "rgba(59,130,246,0.12)", top: "75%", left: "14%", duration: "11s", delay: "2.5s" }} />
+ 
+      {/* ── SPLIT LAYOUT CONTAINER ──────────────────────────
+          CSS Grid with two columns:
+          - Left  (minmax 320px, 1fr): text content
+          - Right (minmax 380px, 1fr): image
+          
+          When the screen is narrow (mobile), CSS auto-fit
+          will stack them vertically — text first, image below.
+          
+          gap: the space between the two columns
+          alignItems: center — vertically centers both columns
+          relative + zIndex 1: sits above the spotlight layer
+      ──────────────────────────────────────────────────────── */}
+      <div
+        style={{
+          maxWidth: 1100,
+          margin: "0 auto",
+          position: "relative",
+          zIndex: 1,
+          display: "grid",
+          // auto-fit means: fit as many columns as possible
+          // minmax(320px, 1fr) means: each column is at least 320px, max equal share
+          // On a wide screen → 2 columns. On mobile → 1 column (stacked)
+          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+          gap: "3rem",
+          alignItems: "center",
+        }}
+      >
+ 
+        {/* ── LEFT COLUMN: TEXT CONTENT ─────────────────── */}
+        <div style={{ textAlign: "left" }}>
+ 
+          {/* Badge — animates down from above on load */}
+          <div
+            className="animate-hero-badge"
+            style={{ marginBottom: 24 }}
           >
             <span
               style={{
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
-                background: "rgb(59,130,246)",
-                display: "inline-block",
-                // Pulse animation — draws attention
-                animation: "pulse 2s ease infinite",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 7,
+                fontSize: 12,
+                fontFamily: "DM Mono, monospace",
+                color: "rgb(59,130,246)",
+                border: "1px solid rgba(59,130,246,0.25)",
+                background: "rgba(59,130,246,0.06)",
+                padding: "5px 14px",
+                borderRadius: 999,
+                letterSpacing: "0.02em",
               }}
-            />
-            Built for focused developers
-          </span>
-        </div>
-
-        {/* Main headline — fades up */}
-        <h1
-          className="animate-hero-h1"
-          style={{
-            fontSize: "clamp(2.2rem, 5.5vw, 3.8rem)",
-            fontWeight: 600,
-            letterSpacing: "-0.03em",
-            lineHeight: 1.08,
-            color: "var(--hero-text, #111)",
-            margin: "0 0 1.5rem",
-          }}
-        >
-          See exactly how you're{" "}
-          <span
+            >
+              {/* Pulsing dot — breathing animation draws attention */}
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: "rgb(59,130,246)",
+                  display: "inline-block",
+                  animation: "pulse 2s ease infinite",
+                }}
+              />
+              Built for focused developers
+            </span>
+          </div>
+ 
+          {/* Main headline — fades up */}
+          <h1
+            className="animate-hero-h1"
             style={{
-              color: "rgb(59,130,246)",
-              // Shimmer animation on the blue word
-              backgroundImage: "linear-gradient(90deg, rgb(59,130,246), rgb(99,102,241), rgb(59,130,246))",
-              backgroundSize: "200% 100%",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              animation: "shimmer 3s linear infinite",
+              // clamp(min, preferred, max) — responsive font size
+              // min: 2rem (mobile), preferred: 4vw (scales with viewport), max: 3.5rem (desktop)
+              fontSize: "clamp(2rem, 4vw, 3.5rem)",
+              fontWeight: 600,
+              // Tight letter spacing makes large headings feel premium
+              letterSpacing: "-0.03em",
+              // Tight line height for big headings — prevents too much vertical space
+              lineHeight: 1.1,
+              color: "#0f172a",
+              margin: "0 0 1.25rem",
             }}
           >
-            <Typewriter text="improving" delay={400} />
-          </span>
-          <br />
-          as a developer
-        </h1>
-
-        {/* Subtitle — slightly delayed fade */}
-        <p
-          className="animate-hero-sub"
-          style={{
-            fontSize: "clamp(1rem, 2vw, 1.125rem)",
-            color: "#6b7280",
-            lineHeight: 1.7,
-            maxWidth: 520,
-            margin: "0 auto 2.5rem",
-          }}
-        >
-          DevTrack connects your projects, skills, and ideas into one system so
-          you can track real progress and stay focused on what matters.
-        </p>
-
-        {/* CTA buttons — staggered pop-in */}
+            See exactly how{" "}
+            <br className="hidden sm:block" />
+            you're{" "}
+            {/* Shimmer gradient animates across the word "improving"
+                WebkitBackgroundClip: "text" clips the gradient to text shape
+                WebkitTextFillColor: "transparent" shows the gradient through
+                This is a widely-supported CSS trick for gradient text */}
+            <span
+              style={{
+                backgroundImage: "linear-gradient(90deg, rgb(59,130,246), rgb(99,102,241), rgb(59,130,246))",
+                backgroundSize: "200% 100%",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                animation: "shimmer 3s linear infinite",
+              }}
+            >
+              <Typewriter text="improving" delay={400} />
+            </span>
+            <br />
+            as a developer
+          </h1>
+ 
+          {/* Subtitle — fades up after headline */}
+          <p
+            className="animate-hero-sub"
+            style={{
+              fontSize: "clamp(0.95rem, 1.8vw, 1.1rem)",
+              color: "#6b7280",
+              lineHeight: 1.75,
+              // No maxWidth needed — the grid column constrains the width
+              margin: "0 0 2.25rem",
+            }}
+          >
+            DevTrack connects your projects, skills, and ideas into one
+            system so you can track real progress and stay focused on
+            what matters.
+          </p>
+ 
+          {/* CTA buttons — pop in last */}
+          <div
+            className="animate-hero-cta"
+            style={{
+              display: "flex",
+              // Left-align buttons to match the left-aligned text
+              justifyContent: "flex-start",
+              gap: 12,
+              flexWrap: "wrap",
+            }}
+          >
+            <Link
+              to="/register"
+              style={{
+                background: "rgb(37,99,235)",
+                color: "#fff",
+                fontWeight: 500,
+                padding: "11px 28px",
+                borderRadius: 10,
+                fontSize: 14,
+                textDecoration: "none",
+                boxShadow: "0 4px 24px rgba(37,99,235,0.28)",
+                transition: "transform 0.2s, box-shadow 0.2s",
+                display: "inline-block",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 8px 32px rgba(37,99,235,0.4)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 4px 24px rgba(37,99,235,0.28)";
+              }}
+            >
+              Start tracking free
+            </Link>
+ 
+            <Link
+              to="/login"
+              style={{
+                border: "1px solid rgba(0,0,0,0.12)",
+                color: "#374151",
+                fontWeight: 500,
+                padding: "11px 28px",
+                borderRadius: 10,
+                fontSize: 14,
+                textDecoration: "none",
+                transition: "border-color 0.2s, transform 0.2s",
+                display: "inline-block",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = "rgba(0,0,0,0.3)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "rgba(0,0,0,0.12)";
+                e.currentTarget.style.transform = "translateY(0)";
+              }}
+            >
+              Sign in
+            </Link>
+          </div>
+ 
+          {/* Scroll indicator — subtle bounce animation */}
+          <div
+            style={{
+              marginTop: 52,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              opacity: 0.35,
+              animation: "bounce 2s ease-in-out infinite",
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <path
+                d="M8 3v10M4 9l4 4 4-4"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span style={{ fontSize: 11, fontFamily: "DM Mono, monospace", letterSpacing: "0.1em" }}>
+              scroll
+            </span>
+          </div>
+        </div>
+ 
+        {/* ── RIGHT COLUMN: IMAGE ───────────────────────────
+            The image wrapper uses position:relative so we can
+            layer elements on top of it (the gradient fade).
+            
+            The image itself fills 100% of this column width.
+            
+            The gradient overlay (::after equivalent using a div)
+            fades the LEFT edge of the image to white — this is
+            the "blending" technique that makes the image feel
+            like part of the page rather than a pasted photo.
+        ──────────────────────────────────────────────────────── */}
         <div
-          className="animate-hero-cta"
-          style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}
-        >
-          <Link
-            to="/register"
-            style={{
-              background: "rgb(37,99,235)",
-              color: "#fff",
-              fontWeight: 500,
-              padding: "11px 28px",
-              borderRadius: 10,
-              fontSize: 14,
-              textDecoration: "none",
-              boxShadow: "0 4px 24px rgba(37,99,235,0.3)",
-              transition: "transform 0.2s, box-shadow 0.2s",
-              display: "inline-block",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-2px)";
-              e.currentTarget.style.boxShadow = "0 8px 32px rgba(37,99,235,0.4)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = "0 4px 24px rgba(37,99,235,0.3)";
-            }}
-          >
-            Start tracking free
-          </Link>
-          <Link
-            to="/login"
-            style={{
-              border: "1px solid rgba(0,0,0,0.12)",
-              color: "#374151",
-              fontWeight: 500,
-              padding: "11px 28px",
-              borderRadius: 10,
-              fontSize: 14,
-              textDecoration: "none",
-              transition: "border-color 0.2s, color 0.2s, transform 0.2s",
-              display: "inline-block",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "rgba(0,0,0,0.3)";
-              e.currentTarget.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "rgba(0,0,0,0.12)";
-              e.currentTarget.style.transform = "translateY(0)";
-            }}
-          >
-            Sign in
-          </Link>
-        </div>
-
-        {/* Scroll indicator arrow */}
-        <div
+          className="animate-hero-img"
           style={{
-            marginTop: 60,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 6,
-            opacity: 0.4,
-            animation: "bounce 2s ease-in-out infinite",
+            position: "relative",
+            // borderRadius clips the image corners and the gradient overlay
+            borderRadius: 20,
+            overflow: "hidden",
           }}
         >
-          <span style={{ fontSize: 11, fontFamily: "DM Mono, monospace", letterSpacing: "0.1em" }}>
-            scroll
-          </span>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          {/* The actual image
+              - src: imported at top of file (Vite-processed URL)
+              - alt: always describe what the image shows — accessibility
+              - width/height: prevents layout shift while image loads
+              - style width:100% + height:auto = responsive, maintains aspect ratio
+              - objectFit:cover fills the box without stretching
+              - display:block removes the default inline spacing under images */}
+          <img
+            src={heroDeveloper}
+            alt="Developer at desk with code on screen, planning and tracking progress"
+            width={720}
+            height={540}
+            style={{
+              width: "100%",
+              height: "auto",
+              display: "block",
+              // Subtle scale on hover — feels alive
+              transition: "transform 0.6s ease",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.02)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
+          />
+ 
+          {/* LEFT FADE GRADIENT ─────────────────────────────
+              This is the key technique. A div absolutely
+              positioned over the image, with a gradient from
+              white (left) to transparent (right).
+              
+              It blends the image into the white page background
+              so there's no hard border between text and image.
+              
+              pointerEvents:none — never blocks image hover or clicks.
+              
+              width:45% — how far the fade extends into the image.
+              More = softer blend. Less = harder edge.
+          ──────────────────────────────────────────────────── */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "45%",
+              height: "100%",
+              // linear-gradient from opaque white to transparent
+              // This creates the fade-out effect on the left edge
+              background: "linear-gradient(to right, #ffffff 0%, rgba(255,255,255,0) 100%)",
+              pointerEvents: "none",
+              zIndex: 1,
+            }}
+          />
+ 
+          {/* BOTTOM FADE GRADIENT ───────────────────────────
+              Same technique but on the bottom edge.
+              Fades image into the page background below —
+              so the image doesn't have a hard bottom border.
+          ──────────────────────────────────────────────────── */}
+          <div
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              width: "100%",
+              height: "30%",
+              background: "linear-gradient(to top, #ffffff 0%, rgba(255,255,255,0) 100%)",
+              pointerEvents: "none",
+              zIndex: 1,
+            }}
+          />
         </div>
+ 
       </div>
     </section>
   );
 };
+ 
 
 // ─────────────────────────────────────────────
 // PRODUCT MOCK — dashboard preview with staggered card reveals
