@@ -488,7 +488,7 @@ const HeroSection = () => {
               - objectFit:cover fills the box without stretching
               - display:block removes the default inline spacing under images */}
           <img
-            src={heroDeveloper}
+            src={herodeveloper}
             alt="Developer at desk with code on screen, planning and tracking progress"
             width={720}
             height={540}
