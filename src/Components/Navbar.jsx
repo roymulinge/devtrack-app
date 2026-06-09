@@ -12,33 +12,25 @@ import {
 } from "./navbarData";
 
 // ─────────────────────────────────────────────────────────
-// GLASS NAVBAR
+// LIQUID GLASS NAVBAR
 //
-// The glass effect uses three CSS properties together:
-//   1. background: rgba(255,255,255,0.75)  → semi-transparent
-//   2. backdropFilter: blur(16px)           → blurs page content behind it
-//   3. border-bottom: rgba(255,255,255,0.2) → subtle frosted edge
+// "Liquid glass" = glassmorphism + inset highlight shadows
+// The inset box-shadows simulate light hitting a curved
+// glass surface from above — top highlight + bottom shadow.
+// This is what makes it feel liquid rather than just frosted.
 //
-// It looks best because your dot-grid background and hero image
-// give the blur something interesting to render through.
-//
-// scroll state increases blur from 12px → 20px as you scroll down,
-// making the navbar feel more "solid" the deeper you go.
+// Layout: position:fixed, floating pill with margin from edges
+// Rounded corners via borderRadius:999 (full pill shape)
 // ─────────────────────────────────────────────────────────
 
-// Brand green tokens — matches Landing.jsx C object
 const GREEN        = "rgb(22,163,74)";
 const GREEN_DARK   = "rgb(21,128,61)";
-const GREEN_GLOW   = "rgba(22,163,74,0.15)";
-const GREEN_SOFT   = "rgba(22,163,74,0.08)";
-const GREEN_BORDER = "rgba(22,163,74,0.25)";
+const GREEN_GLOW   = "rgba(22,163,74,0.2)";
+const GREEN_SOFT   = "rgba(22,163,74,0.12)";
+const GREEN_BORDER = "rgba(22,163,74,0.3)";
 
 // ─────────────────────────────────────────────────────────
-// NavLink — single desktop nav link
-//
-// Active state:   green dot + green text + green tinted bg
-// Inactive state: muted text, green on hover
-// isActive prop comes from comparing pathname === to
+// NavLink — desktop nav pill link
 // ─────────────────────────────────────────────────────────
 const NavLink = ({ to, label, isActive, onClick }) => (
   <Link
@@ -46,21 +38,27 @@ const NavLink = ({ to, label, isActive, onClick }) => (
     onClick={onClick}
     role="menuitem"
     style={{
-      position: "relative",
       display: "inline-flex",
       alignItems: "center",
       gap: 5,
       fontSize: 13,
-      fontWeight: 500,
+      fontWeight: 600,
       fontFamily: "'DM Sans', sans-serif",
       letterSpacing: "0.01em",
-      padding: "6px 12px",
-      borderRadius: 8,
+      padding: "5px 13px",
+      borderRadius: 999,
       textDecoration: "none",
-      color: isActive ? GREEN : "var(--text-secondary, #6b7280)",
-      background: isActive ? GREEN_SOFT : "transparent",
-      border: `1px solid ${isActive ? GREEN_BORDER : "transparent"}`,
-      transition: "color 0.2s, background 0.2s, border-color 0.2s",
+      // Always dark text — readable on the glass pill
+      color: isActive ? "#fff" : "rgba(15,23,42,0.85)",
+      background: isActive
+        ? GREEN
+        : "transparent",
+      boxShadow: isActive
+        ? `0 2px 10px ${GREEN_GLOW}`
+        : "none",
+      border: "1px solid transparent",
+      transition: "all 0.2s ease",
+      whiteSpace: "nowrap",
     }}
     onMouseEnter={e => {
       if (!isActive) {
@@ -71,18 +69,17 @@ const NavLink = ({ to, label, isActive, onClick }) => (
     }}
     onMouseLeave={e => {
       if (!isActive) {
-        e.currentTarget.style.color = "var(--text-secondary, #6b7280)";
+        e.currentTarget.style.color = "rgba(15,23,42,0.85)";
         e.currentTarget.style.background = "transparent";
         e.currentTarget.style.borderColor = "transparent";
       }
     }}
   >
-    {/* Pulsing green dot — only on active link */}
     {isActive && (
       <span style={{
         width: 5, height: 5,
         borderRadius: "50%",
-        background: GREEN,
+        background: "#fff",
         flexShrink: 0,
         animation: "navPulse 2s ease infinite",
       }} />
@@ -92,8 +89,7 @@ const NavLink = ({ to, label, isActive, onClick }) => (
 );
 
 // ─────────────────────────────────────────────────────────
-// DropdownLink — item inside profile dropdown panel
-// Hover: green text + green tinted background
+// DropdownLink
 // ─────────────────────────────────────────────────────────
 const DropdownLink = ({ to, label, onClick }) => (
   <Link
@@ -105,34 +101,32 @@ const DropdownLink = ({ to, label, onClick }) => (
       alignItems: "center",
       gap: 10,
       padding: "8px 16px",
-      fontSize: 12,
+      fontSize: 13,
       fontFamily: "'DM Sans', sans-serif",
-      color: "var(--text-secondary, #6b7280)",
+      fontWeight: 500,
+      // Dark readable text
+      color: "rgba(15,23,42,0.7)",
       textDecoration: "none",
       transition: "color 0.15s, background 0.15s",
+      borderRadius: 8,
+      margin: "0 4px",
     }}
     onMouseEnter={e => {
       e.currentTarget.style.color = GREEN;
       e.currentTarget.style.background = GREEN_SOFT;
     }}
     onMouseLeave={e => {
-      e.currentTarget.style.color = "var(--text-secondary, #6b7280)";
+      e.currentTarget.style.color = "rgba(15,23,42,0.7)";
       e.currentTarget.style.background = "transparent";
     }}
   >
-    <span style={{ fontFamily: "DM Mono, monospace", fontSize: 10, opacity: 0.45 }}>→</span>
+    <span style={{ fontFamily: "DM Mono, monospace", fontSize: 10, opacity: 0.4 }}>→</span>
     {label}
   </Link>
 );
 
 // ─────────────────────────────────────────────────────────
-// AvatarBadge — colored circle with user initial
-//
-// getAvatarColor hashes the email/username string into a
-// consistent index into AVATAR_COLORS array.
-// This means the same user always gets the same color.
-//
-// Ring: box-shadow with color.text at 20% opacity
+// AvatarBadge
 // ─────────────────────────────────────────────────────────
 const AvatarBadge = ({ user, size = "sm" }) => {
   const letter =
@@ -141,7 +135,7 @@ const AvatarBadge = ({ user, size = "sm" }) => {
     user?.username?.[0]?.toUpperCase() ??
     "U";
   const color = getAvatarColor(user?.email ?? user?.username ?? "");
-  const dim = size === "sm" ? 24 : 32;
+  const dim = size === "sm" ? 26 : 34;
 
   return (
     <div
@@ -154,8 +148,7 @@ const AvatarBadge = ({ user, size = "sm" }) => {
         alignItems: "center",
         justifyContent: "center",
         flexShrink: 0,
-        // Subtle ring using the avatar's own accent color
-        boxShadow: `0 0 0 1.5px ${color.text}33`,
+        boxShadow: `0 0 0 2px ${color.text}44`,
       }}
     >
       <span style={{
@@ -171,9 +164,7 @@ const AvatarBadge = ({ user, size = "sm" }) => {
 };
 
 // ─────────────────────────────────────────────────────────
-// DesktopNav — horizontal link row
-// Hidden on mobile via className="hidden md:flex"
-// Shows user links when logged in, public links when not
+// DesktopNav
 // ─────────────────────────────────────────────────────────
 const DesktopNav = ({ user, pathname }) => {
   const links = user ? NAV_LINKS : PUBLIC_NAV_LINKS;
@@ -187,18 +178,9 @@ const DesktopNav = ({ user, pathname }) => {
 };
 
 // ─────────────────────────────────────────────────────────
-// ProfileDropdown — avatar button + glass dropdown panel
-//
-// Three closing mechanisms:
-//   1. Click outside (mousedown listener on document)
-//   2. ESC key (keydown listener, only active when open)
-//   3. Route change (useEffect watching pathname in Navbar)
-//
-// Dropdown uses same glass style as navbar:
-//   backdrop-filter:blur + dark semi-transparent bg
+// ProfileDropdown — liquid glass dropdown panel
 // ─────────────────────────────────────────────────────────
 const ProfileDropdown = ({ user, dropOpen, setDropOpen, dropRef, onLogout }) => {
-  // ESC to close — standard keyboard accessibility pattern
   useEffect(() => {
     const handleKey = e => {
       if (e.key === "Escape" && dropOpen) setDropOpen(false);
@@ -211,8 +193,7 @@ const ProfileDropdown = ({ user, dropOpen, setDropOpen, dropRef, onLogout }) => 
 
   return (
     <div className="hidden md:block" ref={dropRef} style={{ position: "relative" }}>
-
-      {/* Trigger button — glass pill */}
+      {/* Trigger button */}
       <button
         onClick={() => setDropOpen(v => !v)}
         aria-haspopup="menu"
@@ -222,43 +203,52 @@ const ProfileDropdown = ({ user, dropOpen, setDropOpen, dropRef, onLogout }) => 
           display: "flex",
           alignItems: "center",
           gap: 8,
-          padding: "5px 10px 5px 6px",
-          borderRadius: 10,
-          border: `1px solid ${dropOpen ? GREEN_BORDER : "rgba(0,0,0,0.1)"}`,
-          background: dropOpen ? GREEN_SOFT : "rgba(255,255,255,0.5)",
+          padding: "4px 10px 4px 5px",
+          borderRadius: 999,
+          border: `1px solid ${dropOpen ? GREEN_BORDER : "rgba(255,255,255,0.5)"}`,
+          background: dropOpen
+            ? GREEN_SOFT
+            : "rgba(255,255,255,0.35)",
+          // Inset highlight — the liquid glass touch
+          boxShadow: dropOpen
+            ? `inset 0 1px 0 rgba(255,255,255,0.8), 0 2px 8px ${GREEN_GLOW}`
+            : "inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 4px rgba(0,0,0,0.06)",
           cursor: "pointer",
-          transition: "border-color 0.2s, background 0.2s",
+          transition: "all 0.2s ease",
         }}
         onMouseEnter={e => {
           if (!dropOpen) {
             e.currentTarget.style.borderColor = GREEN_BORDER;
             e.currentTarget.style.background = GREEN_SOFT;
+            e.currentTarget.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,0.8), 0 2px 8px ${GREEN_GLOW}`;
           }
         }}
         onMouseLeave={e => {
           if (!dropOpen) {
-            e.currentTarget.style.borderColor = "rgba(0,0,0,0.1)";
-            e.currentTarget.style.background = "rgba(255,255,255,0.5)";
+            e.currentTarget.style.borderColor = "rgba(255,255,255,0.5)";
+            e.currentTarget.style.background = "rgba(255,255,255,0.35)";
+            e.currentTarget.style.boxShadow = "inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 4px rgba(0,0,0,0.06)";
           }
         }}
       >
         <AvatarBadge user={user} size="sm" />
         <span style={{
           fontSize: 12,
-          fontFamily: "DM Mono, monospace",
-          color: "var(--text-secondary, #6b7280)",
-          maxWidth: 120,
+          fontFamily: "'DM Sans', sans-serif",
+          fontWeight: 600,
+          // Dark readable text — not relying on CSS vars
+          color: "rgba(15,23,42,0.8)",
+          maxWidth: 110,
           overflow: "hidden",
           textOverflow: "ellipsis",
           whiteSpace: "nowrap",
         }}>
           {userDisplay}
         </span>
-        {/* Chevron rotates 180deg when open — CSS transform via inline style */}
         <svg
           style={{
             width: 12, height: 12,
-            color: "var(--text-muted, #9ca3af)",
+            color: "rgba(15,23,42,0.5)",
             transition: "transform 0.2s ease",
             transform: dropOpen ? "rotate(180deg)" : "rotate(0deg)",
             flexShrink: 0,
@@ -271,10 +261,9 @@ const ProfileDropdown = ({ user, dropOpen, setDropOpen, dropRef, onLogout }) => 
         </svg>
       </button>
 
-      {/* Glass dropdown panel
-          Slides down with dropdownSlide animation
-          Dark glass: rgba(10,10,10,0.88) + blur(20px)
-          Subtle green ring via box-shadow */}
+      {/* Liquid glass dropdown panel
+          Light version — readable dark text on frosted white
+          Inset shadows create the curved glass surface illusion */}
       {dropOpen && (
         <div
           role="menu"
@@ -282,38 +271,49 @@ const ProfileDropdown = ({ user, dropOpen, setDropOpen, dropRef, onLogout }) => 
           style={{
             position: "absolute",
             right: 0,
-            top: "calc(100% + 8px)",
-            width: 220,
-            borderRadius: 14,
+            top: "calc(100% + 10px)",
+            width: 230,
+            borderRadius: 18,
             overflow: "hidden",
             zIndex: 50,
-            background: "rgba(10,10,10,0.88)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            border: "1px solid rgba(255,255,255,0.09)",
-            boxShadow: `0 16px 48px rgba(0,0,0,0.25), 0 0 0 0.5px ${GREEN_BORDER}`,
-            animation: "dropdownSlide 0.18s ease both",
+            // Liquid glass — light version
+            background: "rgba(255,255,255,0.75)",
+            backdropFilter: "blur(24px) saturate(180%)",
+            WebkitBackdropFilter: "blur(24px) saturate(180%)",
+            border: "1px solid rgba(255,255,255,0.6)",
+            // ── LIQUID GLASS SHADOW STACK ──────────────────
+            // 1. inset top: bright highlight = light hitting glass
+            // 2. inset bottom: dark edge = depth at base
+            // 3. outer: floating depth shadow
+            // 4. outer green ring: brand accent
+            boxShadow: [
+              "inset 0 1px 0 rgba(255,255,255,0.9)",
+              "inset 0 -1px 0 rgba(0,0,0,0.04)",
+              "0 20px 60px rgba(0,0,0,0.12)",
+              `0 0 0 0.5px ${GREEN_BORDER}`,
+            ].join(", "),
+            animation: "dropdownSlide 0.2s ease both",
           }}
         >
-          {/* User header */}
+          {/* Header */}
           <div style={{
-            padding: "12px 16px",
-            borderBottom: "1px solid rgba(255,255,255,0.07)",
+            padding: "13px 16px 11px",
+            borderBottom: "1px solid rgba(0,0,0,0.06)",
           }}>
             <p style={{
               fontSize: 10,
               fontFamily: "DM Mono, monospace",
-              color: "rgba(255,255,255,0.3)",
+              color: "rgba(15,23,42,0.4)",
               textTransform: "uppercase",
-              letterSpacing: "0.08em",
-              marginBottom: 3,
+              letterSpacing: "0.09em",
+              marginBottom: 3, margin: "0 0 3px",
             }}>
               signed in as
             </p>
             <p style={{
-              fontSize: 12,
-              color: "rgba(255,255,255,0.85)",
-              fontWeight: 500,
+              fontSize: 13,
+              fontWeight: 600,
+              color: "rgba(15,23,42,0.85)",
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
@@ -323,20 +323,13 @@ const ProfileDropdown = ({ user, dropOpen, setDropOpen, dropRef, onLogout }) => 
             </p>
           </div>
 
-          {/* Nav items */}
-          <div style={{ padding: "4px 0" }}>
+          <div style={{ padding: "6px 0" }}>
             {DROPDOWN_MENU_ITEMS.map(({ to, label }) => (
-              <DropdownLink
-                key={to}
-                to={to}
-                label={label}
-                onClick={() => setDropOpen(false)}
-              />
+              <DropdownLink key={to} to={to} label={label} onClick={() => setDropOpen(false)} />
             ))}
           </div>
 
-          {/* Sign out — red, visually separated */}
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.07)", padding: "4px 0" }}>
+          <div style={{ borderTop: "1px solid rgba(0,0,0,0.06)", padding: "6px 0" }}>
             <button
               onClick={() => { onLogout(); setDropOpen(false); }}
               role="menuitem"
@@ -346,22 +339,26 @@ const ProfileDropdown = ({ user, dropOpen, setDropOpen, dropRef, onLogout }) => 
                 alignItems: "center",
                 gap: 10,
                 padding: "8px 16px",
-                fontSize: 12,
+                fontSize: 13,
+                fontWeight: 500,
                 fontFamily: "'DM Sans', sans-serif",
-                color: "rgba(248,113,113,0.9)",
+                color: "rgb(220,38,38)",
                 background: "transparent",
                 border: "none",
                 cursor: "pointer",
                 transition: "color 0.15s, background 0.15s",
                 textAlign: "left",
+                borderRadius: 8,
+                margin: "0 4px",
+                width: "calc(100% - 8px)",
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.background = "rgba(239,68,68,0.08)";
-                e.currentTarget.style.color = "rgb(252,165,165)";
+                e.currentTarget.style.color = "rgb(185,28,28)";
               }}
               onMouseLeave={e => {
                 e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.color = "rgba(248,113,113,0.9)";
+                e.currentTarget.style.color = "rgb(220,38,38)";
               }}
             >
               <span style={{ fontFamily: "DM Mono, monospace", fontSize: 10, opacity: 0.5 }}>→</span>
@@ -375,11 +372,7 @@ const ProfileDropdown = ({ user, dropOpen, setDropOpen, dropRef, onLogout }) => 
 };
 
 // ─────────────────────────────────────────────────────────
-// MobileMenu — hamburger button + slide-down drawer
-//
-// Drawer uses dark glass matching the dropdown panel.
-// Position:absolute from the navbar so it overlays page content.
-// Only renders when menuOpen === true AND user is logged in.
+// MobileMenu — hamburger + full-width glass drawer
 // ─────────────────────────────────────────────────────────
 const MobileMenu = ({ user, menuOpen, setMenuOpen, pathname, onLogout }) => {
   const userDisplay = user?.full_name ?? user?.email ?? user?.username;
@@ -387,7 +380,6 @@ const MobileMenu = ({ user, menuOpen, setMenuOpen, pathname, onLogout }) => {
 
   return (
     <>
-      {/* Hamburger / X toggle button — md:hidden = mobile only */}
       <button
         onClick={() => setMenuOpen(v => !v)}
         aria-label="Toggle navigation menu"
@@ -399,40 +391,38 @@ const MobileMenu = ({ user, menuOpen, setMenuOpen, pathname, onLogout }) => {
           alignItems: "center",
           justifyContent: "center",
           width: 36, height: 36,
-          borderRadius: 9,
-          border: `1px solid ${menuOpen ? GREEN_BORDER : "rgba(0,0,0,0.1)"}`,
-          background: menuOpen ? GREEN_SOFT : "rgba(255,255,255,0.5)",
-          color: menuOpen ? GREEN : "var(--text-muted, #9ca3af)",
+          borderRadius: 999,
+          border: `1px solid ${menuOpen ? GREEN_BORDER : "rgba(255,255,255,0.5)"}`,
+          background: menuOpen ? GREEN_SOFT : "rgba(255,255,255,0.35)",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.8), 0 1px 4px rgba(0,0,0,0.06)",
+          color: menuOpen ? GREEN : "rgba(15,23,42,0.65)",
           cursor: "pointer",
-          transition: "border-color 0.2s, background 0.2s, color 0.2s",
+          transition: "all 0.2s ease",
         }}
         onMouseEnter={e => {
           e.currentTarget.style.color = GREEN;
           e.currentTarget.style.borderColor = GREEN_BORDER;
+          e.currentTarget.style.background = GREEN_SOFT;
         }}
         onMouseLeave={e => {
           if (!menuOpen) {
-            e.currentTarget.style.color = "var(--text-muted, #9ca3af)";
-            e.currentTarget.style.borderColor = "rgba(0,0,0,0.1)";
+            e.currentTarget.style.color = "rgba(15,23,42,0.65)";
+            e.currentTarget.style.borderColor = "rgba(255,255,255,0.5)";
+            e.currentTarget.style.background = "rgba(255,255,255,0.35)";
           }
         }}
       >
-        {/* Swap icon based on open state */}
         {menuOpen ? (
-          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         ) : (
-          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         )}
       </button>
 
-      {/* Mobile drawer
-          position:absolute from the navbar container
-          Covers full width of screen, slides down
-          Dark glass: same as dropdown but full-width */}
       {menuOpen && user && (
         <div
           id="mobile-menu"
@@ -440,38 +430,49 @@ const MobileMenu = ({ user, menuOpen, setMenuOpen, pathname, onLogout }) => {
           aria-label="Mobile menu"
           className="md:hidden"
           style={{
-            position: "absolute",
-            top: "100%",
-            left: 0,
-            right: 0,
-            zIndex: 30,
-            background: "rgba(10,10,10,0.92)",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            borderBottom: "1px solid rgba(255,255,255,0.07)",
-            borderTop: `1px solid ${GREEN_BORDER}`,
+            position: "fixed",
+            top: 80,
+            left: 12,
+            right: 12,
+            zIndex: 39,
+            borderRadius: 20,
+            overflow: "hidden",
+            // Light liquid glass — matches navbar style
+            background: "rgba(255,255,255,0.82)",
+            backdropFilter: "blur(24px) saturate(180%)",
+            WebkitBackdropFilter: "blur(24px) saturate(180%)",
+            border: "1px solid rgba(255,255,255,0.6)",
+            boxShadow: [
+              "inset 0 1px 0 rgba(255,255,255,0.9)",
+              "inset 0 -1px 0 rgba(0,0,0,0.04)",
+              "0 20px 60px rgba(0,0,0,0.14)",
+              `0 0 0 0.5px ${GREEN_BORDER}`,
+            ].join(", "),
             animation: "drawerSlide 0.22s ease both",
           }}
         >
-          {/* User info strip */}
+          {/* User info */}
           <div style={{
-            padding: "12px 16px",
-            borderBottom: "1px solid rgba(255,255,255,0.06)",
+            padding: "14px 16px",
+            borderBottom: "1px solid rgba(0,0,0,0.06)",
             display: "flex",
             alignItems: "center",
             gap: 10,
           }}>
             <AvatarBadge user={user} size="md" />
-            <p style={{ fontSize: 12, color: "rgba(255,255,255,0.55)", margin: 0 }}>
+            <p style={{
+              fontSize: 13, fontWeight: 600,
+              color: "rgba(15,23,42,0.8)", margin: 0,
+            }}>
               {userDisplay}
             </p>
           </div>
 
-          {/* Nav links section */}
+          {/* Nav links */}
           <div style={{ padding: "8px 12px" }}>
             <p style={{
               fontSize: 10, fontFamily: "DM Mono, monospace",
-              color: "rgba(255,255,255,0.22)",
+              color: "rgba(15,23,42,0.35)",
               textTransform: "uppercase", letterSpacing: "0.1em",
               padding: "4px 8px", marginBottom: 4,
             }}>
@@ -479,25 +480,16 @@ const MobileMenu = ({ user, menuOpen, setMenuOpen, pathname, onLogout }) => {
             </p>
             {NAV_LINKS.map(({ to, label }) => (
               <Link
-                key={to}
-                to={to}
-                onClick={close}
-                role="menuitem"
+                key={to} to={to} onClick={close} role="menuitem"
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  padding: "10px 12px",
-                  borderRadius: 8,
-                  fontSize: 14,
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontWeight: 500,
-                  textDecoration: "none",
-                  marginBottom: 2,
-                  // Active = green, inactive = muted white
-                  color: pathname === to ? GREEN : "rgba(255,255,255,0.65)",
-                  background: pathname === to ? GREEN_SOFT : "transparent",
-                  transition: "color 0.15s, background 0.15s",
+                  display: "flex", alignItems: "center", gap: 10,
+                  padding: "10px 12px", borderRadius: 10,
+                  fontSize: 14, fontFamily: "'DM Sans', sans-serif",
+                  fontWeight: 600, textDecoration: "none", marginBottom: 2,
+                  color: pathname === to ? "#fff" : "rgba(15,23,42,0.75)",
+                  background: pathname === to ? GREEN : "transparent",
+                  boxShadow: pathname === to ? `0 2px 10px ${GREEN_GLOW}` : "none",
+                  transition: "all 0.15s ease",
                 }}
                 onMouseEnter={e => {
                   if (pathname !== to) {
@@ -507,25 +499,22 @@ const MobileMenu = ({ user, menuOpen, setMenuOpen, pathname, onLogout }) => {
                 }}
                 onMouseLeave={e => {
                   if (pathname !== to) {
-                    e.currentTarget.style.color = "rgba(255,255,255,0.65)";
+                    e.currentTarget.style.color = "rgba(15,23,42,0.75)";
                     e.currentTarget.style.background = "transparent";
                   }
                 }}
               >
-                <span style={{ fontFamily: "DM Mono, monospace", fontSize: 10, opacity: 0.35 }}>→</span>
+                <span style={{ fontFamily: "DM Mono, monospace", fontSize: 10, opacity: 0.4 }}>→</span>
                 {label}
               </Link>
             ))}
           </div>
 
-          {/* Account section */}
-          <div style={{
-            padding: "8px 12px",
-            borderTop: "1px solid rgba(255,255,255,0.06)",
-          }}>
+          {/* Account */}
+          <div style={{ padding: "8px 12px", borderTop: "1px solid rgba(0,0,0,0.06)" }}>
             <p style={{
               fontSize: 10, fontFamily: "DM Mono, monospace",
-              color: "rgba(255,255,255,0.22)",
+              color: "rgba(15,23,42,0.35)",
               textTransform: "uppercase", letterSpacing: "0.1em",
               padding: "4px 8px", marginBottom: 4,
             }}>
@@ -533,20 +522,12 @@ const MobileMenu = ({ user, menuOpen, setMenuOpen, pathname, onLogout }) => {
             </p>
             {MOBILE_ACCOUNT_ITEMS.map(({ to, label }) => (
               <Link
-                key={to}
-                to={to}
-                onClick={close}
-                role="menuitem"
+                key={to} to={to} onClick={close} role="menuitem"
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  padding: "10px 12px",
-                  borderRadius: 8,
-                  fontSize: 14,
-                  color: "rgba(255,255,255,0.5)",
-                  textDecoration: "none",
-                  marginBottom: 2,
+                  display: "flex", alignItems: "center", gap: 10,
+                  padding: "10px 12px", borderRadius: 10,
+                  fontSize: 14, color: "rgba(15,23,42,0.65)",
+                  textDecoration: "none", marginBottom: 2,
                   transition: "color 0.15s, background 0.15s",
                 }}
                 onMouseEnter={e => {
@@ -554,7 +535,7 @@ const MobileMenu = ({ user, menuOpen, setMenuOpen, pathname, onLogout }) => {
                   e.currentTarget.style.background = GREEN_SOFT;
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.color = "rgba(255,255,255,0.5)";
+                  e.currentTarget.style.color = "rgba(15,23,42,0.65)";
                   e.currentTarget.style.background = "transparent";
                 }}
               >
@@ -562,44 +543,31 @@ const MobileMenu = ({ user, menuOpen, setMenuOpen, pathname, onLogout }) => {
                 {label}
               </Link>
             ))}
-
-            {/* Sign out */}
             <button
               onClick={() => { onLogout(); close(); }}
               role="menuitem"
               style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "10px 12px",
-                borderRadius: 8,
-                fontSize: 14,
-                color: "rgba(248,113,113,0.85)",
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                marginTop: 4,
-                fontFamily: "'DM Sans', sans-serif",
+                width: "100%", display: "flex", alignItems: "center", gap: 10,
+                padding: "10px 12px", borderRadius: 10,
+                fontSize: 14, color: "rgb(220,38,38)",
+                background: "transparent", border: "none",
+                cursor: "pointer", marginTop: 4,
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 500,
                 transition: "color 0.15s, background 0.15s",
                 textAlign: "left",
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.background = "rgba(239,68,68,0.08)";
-                e.currentTarget.style.color = "rgb(252,165,165)";
               }}
               onMouseLeave={e => {
                 e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.color = "rgba(248,113,113,0.85)";
               }}
             >
-              <span style={{ fontFamily: "DM Mono, monospace", fontSize: 10, opacity: 0.35 }}>→</span>
+              <span style={{ fontFamily: "DM Mono, monospace", fontSize: 10, opacity: 0.4 }}>→</span>
               Sign out
             </button>
           </div>
-
-          {/* Safe area spacer — prevents content touching screen edge */}
-          <div style={{ height: 10 }} />
+          <div style={{ height: 8 }} />
         </div>
       )}
     </>
@@ -607,16 +575,17 @@ const MobileMenu = ({ user, menuOpen, setMenuOpen, pathname, onLogout }) => {
 };
 
 // ─────────────────────────────────────────────────────────
-// MAIN NAVBAR COMPONENT
+// MAIN NAVBAR
 //
-// scroll state: window.scrollY > 10 triggers stronger glass
-//   - blur increases: 12px → 20px
-//   - bg opacity increases: 0.72 → 0.85
-//   - shadow deepens
-// This makes the navbar feel "heavier" as you scroll — natural.
+// position:fixed — detaches from page flow, floats above content
+// top:12px + horizontal margin = floating pill effect
+// borderRadius:999 = full pill / rounded capsule shape
 //
-// position:sticky + top:0 = stays fixed at top while scrolling
-// position:relative on inner div = lets mobile drawer position from here
+// The liquid glass shadow stack:
+//   inset 0 1px 0 rgba(255,255,255,0.85)  → top light catch
+//   inset 0 -1px 0 rgba(0,0,0,0.06)       → bottom depth
+//   0 8px 32px rgba(0,0,0,0.1)            → floating shadow
+//   0 1px 0 rgba(255,255,255,0.5)         → outer top rim
 // ─────────────────────────────────────────────────────────
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
@@ -626,27 +595,20 @@ const Navbar = () => {
   const [scrolled, setScrolled]   = useState(false);
   const dropRef = useRef(null);
 
-  // Detect scroll — passive:true is a performance hint to the browser
-  // It tells the browser this listener won't call preventDefault()
-  // so it can scroll without waiting for JS — smoother scrolling
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
+    const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close both menus on route change
   useEffect(() => {
     setDropOpen(false);
     setMenuOpen(false);
   }, [pathname]);
 
-  // Close dropdown when user clicks anywhere outside dropRef element
   useEffect(() => {
     const onMouseDown = e => {
-      if (dropRef.current && !dropRef.current.contains(e.target)) {
-        setDropOpen(false);
-      }
+      if (dropRef.current && !dropRef.current.contains(e.target)) setDropOpen(false);
     };
     document.addEventListener("mousedown", onMouseDown);
     return () => document.removeEventListener("mousedown", onMouseDown);
@@ -654,122 +616,137 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Keyframe definitions — scoped here, applied via className/animation */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 
-        /* Active nav dot breathing */
         @keyframes navPulse {
           0%, 100% { opacity: 1; transform: scale(1); }
-          50%       { opacity: 0.45; transform: scale(0.7); }
+          50%       { opacity: 0.4; transform: scale(0.7); }
         }
-
-        /* Dropdown panel slides down + fades in */
         @keyframes dropdownSlide {
-          from { opacity: 0; transform: translateY(-8px); }
-          to   { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
         }
-
-        /* Mobile drawer slides down + fades in */
         @keyframes drawerSlide {
-          from { opacity: 0; transform: translateY(-10px); }
-          to   { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; transform: translateY(-12px) scale(0.98); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
         }
       `}</style>
+
+      {/* Spacer — pushes page content down so it's not hidden under fixed navbar */}
+      <div style={{ height: 72 }} aria-hidden="true" />
 
       <nav
         role="navigation"
         aria-label="Main navigation"
         style={{
-          position: "sticky",
-          top: 0,
+          // Fixed positioning — floats above all page content
+          position: "fixed",
+          top: 12,
+          // Floating pill with margin from edges
+          left: "50%",
+          transform: "translateX(-50%)",
+          // Responsive width — max 1200px, shrinks on small screens
+          width: "min(calc(100% - 24px), 1200px)",
           zIndex: 40,
 
-          // ── GLASS EFFECT ──────────────────────────────────
-          // background opacity increases when scrolled
+          // ── LIQUID GLASS ──────────────────────────────────
+          // Gradient bg = light hits top, fades to slightly darker bottom
+          // This is what makes it look curved/liquid vs flat glass
           background: scrolled
-            ? "rgba(255,255,255,0.85)"
-            : "rgba(255,255,255,0.72)",
+            ? "linear-gradient(135deg, rgba(255,255,255,0.88) 0%, rgba(255,255,255,0.72) 100%)"
+            : "linear-gradient(135deg, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.58) 100%)",
 
-          // blur strengthens when scrolled — more frosted depth
-          backdropFilter:         `blur(${scrolled ? "20px" : "12px"})`,
-          WebkitBackdropFilter:   `blur(${scrolled ? "20px" : "12px"})`,
+          // saturate(180%) = makes colors behind it more vivid through glass
+          backdropFilter: `blur(${scrolled ? "24px" : "16px"}) saturate(180%)`,
+          WebkitBackdropFilter: `blur(${scrolled ? "24px" : "16px"}) saturate(180%)`,
 
-          // subtle white border = glass edge illusion
-          borderBottom: "1px solid rgba(255,255,255,0.3)",
+          // Full pill shape — 999 = always fully rounded regardless of height
+          borderRadius: 999,
 
-          // shadow deepens when scrolled
-          boxShadow: scrolled
-            ? `0 4px 24px rgba(0,0,0,0.07), 0 1px 0 ${GREEN_GLOW}`
-            : "0 1px 0 rgba(0,0,0,0.04)",
+          // Outer border — glass edge
+          border: "1px solid rgba(255,255,255,0.55)",
 
-          transition: "background 0.3s ease, box-shadow 0.3s ease",
+          // ── SHADOW STACK ──────────────────────────────────
+          // Layer 1: inset top highlight = light catching top of glass
+          // Layer 2: inset bottom edge = depth at base of glass curve
+          // Layer 3: outer floating shadow = elevation above page
+          // Layer 4: outer top rim = extra light on the very top edge
+          // Layer 5: green accent glow (stronger when scrolled)
+          boxShadow: [
+            "inset 0 1.5px 0 rgba(255,255,255,0.85)",
+            "inset 0 -1px 0 rgba(0,0,0,0.05)",
+            `0 ${scrolled ? "12px 40px" : "8px 28px"} rgba(0,0,0,${scrolled ? "0.12" : "0.08"})`,
+            "0 1px 0 rgba(255,255,255,0.6)",
+            scrolled ? `0 0 0 1px ${GREEN_BORDER}` : "none",
+          ].join(", "),
+
+          transition: "background 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease",
         }}
       >
-        {/* Green shimmer line at the bottom edge
-            Gradient: transparent → green → transparent
-            Ties the navbar into the brand color consistently */}
         <div style={{
-          position: "absolute",
-          bottom: 0, left: 0, right: 0,
-          height: 1,
-          background: `linear-gradient(to right, transparent, ${GREEN_GLOW}, transparent)`,
-          pointerEvents: "none",
-        }} />
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          height: 56,
+          padding: "0 8px 0 6px",
+          // Relative so mobile drawer positions from this container
+          position: "relative",
+        }}>
 
-        {/* Inner row — position:relative lets mobile drawer use top:100% */}
-        <div
-          style={{
-            maxWidth: 1280,
-            margin: "0 auto",
-            padding: "0 24px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            height: 56,
-            position: "relative",
-          }}
-        >
-
-          {/* ── LOGO ──────────────────────────────────────── */}
+          {/* ── LOGO ──────────────────────────────────────────
+              Logo has black background — we use mix-blend-mode:multiply
+              which makes black areas transparent on light backgrounds.
+              On a white/glass navbar, black becomes invisible.
+              The colored parts of the logo remain fully visible. */}
           <Link
             to="/"
             aria-label="DevTrack Home"
-            style={{ display: "flex", alignItems: "center", flexShrink: 0, textDecoration: "none" }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              flexShrink: 0,
+              textDecoration: "none",
+              padding: "0 6px",
+            }}
           >
             <img
               src={logo}
               alt="DevTrack"
-              style={{ height: 32, width: "auto" }}
+              style={{
+                // Tall enough to see logo + text clearly
+                height: 42,
+                width: "auto",
+                // mix-blend-mode:multiply = black pixels become transparent
+                // This removes the black background from your logo PNG
+                // without needing a transparent PNG file
+                mixBlendMode: "multiply",
+              }}
               onError={e => {
-                // If logo.png missing, hide img and show text wordmark
                 e.currentTarget.style.display = "none";
                 e.currentTarget.nextSibling.style.display = "inline";
               }}
             />
-            {/* Text fallback — hidden by default */}
+            {/* Text fallback if logo fails */}
             <span style={{
               display: "none",
               fontFamily: "'DM Sans', sans-serif",
-              fontWeight: 700,
-              fontSize: 18,
-              letterSpacing: "-0.02em",
-              color: "#0a0a0a",
+              fontWeight: 700, fontSize: 18,
+              letterSpacing: "-0.02em", color: "#0a0a0a",
             }}>
               Dev<span style={{ color: GREEN }}>Track</span>
             </span>
           </Link>
 
-          {/* ── DESKTOP NAV ───────────────────────────────── */}
+          {/* ── DESKTOP NAV ─────────────────────────────────── */}
           <DesktopNav user={user} pathname={pathname} />
 
-          {/* ── RIGHT SIDE ────────────────────────────────── */}
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          {/* ── RIGHT SIDE ──────────────────────────────────── */}
+          <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "0 4px" }}>
             <ThemeToggle />
 
             {user ? (
               <>
-                {/* Logged in: avatar dropdown (desktop) + hamburger (mobile) */}
                 <ProfileDropdown
                   user={user}
                   dropOpen={dropOpen}
@@ -786,51 +763,55 @@ const Navbar = () => {
                 />
               </>
             ) : (
-              /* Not logged in: Login link + green Get Started CTA */
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <Link
                   to="/login"
                   style={{
-                    fontSize: 13,
-                    fontWeight: 500,
+                    fontSize: 13, fontWeight: 600,
                     fontFamily: "'DM Sans', sans-serif",
-                    color: "var(--text-secondary, #6b7280)",
+                    // Dark readable text — hardcoded, not CSS var
+                    color: "rgba(15,23,42,0.75)",
                     textDecoration: "none",
                     padding: "6px 12px",
-                    borderRadius: 8,
-                    transition: "color 0.2s",
+                    borderRadius: 999,
+                    transition: "color 0.2s, background 0.2s",
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.color = GREEN; }}
-                  onMouseLeave={e => { e.currentTarget.style.color = "var(--text-secondary, #6b7280)"; }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.color = GREEN;
+                    e.currentTarget.style.background = GREEN_SOFT;
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.color = "rgba(15,23,42,0.75)";
+                    e.currentTarget.style.background = "transparent";
+                  }}
                 >
                   Login
                 </Link>
 
-                {/* Green CTA — was bg-blue-600, now matches brand */}
+                {/* Green CTA pill — matches Landing.jsx */}
                 <Link
                   to="/register"
                   style={{
-                    fontSize: 13,
-                    fontWeight: 600,
+                    fontSize: 13, fontWeight: 700,
                     fontFamily: "'DM Sans', sans-serif",
                     color: "#fff",
                     textDecoration: "none",
-                    padding: "7px 18px",
-                    borderRadius: 9,
+                    padding: "7px 20px",
+                    borderRadius: 999,
                     background: GREEN,
-                    boxShadow: `0 2px 12px ${GREEN_GLOW}`,
+                    boxShadow: `0 2px 12px ${GREEN_GLOW}, inset 0 1px 0 rgba(255,255,255,0.25)`,
                     transition: "background 0.2s, transform 0.15s, box-shadow 0.2s",
                     display: "inline-block",
                   }}
                   onMouseEnter={e => {
                     e.currentTarget.style.background = GREEN_DARK;
                     e.currentTarget.style.transform = "translateY(-1px)";
-                    e.currentTarget.style.boxShadow = "0 4px 16px rgba(22,163,74,0.35)";
+                    e.currentTarget.style.boxShadow = `0 4px 18px rgba(22,163,74,0.4), inset 0 1px 0 rgba(255,255,255,0.25)`;
                   }}
                   onMouseLeave={e => {
                     e.currentTarget.style.background = GREEN;
                     e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow = `0 2px 12px ${GREEN_GLOW}`;
+                    e.currentTarget.style.boxShadow = `0 2px 12px ${GREEN_GLOW}, inset 0 1px 0 rgba(255,255,255,0.25)`;
                   }}
                 >
                   Get started
